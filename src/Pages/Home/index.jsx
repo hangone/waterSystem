@@ -12,7 +12,7 @@ import PubSub from 'pubsub-js'
 import {nanoid} from 'nanoid'
 
 // AnimatedRouter组件, 替换Switch组件
-import AnimatedRouter from 'react-animated-router'; 
+//import AnimatedRouter from 'react-animated-router'; 
  
 
 import { Menu, Button, Dropdown} from 'antd';
