@@ -8,7 +8,8 @@ const MainChange = lazy(()=>import("../Pages/MainPages/HomePage/MainChange"))
 const MinuteChange = lazy(()=>import("../Pages/MainPages/HomePage/MinuteChange")) 
 const WaterChange = lazy(()=>import("../Pages/MainPages/HomePage/WaterChange")) 
 const RainChange = lazy(()=>import("../Pages/MainPages/HomePage/RainChange")) 
-const WhouseChange = lazy(()=>import("../Pages/MainPages/HomePage/WhouseChange"))   
+const WhouseChange = lazy(()=>import("../Pages/MainPages/HomePage/WhouseChange"))
+//const WaterQuality = lazy(()=>import("../Pages/MainPages/HomePage/WaterQuality"))   
   
 const HourWaterForm = lazy(()=>import("../Pages/MainPages/WaterPage/HourWaterForm"))  
 const DayWaterForm = lazy(()=>import("../Pages/MainPages/WaterPage/DayWaterForm"))  
@@ -40,7 +41,8 @@ export const subRouterMap = [
     {path:"/home/homePage/minuteChange",component:MinuteChange,exact:true,title:Common.projectName+'实时水雨情_小时水位数据'}, 
     {path:"/home/homePage/waterChange",component:WaterChange,exact:true,title:Common.projectName+'实时水雨情_小时雨量数据'}, 
     {path:"/home/homePage/rainChange",component:RainChange,exact:false,title:Common.projectName+'实时水雨情_小时库容数据'}, 
-    {path:"/home/homePage/whouseChange",component:WhouseChange,exact:false,title:Common.projectName+'实时水雨情_5分钟水雨情'},  
+    {path:"/home/homePage/whouseChange",component:WhouseChange,exact:false,title:Common.projectName+'实时水雨情_5分钟水雨情'},
+    //{path: "/home/homePage/waterQuality", component: WaterQuality, exact: false, title: Common.projectName + '实时水质_实时水质数据'},  
 
     // 雨量报表
     {path:"/home/rainPage/hourRainForm",component:HourRainForm,exact:false,title:Common.projectName+'雨情报表_分时雨量明细报表'},

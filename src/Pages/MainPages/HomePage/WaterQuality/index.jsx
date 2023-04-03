@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, Fragment } from 'react'
-import { MessageTool } from 'Components/MessageTool'
-import { waterQualitySystemDomain } from 'Config'
+import { MessageTool,MessageToolClear } from 'Components/Tools/MessageTool'; 
+//import { waterQualitySystemDomain } from 'Config'
 import {
   Button,
   Modal,
