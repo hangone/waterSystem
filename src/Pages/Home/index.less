@@ -1,0 +1,403 @@
+@table-font-size: 1.3rem!important;
+@header-font-size: 1.3rem!important;
+@side-font-size: 1.2rem!important;
+@body-font-size: 1.3rem!important;
+@side-width: 16rem;
+
+.home-div {
+  display: flex;
+  justify-content: flex-start;
+  height: 100vh;
+  min-width: 1200px;
+  position: relative;
+
+  .left-div {
+    width: @side-width;
+    height: 100vh;
+    background: #2f3b52;
+    overflow-y: auto;
+    overflow-x: hidden;
+    color: #fff;
+    /*color: rgba(255,255,255,.7);*/
+    font-family: Helvetica Neue, Helvetica, PingFang SC, Tahoma, Arial,
+      sans-serif !important;
+    text-align: center;
+    transition: 0.3s width;
+    .logo-div {
+      height: 5rem;
+      margin-bottom: 0.5rem;
+      transition: 1s opacity;
+      .small-txt {
+        padding-top: 0.5rem;
+        font-size: 1.5rem;
+      }
+      .big-txt {
+        padding: 0 0 1.5rem;
+        font-size: 1.2rem;
+      }
+
+      .fg-logo1 {
+        width: 80%;
+        height: auto;
+        margin-top: 15px;
+      }
+    }
+    .logo-div.hidden {
+      opacity: 0;
+    }
+
+    .ant-menu-title-content {
+      font-size: @side-font-size;
+    }
+  }
+  .left-div.hidden {
+    width: 6rem !important;
+    .logo-div {
+      transition: 0.5s width;
+      visibility: hidden;
+      width: 0 !important;
+      height: 6rem;
+    }
+  }
+  .bg-img {
+    position: absolute;
+    right: 50px;
+    top: 100px;
+    z-index: 0;
+    opacity: 0.15;
+    width: 200px;
+    border-radius: 50%;
+    height: 60px;
+    object-fit: cover;
+  }
+  .content-div {
+    position: relative;
+    padding-bottom: 10px;
+    flex-grow: 1;
+    width: 60%;
+    height: 100vh;
+    /* background:repeating-linear-gradient( to left top,rgba(140, 139, 216, 0.3) ,rgb(120, 120, 165) );*/
+    background: url('../../Assets/images/pic/bg-body.jpg') center center;
+    background-size: cover;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+
+    .header-div {
+      height: auto;
+      display: flex;
+      color: #1f1f1f;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+      font-size: @header-font-size;
+      padding: 0.6rem;
+      background-color: #393d49;
+      color: white;
+
+      .ant-btn,
+      .ant-dropdown-trigger,
+      .ant-dropdown-trigger .ant-dropdown-link {
+        background: transparent !important;
+        color: white !important;
+      }
+      .header-left {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        .ant-btn.ant-btn-default {
+          border: none;
+          vertical-align: middle;
+        }
+        .useable-div {
+          margin: 0 1.5vw;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .useable-div:hover {
+          color: #7e899e;
+        }
+        .useable-div.fix-time:hover {
+          color: white;
+        }
+      }
+      .header-right {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 1rem;
+        .ant-dropdown-trigger.ant-dropdown-link {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .anticon.anticon-down {
+          margin-left: 1rem;
+        }
+        .user-img {
+          width: 80%;
+          height: 80%;
+          max-width: 50px;
+        }
+      }
+    }
+    .body-div {
+      flex-grow: 1;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      height: 90%;
+      overflow: auto;
+      font-size: 1.4rem;
+      font-family: '微软雅黑', 'Courier New', Courier, monospace !important;
+
+      .commTable-div {
+        width: 100%;
+        height: 96%;
+        /*color:white;*/
+
+        // 原有的白色背景设置为透明
+        .ant-table,
+                .ant-empty,
+                .ant-spin-container,
+                .body-bottom-div,
+                .ant-spin-container::after,
+                .ant-table-thead,
+                .ant-table-cell,
+                th.ant-table-cell, 
+                .ant-empty ,
+                .ant-empty .ant-empty-description,
+                .ant-table-sticky-holder, 
+                .ant-btn,
+                .ant-picker-input,
+                .ant-picker,
+                .ant-picker-input input,
+                .ant-picker-input .ant-picker-suffix,
+                .ant-radio-wrapper 
+                /*.ant-picker-input .ant-picker-clear*/ {
+          background: transparent !important;
+          color: white !important;
+        }
+
+        .ant-empty,
+        .ant-empty .ant-empty-description,
+        .ant-btn,
+        .ant-picker-input,
+        .ant-picker,
+        .ant-picker-input input,
+        .ant-picker-input .ant-picker-suffix,
+        .ant-radio-wrapper,
+        .top-title,
+        .body-top-div {
+          color: white !important;
+        }
+
+        .ant-empty,
+        .ant-empty .ant-empty-description,
+        .ant-table-sticky-holder,
+        .ant-table-sticky-holder td {
+          border: none !important;
+        }
+
+        .ant-table-thead {
+          background-color: #212939 !important;
+        }
+        .ant-table-cell {
+          font-size: @table-font-size;
+        }
+
+        .body-top-div {
+          height: 3rem;
+          width: 98%;
+          margin: 1rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .top-left,
+          .top-right {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            .ant-picker {
+              margin-right: 1rem;
+            }
+          }
+          .top-right {
+            .ant-btn {
+              padding: 0 0.5rem;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              .anticon svg {
+                font-size: 0.9rem;
+              }
+              span {
+                margin-left: auto !important;
+              }
+            }
+            button:first-child {
+              margin-right: 1.5rem;
+            }
+          }
+        }
+        .body-bottom-div {
+          min-height: calc(100% - 5rem);
+          height: 90%;
+          width: 98%;
+          margin: 0 1rem 1rem 1rem;
+          overflow: auto;
+          border-radius: 5px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+          .ant-pagination.ant-table-pagination {
+            display: flex;
+            justify-content: center;
+          }
+          .ant-pagination-item-active a {
+            color: #1890ff;
+            line-height: 32px;
+          }
+          .ant-pagination a,
+          .ant-pagination-item-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .ant-empty .ant-empty-description {
+            color: #1f1f1f;
+          }
+          .ant-table-wrapper {
+            align-self: flex-start;
+          }
+        }
+      }
+      .ant-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .top-left .ant-btn {
+        width: 2rem;
+        transform: scale(1.3);
+      }
+      #bottom-echart {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .ant-table-wrapper {
+        clear: both;
+        width: 100%;
+        max-width: 100%;
+      }
+    }
+  }
+
+  #fix-data {
+    position: absolute;
+    bottom: 50px;
+    left: 40px;
+    background: rgba(193, 224, 216, 0.96);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .anticon svg {
+      color: white !important;
+      font-size: 1.5rem !important;
+    }
+  }
+  #fix-data:hover {
+    background: rgba(142, 142, 179, 0.96);
+  }
+
+  .ant-menu-item .ant-menu-item-icon + span,
+  .ant-menu-submenu-title .ant-menu-item-icon + span,
+  .ant-menu-item .anticon + span,
+  .ant-menu-submenu-title .anticon + span {
+    margin-left: 6px !important;
+  }
+  /*.ant-menu.ant-menu-sub.ant-menu-inline li .ant-menu-title-content{
+        margin-left:-0.3rem;
+    }*/
+
+  .fixTitle-div {
+    width: 100%;
+    .ant-radio-wrapper {
+      span {
+        font-size: 1.2rem !important;
+      }
+      .ant-radio {
+        position: relative;
+        top: 50%;
+      }
+    }
+    .table-mode-div {
+      margin-left: 2rem;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      .ant-dropdown-trigger {
+        /*border:1px solid black;*/
+      }
+    }
+    .ant-btn {
+      font-size: @body-font-size;
+    }
+  }
+  .ant-picker,
+  .ant-btn {
+    border: 0.15rem solid white !important;
+  }
+  .ant-btn:hover {
+    color: rgba(141, 176, 223, 0.973);
+    border: 0.15rem solid rgba(141, 176, 223, 0.973) !important;
+    box-shadow: 0 0 10px rgba(141, 176, 223, 0.973);
+    span {
+      color: rgba(141, 176, 223, 0.973);
+    }
+  }
+  .header-left .ant-btn {
+    border: none !important;
+  }
+
+  // 覆盖水位// background:repeating-linear-gradient( rgb(89, 87, 194,0.9) 50%,rgb(120, 120, 165) 50%)
+  .ant-menu.ant-menu-dark,
+  .ant-menu-title-content {
+    color: white !important;
+  }
+  // 一级菜单
+  .ant-menu.ant-menu-dark,
+  .ant-menu-dark .ant-menu-sub,
+  .ant-menu.ant-menu-dark .ant-menu-sub {
+    color: white;
+    background-color: #2f3b52;
+  }
+  // 二级菜单
+  .ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal)
+    .ant-menu-item-selected {
+    background: repeating-linear-gradient(
+      to left top,
+      #8d929b,
+      rgba(142, 142, 216, 0.8)
+    ) !important;
+    /*  background: radial-gradient(at center center,rgba(236, 236, 240, 0.8) ,#212939 )!important;*/
+  }
+  .ant-menu.ant-menu-sub.ant-menu-inline {
+    background-color: #212939;
+  }
+}
+
+.homeTable-div {
+  table {
+    /* border: 1px solid white;*/
+  }
+}

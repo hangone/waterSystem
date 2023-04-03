@@ -1,0 +1,158 @@
+.body-bottom-div {
+  height: auto;
+}
+#current-div {
+  /* justify-content: center;*/
+  padding-top: 0px;
+  min-height: 500px;
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /*  .ant-form-item-control-input{
+        padding: 20px!important;
+        border:1px solid #d9d9d9;
+    }
+    .ant-select-selector{
+        border: none!important;
+    }*/
+}
+#current-div .body-bottom-div {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center;*/
+  padding-top: 0px;
+  align-items: center;
+  padding-top: 80px;
+  justify-content: flex-start;
+}
+#current-div .body-bottom-div #edit-div {
+  display: flex;
+  justify-content: space-between;
+}
+#current-div .body-bottom-div #edit-div .form-item {
+  width: calc(100% - 200px) !important;
+}
+#current-div .body-bottom-div #edit-div .submitBtn {
+  width: 200px !important;
+}
+#current-div .date-div {
+  width: 22rem !important;
+}
+#current-div .date-div .ant-picker {
+  width: 16rem !important;
+}
+#current-div .user-title,
+#current-div .ant-table-wrapper {
+  /*margin: 0 5rem;
+        max-width: 1200px;*/
+}
+#current-div .ant-table-wrapper,
+#current-div h1 {
+  width: 100%;
+}
+#current-div h1 {
+  padding-bottom: 5vh;
+}
+#current-div td.ant-table-cell,
+#current-div th.ant-table-cell {
+  height: 10vh;
+  max-height: 100px;
+  font-size: 1.2rem !important;
+  box-sizing: border-box !important;
+  text-indent: 10px;
+}
+#current-div small {
+  position: absolute;
+  bottom: 50px;
+  font-size: 20px;
+  left: 100px;
+}
+#current-div .submitBtn .ant-spin.ant-spin-spinning {
+  margin-left: 3px;
+  height: 20px !important;
+}
+#current-div .submitBtn .anticon svg {
+  font-size: 20px !important;
+}
+#current-div #edit-div {
+  width: 100%;
+  padding: 20px;
+  margin-top: 40px;
+}
+#current-div #edit-div label {
+  color: white !important;
+}
+#current-div .top-title {
+  margin: 0 !important;
+}
+#current-div .ant-row.ant-form-item {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+}
+#current-div .submitBtn {
+  display: flex;
+  justify-content: center;
+  /* padding-top:5vh;*/
+}
+#current-div .submitBtn .ant-col {
+  width: 100% !important;
+}
+#current-div .submitBtn .ant-form-item-control-input {
+  position: relative;
+  left: calc(50% - 80px);
+  width: 160px;
+}
+#current-div .submitBtn .ant-btn {
+  height: 2.8rem;
+  width: 10rem !important;
+}
+#current-div .submitBtn > div {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center;
+  margin-left: 0 !important;
+  max-width: 100% !important;
+}
+#current-div .ant-form-item-label label,
+#current-div .ant-form-item-control-input-content button[type^='submit'] span {
+  font-size: 1.3rem !important;
+}
+#current-div .ant-form-item-label {
+  text-align: center !important;
+}
+#current-div .ant-form-item-control-input-content > input,
+#current-div .ant-form-item-control-input,
+#current-div .ant-input-affix-wrapper.ant-input-password {
+  /* width: 22rem!important;*/
+  width: 100% !important;
+}
+#current-div .ant-form-item-control-input-content > input,
+#current-div .ant-input-affix-wrapper.ant-input-password,
+#current-div .ant-select-selector {
+  padding: 8px !important;
+}
+#current-div .ant-select-selector {
+  height: auto !important;
+}
+.ant-popover-message svg {
+  font-size: 1.3rem !important;
+}
+.ant-popover-message-title,
+.ant-popover-buttons span,
+.ant-form-item-control-input-content input {
+  font-size: 1.2rem !important;
+}
+.ant-btn-sm {
+  height: 30px !important;
+}
+/*.ant-table-thead > tr > th, .ant-table-tbody > tr > td, .ant-table tfoot > tr > th, .ant-table tfoot > tr > td{
+    padding: 0 !important;
+}*/
+.ant-form-item-control-input-content input {
+  width: 95% !important;
+}

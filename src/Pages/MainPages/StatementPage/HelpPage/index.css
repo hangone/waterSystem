@@ -1,0 +1,65 @@
+.helpPage-div {
+  color: white;
+  padding: 4rem;
+  margin-bottom: 100px;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+.helpPage-div h1,
+.helpPage-div h2,
+.helpPage-div h3,
+.helpPage-div h4,
+.helpPage-div h5,
+.helpPage-div h6 {
+  color: white;
+}
+.helpPage-div span {
+  margin-left: 3rem;
+}
+.helpPage-div .box-title-div div {
+  margin-bottom: 1rem;
+  margin-left: 1.5rem;
+}
+.helpPage-div div.box-title-div {
+  margin-left: 1rem;
+}
+.helpPage-div div {
+  font-size: 1.1rem;
+  letter-spacing: 0.1rem;
+}
+.helpPage-div .box-div {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
+}
+.helpPage-div .box-div .left-div,
+.helpPage-div .box-div .right-div {
+  width: 45%;
+  background: transparent !important;
+  height: 30vh !important;
+  overflow: auto;
+  text-align: left;
+}
+.helpPage-div ::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width: 1rem !important;
+  /*高宽分别对应横竖滚动条的尺寸*/
+  height: 1rem !important;
+  background: transparent !important;
+  cursor: pointer;
+}
+.helpPage-div ::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 5px !important;
+  background: transparent !important;
+  cursor: pointer !important;
+}
+.helpPage-div ::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  border-radius: 0 !important;
+  background: transparent !important;
+  cursor: pointer !important;
+}

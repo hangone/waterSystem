@@ -1,0 +1,70 @@
+.helpPage-div {
+  color: white;
+  padding: 4rem;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: white;
+  }
+  span {
+    margin-left: 3rem;
+  }
+  .box-title-div div {
+    margin-bottom: 1rem;
+    margin-left: 1.5rem;
+  }
+  div.box-title-div {
+    margin-left: 1rem;
+  }
+  div {
+    font-size: 1.1rem;
+    letter-spacing: 0.1rem;
+  }
+  margin-bottom: 100px;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  .box-div {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
+    .left-div,
+    .right-div {
+      width: 45%;
+      background: transparent !important;
+      height: 30vh !important;
+      overflow: auto;
+      text-align: left;
+    }
+  }
+
+  // 滚动条颜色
+
+  ::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 1rem !important;
+    /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1rem !important;
+    background: transparent !important;
+    cursor: pointer;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 5px !important;
+    background: transparent !important;
+    cursor: pointer !important;
+  }
+
+  ::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    border-radius: 0 !important;
+    background: transparent !important;
+    cursor: pointer !important;
+  }
+}

@@ -1,0 +1,123 @@
+.ant-table-body,
+.ant-table-body table{
+    height: 100%!important;
+}
+// 页面背景
+.home-img-div,
+.home-img-div>.bg-img,
+.home-img-div>.flow-flag-div{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+.home-img-div>.bg-img,
+.home-img-div .flow-flag-div{
+    top:0;
+    left:0;
+    border-radius: 0!important;
+    opacity: 1!important;
+}
+.home-img-div .flow-flag-div{
+    position: absolute; 
+    z-index: 99;
+}
+.home-img-div>.bg-img {
+    object-fit: fill!important;
+}
+// 漂浮的图标
+.flow-item{
+    position: absolute; 
+    height: auto;
+    text-align: left;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .icon-img{
+        text-align: center; 
+    }
+    .icon-img img{
+        width: 40px;
+        height: 40px;
+    }
+    .inner-txt{
+        width: 180px;
+        height: auto;
+        font-size: 1.2rem;
+        color:white!important;
+        background-color: rgba(107,152,233,.9);
+        color: #1f1f1f;
+        padding:10px;
+        border-radius: 5px;
+        text-align: left; 
+
+        span.kurong,
+        span.inflow,
+        span.outflow,
+        span.inner,
+        span.inner-water{
+            font-weight: bold;
+        }
+        div{ 
+            white-space: nowrap;
+        }
+    }
+} 
+.flow-item:nth-child(1) .inner-txt,
+.flow-item:nth-child(2) .inner-txt,
+.flow-item:nth-child(3) .inner-txt,
+.flow-item:nth-child(5) .inner-txt{
+    width: 150px;
+}
+.flow-item:nth-child(4) .inner-txt,
+.flow-item:nth-child(6) .inner-txt,
+.flow-item:nth-child(7) .inner-txt{
+    width: 200px;
+}
+// 雨量部分
+.flow-flag-div>div:nth-child(1){
+    top: calc(40% - 30px); left: calc(75% - 140px) ;
+    display: flex;
+    flex-direction: row;
+} 
+.flow-flag-div>div:nth-child(2){
+    top: calc(20% - 30px); left: calc(80% - 140px);
+    display: flex;
+    flex-direction: row;
+}
+.flow-flag-div div:nth-child(3){
+    top: calc(12% - 30px); left: calc(64% - 140px);
+    display: flex;
+    flex-direction: row;
+}
+.flow-flag-div>div:nth-child(4){
+    top: calc(22% - 30px); left: calc(41% - 140px);
+    display: flex;
+    flex-direction: row;
+}
+.flow-flag-div>div:nth-child(5){
+    top:  calc(5% - 30px); left: calc(44% - 140px);
+    display: flex;
+    flex-direction: row;
+}
+
+// 水位部分
+.flow-flag-div>div:nth-child(6){
+    top: calc(85% - 30px); left: calc(92% - 150px);
+    /*top: calc(88% - 30px); left: calc(78% - 150px);*/
+    display: flex;
+    flex-direction: row;
+}
+.flow-flag-div>div:nth-child(7){
+   top: calc(65% - 30px); left: calc(82% - 140px);
+     /*top: calc(72% - 30px); left: calc(86% - 140px);*/
+    display: flex;
+    flex-direction: row; 
+}
+.flow-flag-div>div:nth-child(8){
+    top: calc(31% - 30px); left: calc(60% - 140px);
+    display: flex;
+    flex-direction: row;
+}

@@ -1,0 +1,4 @@
+.ant-table-body,
+.ant-table-body table {
+  height: 100% !important;
+}

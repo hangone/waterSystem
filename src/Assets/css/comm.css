@@ -1,0 +1,142 @@
+.home-div .content-div .body-div .commTable-div .body-bottom-div {
+  min-height: calc(100% - 5rem);
+  margin-top: 1rem;
+  width: 98%;
+}
+.waterChange-div .body-bottom-div,
+.rainChange-div .body-bottom-div {
+  display: flex;
+  justify-content: space-around !important;
+  align-items: center;
+  flex-direction: column;
+  background-color: transparent !important;
+  height: 100% !important;
+}
+.waterChange-div .body-bottom-div > div,
+.rainChange-div .body-bottom-div > div {
+  width: 98%;
+  height: 48%;
+}
+.waterChange-div .body-bottom-div > div #bottom-echart > div,
+.rainChange-div .body-bottom-div > div #bottom-echart > div {
+  background-color: transparent;
+  color: #923535;
+}
+.waterChange-div .body-bottom-div .bottom-top,
+.rainChange-div .body-bottom-div .bottom-top {
+  /* border: 1px solid white;*/
+}
+.waterChange-div .body-bottom-div .bottom-bottom,
+.rainChange-div .body-bottom-div .bottom-bottom {
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* border: 1px solid white;*/
+  /* background-color: #100C2A;*/
+}
+.waterChange-div .body-bottom-div .bottom-bottom .mask-div,
+.rainChange-div .body-bottom-div .bottom-bottom .mask-div {
+  position: absolute;
+  background: #100c2a;
+  width: 100%;
+  height: 350px;
+  top: 0px;
+  z-index: 1;
+}
+.waterChange-div .body-bottom-div .bottom-bottom #bottom-echart-top,
+.rainChange-div .body-bottom-div .bottom-bottom #bottom-echart-top,
+.waterChange-div .body-bottom-div .bottom-bottom #bottom-echart-middle,
+.rainChange-div .body-bottom-div .bottom-bottom #bottom-echart-middle,
+.waterChange-div .body-bottom-div .bottom-bottom #bottom-echart-bottom,
+.rainChange-div .body-bottom-div .bottom-bottom #bottom-echart-bottom {
+  background: transparent;
+  /* border: 1px solid pink;*/
+}
+.waterChange-div .body-bottom-div .bottom-top,
+.rainChange-div .body-bottom-div .bottom-top {
+  overflow: auto;
+}
+.waterChange-div .body-bottom-div #bottom-echart-top,
+.rainChange-div .body-bottom-div #bottom-echart-top,
+.waterChange-div .body-bottom-div #bottom-echart-middle,
+.rainChange-div .body-bottom-div #bottom-echart-middle,
+.waterChange-div .body-bottom-div #bottom-echart-bottom,
+.rainChange-div .body-bottom-div #bottom-echart-bottom {
+  width: 30% !important;
+}
+.waterChange-div .body-bottom-div .commTable-div,
+.rainChange-div .body-bottom-div .commTable-div {
+  height: 100% !important;
+}
+.date-div.table-div,
+.table-mode-div,
+.date-div {
+  width: 18rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.date-div.table-div > span,
+.table-mode-div > span,
+.date-div > span {
+  font-size: 1.2rem;
+  width: 5.5rem;
+  white-space: nowrap;
+  font-size: '微软雅黑', '宋体' !important;
+}
+.date-div.table-div > .ant-picker,
+.table-mode-div > .ant-picker,
+.date-div > .ant-picker {
+  border-radius: 20px;
+  width: 12rem !important;
+  height: 2.5rem;
+  font-size: 1.2rem !important;
+}
+.date-div.table-div > .ant-picker .ant-picker-input input,
+.table-mode-div > .ant-picker .ant-picker-input input,
+.date-div > .ant-picker .ant-picker-input input {
+  font-size: 1.2rem !important;
+}
+.date-div.table-div > .ant-picker.time-div,
+.table-mode-div > .ant-picker.time-div,
+.date-div > .ant-picker.time-div {
+  width: 16rem !important;
+}
+.date-div.table-div > .ant-btn,
+.table-mode-div > .ant-btn,
+.date-div > .ant-btn {
+  border-radius: 20px;
+  width: 8rem !important;
+  font-size: 1.2rem !important;
+  margin-left: 1.5rem;
+  font-size: 1rem !important;
+}
+.top-right {
+  height: inherit;
+}
+.top-right .top-title {
+  height: inherit;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.top-right .ant-btn,
+.top-right svg {
+  font-size: 1.2rem !important;
+}
+.dayRainChart1-div .ant-spin-nested-loading {
+  background-color: transparent;
+}
+.dayRainChart-div .ant-spin.ant-spin-spinning {
+  background: transparent !important;
+  z-index: 0 !important;
+  height: 80vh !important;
+  max-height: 1000px !important;
+}
+.ant-menu-title-content {
+  letter-spacing: 1px !important;
+}
+.header-div {
+  padding: 15px;
+}
