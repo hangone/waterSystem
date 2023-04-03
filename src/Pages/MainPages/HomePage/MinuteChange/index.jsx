@@ -1,17 +1,19 @@
 import React,{useEffect,useState,useRef, Fragment} from 'react' ;
-import { Table,Radio,Spin  } from 'antd'; 
+import { Table,Radio,Spin,Cascader,Input,Divider  } from 'antd'; 
 import { MessageTool,MessageToolClear } from 'Components/Tools/MessageTool'; 
 import { getWaterMinute1,getWaterMinute2,getWaterMinute3, 
     getRainMinute1,getRainMinute2,getRainMinute3,getRainMinute4,getRainMinute5,
     getCapMinute1,getInflowMinute2,getOutflowMinute3 } from 'Services/Home/minute';  
 import { changeDataLine,changeDataLine2,stripDayUselessData2 } from 'Utils'
 import { resetTableTitleWidth} from 'Utils/layoutreset'
+import options from '..//WaterQuality/formData/options'
 
 // 引入兄弟传值模块 
 import PubSub from 'pubsub-js'
 
 // 引入时间模块
 import moment from 'moment';
+import { getWaterQualityData } from '../../../../Services/waterQuality'
 
 import * as echarts from 'echarts'
 import Common from 'Common'; 
@@ -19,6 +21,7 @@ import {formatDate} from 'Utils'
 import 'Assets/css/comm.css';
 import './index.css';
  
+const { Search } = Input
 
 function WaterChange(){    
     // 端点编码
@@ -213,48 +216,48 @@ function WaterChange(){
   
     // 二、监听数据
     // 初始化加载
-    useEffect(()=>{
-        try{  
-            // const preIsShowTitle =  sessionStorage.getItem("water_isShowTitle")
-            // setIsShowTitle (preIsShowTitle == 'true' ? preIsShowTitle :false)
+    // useEffect(()=>{
+    //     try{  
+    //         // const preIsShowTitle =  sessionStorage.getItem("water_isShowTitle")
+    //         // setIsShowTitle (preIsShowTitle == 'true' ? preIsShowTitle :false)
             
-            // 清除提示
-            MessageToolClear(); 
-            setIsLoading(true)
-            // 获取平均水位站点数据
-            typeList1  = Common.waterData 
-            typeList2  = Common.rainData 
+    //         // 清除提示
+    //         MessageToolClear(); 
+    //         setIsLoading(true)
+    //         // 获取平均水位站点数据
+    //         typeList1  = Common.waterData 
+    //         typeList2  = Common.rainData 
 
-            // // 去除末尾的厂房站雨量
-            // typeList2 = typeList2.slice(0,typeList2.length-1)
+    //         // // 去除末尾的厂房站雨量
+    //         // typeList2 = typeList2.slice(0,typeList2.length-1)
               
-            // 首次查询表格数据, 月、 周、日  
-            // onSearch('month',true);
-            // onSearch('week',true);  
-            onSearch('day',true);
+    //         // 首次查询表格数据, 月、 周、日  
+    //         // onSearch('month',true);
+    //         // onSearch('week',true);  
+    //         onSearch('day',true);
 
-            ITimer = setInterval(()=>{ 
-                // 查询表格数据
-                // onSearch(Common.waterData,t_columns.length - 1);
-                onSearch(radioItem);
-                // 更新提示
-                MessageTool("数据已经更新","success")
-            },Common.refreshDelay)  
-            sessionStorage.setItem('ITimerResponse',ITimer)
+    //         ITimer = setInterval(()=>{ 
+    //             // 查询表格数据
+    //             // onSearch(Common.waterData,t_columns.length - 1);
+    //             onSearch(radioItem);
+    //             // 更新提示
+    //             MessageTool("数据已经更新","success")
+    //         },Common.refreshDelay)  
+    //         sessionStorage.setItem('ITimerResponse',ITimer)
  
-        }catch(err){
-            console.log("出现异常",err)
-            MessageTool('系统出现异常！请刷新重试','error')
-        }  
-        return ()=>{
-            //  清除定时器
-            let ITimerResponse = sessionStorage.getItem('ITimerResponse' )
-            if(ITimerResponse) clearInterval(ITimerResponse) 
-            if(ITimer) clearInterval(ITimer) 
-            // 取消消息订阅
-            PubSub.unsubscribe("water_titleMenu");  
-        }
-    },[]) 
+    //     }catch(err){
+    //         console.log("出现异常",err)
+    //         MessageTool('系统出现异常！请刷新重试','error')
+    //     }  
+    //     return ()=>{
+    //         //  清除定时器
+    //         let ITimerResponse = sessionStorage.getItem('ITimerResponse' )
+    //         if(ITimerResponse) clearInterval(ITimerResponse) 
+    //         if(ITimer) clearInterval(ITimer) 
+    //         // 取消消息订阅
+    //         PubSub.unsubscribe("water_titleMenu");  
+    //     }
+    // },[]) 
     // 监听页面的尺寸变化 
     useEffect(() => {    
         // 重新设置表头宽度 
@@ -266,329 +269,452 @@ function WaterChange(){
         } 
     }, [window]);  
      // 监听时间的变化
-     useEffect(()=>{ 
-        dragTableScroll();
-    },[moment().format("HH"),dataSource.length]) 
+    //  useEffect(()=>{ 
+    //     dragTableScroll();
+    // },[moment().format("HH"),dataSource.length]) 
  
     // 三、功能操作
     // 验证分钟
-    const verifyMinute = (one,two,mode)=>{ 
-        if(one == '合计雨量') return true;
+    // const verifyMinute = (one,two,mode)=>{ 
+    //     if(one == '合计雨量') return true;
 
-        let hour1 = parseInt(one.replace(' ','').slice(0,2))
-        let minute1 = parseInt(one.replace(' ','').slice(3))
-        let hour2 = parseInt(two.replace(' ','').slice(0,2))
-        let minute2 = parseInt(two.replace(' ','').slice(3)) 
-        if(mode == '>='){
-            // 15:00       16:01; 
-            if(hour1>hour2 || (hour1 == hour2 && minute1 >= minute2)){ 
-                return true;
-            } 
-        }else if(mode == '<'){ 
-            if(hour1<hour2 || (hour1 == hour2 && minute1 < minute2)){ 
-                return true;
-            }  
-        }else if(mode == '<='){
-            // 15:00       16:01; 
-            if(hour1<hour2 || (hour1 == hour2 && minute1 <= minute2)){ 
-                return true;
-            } 
-        }else if(mode == '>'){ 
-            if(hour1>hour2 || (hour1 == hour2 && minute1 > minute2)){ 
-                return true;
-            }  
-        }
-        return false;
-    }   // 15:40' '15:38' false false
-    // 主动滚动当前滚动条, 传递目标时间
-    const dragTableScroll = () =>{
-        // 目标滚动容器
-        var goalNode = document.querySelector('.bottom-top');
-        if(!goalNode){
-            console.log("错误！当前无法自动滚动！")
-            return;
-        }
-        // 当前的滚动减少的行数
-        var declineRow = 3;
-        // 通过比较当前的时间，来拖动滚动条。
-        var totalRow = dataSource.length; 
-        // 计算滚动的比例
-        let turnsRow = 0;
+    //     let hour1 = parseInt(one.replace(' ','').slice(0,2))
+    //     let minute1 = parseInt(one.replace(' ','').slice(3))
+    //     let hour2 = parseInt(two.replace(' ','').slice(0,2))
+    //     let minute2 = parseInt(two.replace(' ','').slice(3)) 
+    //     if(mode == '>='){
+    //         // 15:00       16:01; 
+    //         if(hour1>hour2 || (hour1 == hour2 && minute1 >= minute2)){ 
+    //             return true;
+    //         } 
+    //     }else if(mode == '<'){ 
+    //         if(hour1<hour2 || (hour1 == hour2 && minute1 < minute2)){ 
+    //             return true;
+    //         }  
+    //     }else if(mode == '<='){
+    //         // 15:00       16:01; 
+    //         if(hour1<hour2 || (hour1 == hour2 && minute1 <= minute2)){ 
+    //             return true;
+    //         } 
+    //     }else if(mode == '>'){ 
+    //         if(hour1>hour2 || (hour1 == hour2 && minute1 > minute2)){ 
+    //             return true;
+    //         }  
+    //     }
+    //     return false;
+    // }   // 15:40' '15:38' false false
+    // // 主动滚动当前滚动条, 传递目标时间
+    // const dragTableScroll = () =>{
+    //     // 目标滚动容器
+    //     var goalNode = document.querySelector('.bottom-top');
+    //     if(!goalNode){
+    //         console.log("错误！当前无法自动滚动！")
+    //         return;
+    //     }
+    //     // 当前的滚动减少的行数
+    //     var declineRow = 3;
+    //     // 通过比较当前的时间，来拖动滚动条。
+    //     var totalRow = dataSource.length; 
+    //     // 计算滚动的比例
+    //     let turnsRow = 0;
  
 
-        switch(radioItem){
-            case 'day':
-                const currentDayTime = moment().format("HH")
-                // const goalCurrentDayTime = moment().format("YYYY-MM-DD HH时") 
-                const goalCurrentDayTime = moment().format("HH:mm") 
-                let isNotArriveDay = true; 
-                // map是可修改数据
-                dataSource.map((item,index)=>{ 
-                    if(isNotArriveDay){ 
-                        turnsRow ++;
-                        // if(item.tm == goalCurrentDayTime|| item.tm == '*' + goalCurrentDayTime){
-                        //     isNotArriveDay = false;   2019-02-00 01:01:01
-                        // }    
-                        if(index!= 0 && index != dataSource.length -1 && verifyMinute(item.tm,goalCurrentDayTime,'<=')
-                            && verifyMinute(dataSource[index+1].tm,goalCurrentDayTime,'>')){
-                            isNotArriveDay = false;    
-                        }
-                    } 
-                })  
-                break;
-            case 'week': 
-                const currentWeekTime = moment().format("ddd")
-                const goalCurrentWeekTime = moment().format("ddd") 
-                let isNotArriveWeek = true;
-                // map是可修改数据
-                dataSource.map(item=>{ 
-                    if(isNotArriveWeek){ 
-                        turnsRow ++;
-                        if(item.tm == goalCurrentWeekTime || item.tm == '*' + goalCurrentWeekTime){
-                            isNotArriveWeek = false; 
-                        }
-                    } 
-                })  
-                break;
-            case 'month':
-                const currentMonthTime = moment().format("HH")
-                const goalCurrentMonthTime = currentMonthTime + '日' 
-                let isNotArriveMonth = true;
-                // map是可修改数据
-                dataSource.map(item=>{ 
-                    if(isNotArriveMonth){ 
-                        turnsRow ++;
-                        if(item.tm == goalCurrentMonthTime || item.tm == '*' + goalCurrentMonthTime){
-                            isNotArriveMonth = false; 
-                        }
-                    } 
-                })  
-                break;
-        }
+    //     switch(radioItem){
+    //         case 'day':
+    //             const currentDayTime = moment().format("HH")
+    //             // const goalCurrentDayTime = moment().format("YYYY-MM-DD HH时") 
+    //             const goalCurrentDayTime = moment().format("HH:mm") 
+    //             let isNotArriveDay = true; 
+    //             // map是可修改数据
+    //             dataSource.map((item,index)=>{ 
+    //                 if(isNotArriveDay){ 
+    //                     turnsRow ++;
+    //                     // if(item.tm == goalCurrentDayTime|| item.tm == '*' + goalCurrentDayTime){
+    //                     //     isNotArriveDay = false;   2019-02-00 01:01:01
+    //                     // }    
+    //                     if(index!= 0 && index != dataSource.length -1 && verifyMinute(item.tm,goalCurrentDayTime,'<=')
+    //                         && verifyMinute(dataSource[index+1].tm,goalCurrentDayTime,'>')){
+    //                         isNotArriveDay = false;    
+    //                     }
+    //                 } 
+    //             })  
+    //             break;
+    //         case 'week': 
+    //             const currentWeekTime = moment().format("ddd")
+    //             const goalCurrentWeekTime = moment().format("ddd") 
+    //             let isNotArriveWeek = true;
+    //             // map是可修改数据
+    //             dataSource.map(item=>{ 
+    //                 if(isNotArriveWeek){ 
+    //                     turnsRow ++;
+    //                     if(item.tm == goalCurrentWeekTime || item.tm == '*' + goalCurrentWeekTime){
+    //                         isNotArriveWeek = false; 
+    //                     }
+    //                 } 
+    //             })  
+    //             break;
+    //         case 'month':
+    //             const currentMonthTime = moment().format("HH")
+    //             const goalCurrentMonthTime = currentMonthTime + '日' 
+    //             let isNotArriveMonth = true;
+    //             // map是可修改数据
+    //             dataSource.map(item=>{ 
+    //                 if(isNotArriveMonth){ 
+    //                     turnsRow ++;
+    //                     if(item.tm == goalCurrentMonthTime || item.tm == '*' + goalCurrentMonthTime){
+    //                         isNotArriveMonth = false; 
+    //                     }
+    //                 } 
+    //             })  
+    //             break;
+    //     }
  
 
-        // 按照比例拖动滚动条
-        turnsRow -= declineRow
-        turnsRow = turnsRow > 0 ? turnsRow : 0
-        goalNode.scrollTop = goalNode.scrollHeight * turnsRow / totalRow
-    }
+    //     // 按照比例拖动滚动条
+    //     turnsRow -= declineRow
+    //     turnsRow = turnsRow > 0 ? turnsRow : 0
+    //     goalNode.scrollTop = goalNode.scrollHeight * turnsRow / totalRow
+    // }
     // 搜索表格信息,(先获取远程数据，再绘制表格)
-    const onSearch = (t_radioItem=null,isInit = false)=>{    
-        switch(t_radioItem){
-            case 'day':
-                getDayData(isInit);
-                break;   
-        }
-    } 
+    // const onSearch = (t_radioItem=null,isInit = false)=>{    
+    //     switch(t_radioItem){
+    //         case 'day':
+    //             getDayData(isInit);
+    //             break;   
+    //     }
+    // } 
 
     // 五、获取远程数据
+    function onChange(value) {
+        console.log(value)
+        if (!value) {
+          return
+        }
+        setIsLoading(true)
+        getWaterQualityData(Number(value[1]))
+          .then((res) => {
+            setDataSource(res.tbody)
+            setIsLoading(false)
+          })
+          .catch((error) => {
+            console.error(error)
+            setIsLoading(false)
+            setDataSource([])
+            MessageTool('数据获取失败', 'error')
+          })
+      }
+    
+      function onSearch(val) {
+        setIsLoading(true)
+        getWaterQualityData(val)
+          .then((res) => {
+            setDataSource(res.tbody)
+            setIsLoading(false)
+          })
+          .catch((error) => {
+            console.error(error)
+            setIsLoading(false)
+            setDataSource([])
+            MessageTool('数据获取失败', 'error')
+          })
+      }
  // 获取日数据
- const getDayData = async(isInit=false) =>{ 
-    try{  
-        // 入库流量，出库流量，库容
-        let dayCap1 = await getCapMinute1() 
-        let dayInflow2 = await getInflowMinute2() 
-        let dayOutflow3 = await getOutflowMinute3()  
-        // 水位
-        let dayWater1 = await getWaterMinute1() 
-        let dayWater2 = await getWaterMinute2()
-        let dayWater3 = await getWaterMinute3() 
-        // 雨量
-        let dayRain1 = await getRainMinute1() 
-        let dayRain2 = await getRainMinute2() 
-        let dayRain3 = await getRainMinute3() 
-        let dayRain4 = await getRainMinute4() 
-        let dayRain5 = await getRainMinute5() 
+//  const getDayData = async(isInit=false) =>{ 
+//     try{  
+//         // 入库流量，出库流量，库容
+//         let dayCap1 = await getCapMinute1() 
+//         let dayInflow2 = await getInflowMinute2() 
+//         let dayOutflow3 = await getOutflowMinute3()  
+//         // 水位
+//         let dayWater1 = await getWaterMinute1() 
+//         let dayWater2 = await getWaterMinute2()
+//         let dayWater3 = await getWaterMinute3() 
+//         // 雨量
+//         let dayRain1 = await getRainMinute1() 
+//         let dayRain2 = await getRainMinute2() 
+//         let dayRain3 = await getRainMinute3() 
+//         let dayRain4 = await getRainMinute4() 
+//         let dayRain5 = await getRainMinute5() 
           
      
-        // // （1.获取图表数据
-        var t_res = [] 
-        const prefixDate = moment().format('YYYY-MM-DD ') 
-        let nowTime = parseInt(moment().format("HH"))
-        nowTime  = nowTime - 8
-        if(nowTime<0) nowTime += 25 
-        let t_max = 0; // 没有负值
-        let t_min = 1000000; // 没有极大值 
+//         // // （1.获取图表数据
+//         var t_res = [] 
+//         const prefixDate = moment().format('YYYY-MM-DD ') 
+//         let nowTime = parseInt(moment().format("HH"))
+//         nowTime  = nowTime - 8
+//         if(nowTime<0) nowTime += 25 
+//         let t_max = 0; // 没有负值
+//         let t_min = 1000000; // 没有极大值 
 
-        // // // 切割超出的时数据  
-        // dayCap1 = stripDayUselessData2(dayCap1) 
+//         // // // 切割超出的时数据  
+//         // dayCap1 = stripDayUselessData2(dayCap1) 
 
-        let timeTurns = 0;
-        let curMinute = 0;
-        let t_item = 0; 
-        dayCap1.forEach((item,index)=>{ 
-            // 表格数据  
-            timeTurns = Math.floor(index / 12);
-            curMinute = (index % 12 ) * 5;
-            curMinute = curMinute <10  ? '0'+curMinute : curMinute 
+//         let timeTurns = 0;
+//         let curMinute = 0;
+//         let t_item = 0; 
+//         dayCap1.forEach((item,index)=>{ 
+//             // 表格数据  
+//             timeTurns = Math.floor(index / 12);
+//             curMinute = (index % 12 ) * 5;
+//             curMinute = curMinute <10  ? '0'+curMinute : curMinute 
 
-            t_item = prefixDate +  columnsTimeList[timeTurns] + ':'+ curMinute + ':00' 
-            t_res.push( { 
-                order:(index == nowTime ? '*' : '' )+(index+1),  
-                [typeList1[0].stcd+'rz']: changeDataLine(dayWater1[index]), 
-                [typeList1[1].stcd+'rz']: changeDataLine(dayWater2[index]), 
-                [typeList1[2].stcd+'rz']: changeDataLine(dayWater3[index]), 
+//             t_item = prefixDate +  columnsTimeList[timeTurns] + ':'+ curMinute + ':00' 
+//             t_res.push( { 
+//                 order:(index == nowTime ? '*' : '' )+(index+1),  
+//                 [typeList1[0].stcd+'rz']: changeDataLine(dayWater1[index]), 
+//                 [typeList1[1].stcd+'rz']: changeDataLine(dayWater2[index]), 
+//                 [typeList1[2].stcd+'rz']: changeDataLine(dayWater3[index]), 
 
-                [typeList2[0].stcd+'drp']: changeDataLine2(dayRain1[index]), 
-                [typeList2[1].stcd+'drp']: changeDataLine2(dayRain2[index]),  
-                [typeList2[2].stcd+'drp']: changeDataLine2(dayRain3[index]),  
-                [typeList2[3].stcd+'drp']: changeDataLine2(dayRain4[index]),  
-                [typeList2[4].stcd+'drp']: changeDataLine2(dayRain5[index]), 
+//                 [typeList2[0].stcd+'drp']: changeDataLine2(dayRain1[index]), 
+//                 [typeList2[1].stcd+'drp']: changeDataLine2(dayRain2[index]),  
+//                 [typeList2[2].stcd+'drp']: changeDataLine2(dayRain3[index]),  
+//                 [typeList2[3].stcd+'drp']: changeDataLine2(dayRain4[index]),  
+//                 [typeList2[4].stcd+'drp']: changeDataLine2(dayRain5[index]), 
 
-                [typeList1[0].stcd+'w']:changeDataLine(dayCap1[index] ), 
-                [typeList1[1].stcd+'inflow']:changeDataLine(dayInflow2[index]  ),
-                [typeList1[2].stcd+'outflow']:changeDataLine(dayOutflow3[index] ), 
+//                 [typeList1[0].stcd+'w']:changeDataLine(dayCap1[index] ), 
+//                 [typeList1[1].stcd+'inflow']:changeDataLine(dayInflow2[index]  ),
+//                 [typeList1[2].stcd+'outflow']:changeDataLine(dayOutflow3[index] ), 
                 
-                tm:  columnsTimeList[timeTurns] + ':'+ curMinute,
-            })    
-        })   
+//                 tm:  columnsTimeList[timeTurns] + ':'+ curMinute,
+//             })    
+//         })   
 
-        // 设置表头数据
-        let t_columns = [ 
-            {
-                title: '时间(分)',
-                dataIndex:'tm',
-                key:'tm',
-                align:'center',
-                width:60,
-                // fixed: 'left',
-            },
-        ] 
-        typeList1.forEach((item,index)=>{  
-            t_columns.push({
-                title:item.stnm + '(米)',
-                dataIndex:item.stcd+'rz',
-                key:item.stcd+'rz',
-                align:'center',
-                width:60,
-            })
+//         // 设置表头数据
+//         let t_columns = [
+//             {
+//               title: '省份',
+//               dataIndex: 'province',
+//               width: 100,
+//               fixed: 'left',
+//             },
+//             {
+//               title: '藻密度(cells/L)',
+//               dataIndex: 'algae_density',
+//               width: 150,
+//             },
+//             {
+//               title: '氨氮(mg/L)',
+//               dataIndex: 'ammonia_nitrogen',
+//               width: 150,
+//             },
+//             {
+//               title: '流域',
+//               dataIndex: 'basin',
+//               width: 150,
+//               //fixed: 'left',
+//             },
+//             {
+//               title: '叶绿素α(mg/L)',
+//               dataIndex: 'chlorophyll_alpha',
+//               width: 150,
+//             },
+//             {
+//               title: '所在地市',
+//               dataIndex: 'city',
+//               width: 150,
+//             },
+//             {
+//               title: '电导率(μS/cm)',
+//               dataIndex: 'conductivity',
+//               width: 150,
+//             },
+//             {
+//               title: '溶解氧(mg/L)',
+//               dataIndex: 'dissolved_oxygen',
+//               width: 150,
+//             },
+//             {
+//               title: 'pH(无量纲)',
+//               dataIndex: 'pH',
+//               width: 150,
+//             },
+//             {
+//               title: '高锰酸盐指数(mg/L)',
+//               dataIndex: 'permanganate_index',
+//               width: 150,
+//             },
+//             {
+//               title: '所属河流',
+//               dataIndex: 'river',
+//               width: 150,
+//             },
+//             {
+//               title: '断面名称',
+//               dataIndex: 'section',
+//               width: 150,
+//             },
+//             {
+//               title: '站点情况',
+//               dataIndex: 'station_status',
+//               width: 150,
+//             },
+//             {
+//               title: '监测时间',
+//               dataIndex: 'time',
+//               width: 150,
+//             },
+//             {
+//               title: '总氮(mg/L)',
+//               dataIndex: 'total_nitrogen',
+//               width: 150,
+//             },
+//             {
+//               title:'总磷(mg/L)',
+//               dataIndex: 'total_phosphorus',
+//               width: 150,
+//             },
+//             {
+//               title: '浊度(NTU)',
+//               dataIndex: 'turbidity',
+//               width: 150,
+//             },
+//             {
+//               title: '水质类别',
+//               dataIndex: 'water_quality',
+//               width: 150,
+//             },
+//             {
+//               title: '水温(℃)',
+//               dataIndex: 'water_temperature',
+//               width: 150,
+//             },
+//           ];
+          
+//         // typeList1.forEach((item,index)=>{  
+//         //     t_columns.push({
+//         //         title:item.stnm + '(米)',
+//         //         dataIndex:item.stcd+'rz',
+//         //         key:item.stcd+'rz',
+//         //         align:'center',
+//         //         width:60,
+//         //     })
             
-            // 间隔加入
-            switch(index){
-                case 0: 
-                    t_columns.push({
-                        title: '库容(万立方米)',
-                        dataIndex:typeList1[0].stcd+'w',
-                        key:typeList1[0].stcd+'w',
-                        align:'center',
-                        width:120,
-                    }) 
-                    break;
-                case 1: 
-                    t_columns.push({
-                        title:'入库流量(立方米/秒)',
-                        dataIndex:typeList1[1].stcd+'inflow',
-                        key:typeList1[1].stcd+'inflow',
-                        align:'center',
-                        width:120,
-                    }) 
-                    break;
-                case 2:       
-                    t_columns.push({
-                        title:'出库流量(立方米/秒)',
-                        dataIndex:typeList1[2].stcd+'outflow',
-                        key:typeList1[2].stcd+'outflow',
-                        align:'center',
-                        width:120,
-                    }) 
-                    break;
-            }
-        }) 
-        typeList2.forEach((item,index)=>{  
-            t_columns.push({
-                title:item.stnm + '(毫米)',
-                dataIndex:item.stcd+'drp',
-                key:item.stcd+'drp',
-                align:'center',
-                width:60,
-            })
-        })  
-        setColumns(t_columns) 
+//         //     // 间隔加入
+//         //     switch(index){
+//         //         case 0: 
+//         //             t_columns.push({
+//         //                 title: '库容(万立方米)',
+//         //                 dataIndex:typeList1[0].stcd+'w',
+//         //                 key:typeList1[0].stcd+'w',
+//         //                 align:'center',
+//         //                 width:120,
+//         //             }) 
+//         //             break;
+//         //         case 1: 
+//         //             t_columns.push({
+//         //                 title:'入库流量(立方米/秒)',
+//         //                 dataIndex:typeList1[1].stcd+'inflow',
+//         //                 key:typeList1[1].stcd+'inflow',
+//         //                 align:'center',
+//         //                 width:120,
+//         //             }) 
+//         //             break;
+//         //         case 2:       
+//         //             t_columns.push({
+//         //                 title:'出库流量(立方米/秒)',
+//         //                 dataIndex:typeList1[2].stcd+'outflow',
+//         //                 key:typeList1[2].stcd+'outflow',
+//         //                 align:'center',
+//         //                 width:120,
+//         //             }) 
+//         //             break;
+//         //     }
+//         // }) 
+//         // typeList2.forEach((item,index)=>{  
+//         //     t_columns.push({
+//         //         title:item.stnm + '(毫米)',
+//         //         dataIndex:item.stcd+'drp',
+//         //         key:item.stcd+'drp',
+//         //         align:'center',
+//         //         width:60,
+//         //     })
+//         // })  
+//         setColumns(t_columns) 
           
           
-        // 切割数据
-        let tt_res = []
-        const currentDayTime = moment().format("HH")
-        // const goalCurrentDayTime = moment().format("YYYY-MM-DD HH时") 
-        const goalCurrentDayTime = moment().format("HH:mm") 
-        let isNotArriveDay = true; 
-        // map是可修改数据
-        t_res.map((item,index)=>{  
-            if(isNotArriveDay){  
-                // if(item.tm == goalCurrentDayTime|| item.tm == '*' + goalCurrentDayTime){
-                //     isNotArriveDay = false;   2019-02-00 01:01:01
-                // }    
-                if(index!= 0 && index != t_res.length - 1 && verifyMinute(item.tm,goalCurrentDayTime,'<=')
-                    && verifyMinute(t_res[index+1].tm,goalCurrentDayTime,'>')){
-                    isNotArriveDay = false;  
-                }
-                tt_res.push(item);
-            } 
-        })  
+//         // 切割数据
+//         let tt_res = []
+//         const currentDayTime = moment().format("HH")
+//         // const goalCurrentDayTime = moment().format("YYYY-MM-DD HH时") 
+//         const goalCurrentDayTime = moment().format("HH:mm") 
+//         let isNotArriveDay = true; 
+//         // map是可修改数据
+//         t_res.map((item,index)=>{  
+//             if(isNotArriveDay){  
+//                 // if(item.tm == goalCurrentDayTime|| item.tm == '*' + goalCurrentDayTime){
+//                 //     isNotArriveDay = false;   2019-02-00 01:01:01
+//                 // }    
+//                 if(index!= 0 && index != t_res.length - 1 && verifyMinute(item.tm,goalCurrentDayTime,'<=')
+//                     && verifyMinute(t_res[index+1].tm,goalCurrentDayTime,'>')){
+//                     isNotArriveDay = false;  
+//                 }
+//                 tt_res.push(item);
+//             } 
+//         })  
 
         
-        // 替换数据
-        t_res = tt_res;
+//         // 替换数据
+//         t_res = tt_res;
 
         
-        // 雨量数据汇总
-        let totalDrp0 = 0
-        let totalDrp1 = 0
-        let totalDrp2 = 0
-        let totalDrp3 = 0
-        let totalDrp4 = 0
-        t_res.forEach(item=>{  
-            if(item[typeList2[0].stcd+'drp'] &&  item[typeList2[0].stcd+'drp'] != '-')
-                totalDrp0 += changeDataLine2(item[typeList2[0].stcd+'drp'])
-            if(item[typeList2[1].stcd +'drp'] && item[typeList2[1].stcd +'drp'] != '-') 
-                totalDrp1 += changeDataLine2(item[typeList2[1].stcd+'drp'])
-            if(item[typeList2[2].stcd+'drp'] && item[typeList2[2].stcd+'drp'] != '-') 
-                totalDrp2 += changeDataLine2(item[typeList2[2].stcd+'drp'])
-            if(item[typeList2[3].stcd+'drp'] && item[typeList2[3].stcd+'drp'] != '-') 
-                totalDrp3 += changeDataLine2(item[typeList2[3].stcd+'drp'])
-            if(item[typeList2[4].stcd+'drp'] && item[typeList2[4].stcd+'drp'] != '-') 
-                totalDrp4 += changeDataLine2(item[typeList2[4].stcd+'drp']) 
-        })
-        // 新添加一条数据 
-        let appendObj = {
-            'order':t_res.length+1,
-            'tm':'合计雨量', 
-            [typeList1[0].stcd+'rz']:'-',
-            [typeList1[1].stcd+'rz']:'-',
-            [typeList1[2].stcd+'rz']:'-',
+//         // 雨量数据汇总
+//         let totalDrp0 = 0
+//         let totalDrp1 = 0
+//         let totalDrp2 = 0
+//         let totalDrp3 = 0
+//         let totalDrp4 = 0
+//         t_res.forEach(item=>{  
+//             if(item[typeList2[0].stcd+'drp'] &&  item[typeList2[0].stcd+'drp'] != '-')
+//                 totalDrp0 += changeDataLine2(item[typeList2[0].stcd+'drp'])
+//             if(item[typeList2[1].stcd +'drp'] && item[typeList2[1].stcd +'drp'] != '-') 
+//                 totalDrp1 += changeDataLine2(item[typeList2[1].stcd+'drp'])
+//             if(item[typeList2[2].stcd+'drp'] && item[typeList2[2].stcd+'drp'] != '-') 
+//                 totalDrp2 += changeDataLine2(item[typeList2[2].stcd+'drp'])
+//             if(item[typeList2[3].stcd+'drp'] && item[typeList2[3].stcd+'drp'] != '-') 
+//                 totalDrp3 += changeDataLine2(item[typeList2[3].stcd+'drp'])
+//             if(item[typeList2[4].stcd+'drp'] && item[typeList2[4].stcd+'drp'] != '-') 
+//                 totalDrp4 += changeDataLine2(item[typeList2[4].stcd+'drp']) 
+//         })
+//         // 新添加一条数据 
+//         let appendObj = {
+//             'order':t_res.length+1,
+//             'tm':'合计雨量', 
+//             [typeList1[0].stcd+'rz']:'-',
+//             [typeList1[1].stcd+'rz']:'-',
+//             [typeList1[2].stcd+'rz']:'-',
             
-            [typeList2[0].stcd+'drp']:totalDrp0,
-            [typeList2[1].stcd+'drp']:totalDrp1,
-            [typeList2[2].stcd+'drp']:totalDrp2,
-            [typeList2[3].stcd+'drp']:totalDrp3,
-            [typeList2[4].stcd+'drp']:totalDrp4,
+//             [typeList2[0].stcd+'drp']:totalDrp0,
+//             [typeList2[1].stcd+'drp']:totalDrp1,
+//             [typeList2[2].stcd+'drp']:totalDrp2,
+//             [typeList2[3].stcd+'drp']:totalDrp3,
+//             [typeList2[4].stcd+'drp']:totalDrp4,
 
-            [typeList1[0].stcd+'w']:'-',
-            [typeList1[1].stcd+'inflow']:'-',
-            [typeList1[2].stcd+'outflow']:'-',
-        } 
-        t_res.push(appendObj);
+//             [typeList1[0].stcd+'w']:'-',
+//             [typeList1[1].stcd+'inflow']:'-',
+//             [typeList1[2].stcd+'outflow']:'-',
+//         } 
+//         t_res.push(appendObj);
 
 
-        // 设置表体数据
-        setDataSource(t_res)  
+//         // 设置表体数据
+//         setDataSource(t_res)  
  
-        // 暂停旋转器
-        setIsLoading(false)  
+//         // 暂停旋转器
+//         setIsLoading(false)  
 
-        // 重新设置表头宽度
-        setTimeout(()=>{ 
-            resetTableTitleWidth()
-        },1000)
-    }catch(err){ 
+//         // 重新设置表头宽度
+//         setTimeout(()=>{ 
+//             resetTableTitleWidth()
+//         },1000)
+//     }catch(err){ 
         
-        // 暂停旋转器
-        setIsLoading(false)  
+//         // 暂停旋转器
+//         setIsLoading(false)  
 
-        console.log("请求超时！请重试",err)
-        MessageTool('请求超时！请重试','error')
-    }
-}  
+//         console.log("请求超时！请重试",err)
+//         MessageTool('请求超时！请重试','error')
+//     }
+// }  
     
     // 六、图表显示
     // 显示的图表，顶部
@@ -1055,7 +1181,27 @@ function WaterChange(){
             </div> */}
             <div className='body-bottom-div' style={{'background':'white'}}>  
                 <Spin tip="加载数据中" spinning={isLoading} style={{display:isLoading ? 'flex' : 'none'}}></Spin>
-                <div className='bottom-top' style={{height:isTableCollapse ? 'inherit' : '50%',position:isTableCollapse ? 'absolute' : 'relative'}}>     
+
+                <div className='bottom-top' style={{height:isTableCollapse ? 'inherit' : '50%',position:isTableCollapse ? 'absolute' : 'relative'}}>
+                <div className="content theme-box">
+          <Cascader
+            options={options}
+            onChange={onChange}
+            size="large"
+            className="antdCas"
+            placement="bottomLeft"
+            style={{ width: '8vw' }}></Cascader>
+          <Search
+            placeholder="请输入断面名称"
+            allowClear
+            enterButton="Search"
+            size="large"
+            onSearch={onSearch}
+            style={{ width: '30vw' }}
+            className="antdSearch"
+          />
+        </div>
+          <Divider />     
                     <Table dataSource={dataSource} columns={columns} pagination={false} sticky />
                 </div> 
       
