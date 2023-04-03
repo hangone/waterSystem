@@ -1,0 +1,13 @@
+.body {
+  display: flex;
+  flex-direction: column;
+}
+.body .content {
+  margin-top: 20px;
+  height: 15vh;
+  display: flex;
+  align-items: center;
+}
+.body .content .antdSearch {
+  margin-left: 20px;
+}
