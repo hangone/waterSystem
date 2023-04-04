@@ -11,7 +11,7 @@ import 'Assets/plugins/animate.css';
 // 以下数据会应用于所有的组件中
 import './Assets/css/default.css'; 
 import './Assets/css/comm.css';
-import './Assets/css/comm.less'; 
+//import './Assets/css/comm.less'; 
 import App from './App'; 
 
 ReactDOM.render( 
