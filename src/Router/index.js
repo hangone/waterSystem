@@ -41,7 +41,7 @@ export const subRouterMap = [
     {path:"/home/homePage/minuteChange",component:MinuteChange,exact:true,title:Common.projectName+'实时水雨情_小时水位数据'}, 
     {path:"/home/homePage/waterChange",component:WaterChange,exact:true,title:Common.projectName+'实时水雨情_小时雨量数据'}, 
     {path:"/home/homePage/rainChange",component:RainChange,exact:false,title:Common.projectName+'实时水雨情_小时库容数据'}, 
-    {path:"/home/homePage/whouseChange",component:WhouseChange,exact:false,title:Common.projectName+'实时水雨情_5分钟水雨情'},
+    {path:"/home/homePage/whouseChange",component:WhouseChange,exact:false,title:Common.projectName+'实时水雨情_实时水质数据'},
     //{path: "/home/homePage/waterQuality", component: WaterQuality, exact: false, title: Common.projectName + '实时水质_实时水质数据'},  
 
     // 雨量报表

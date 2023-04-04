@@ -262,7 +262,7 @@ function Home(props){
                             <Menu.Item key="waterChange">小时水位数据</Menu.Item>
                             <Menu.Item key="rainChange">小时雨量数据</Menu.Item>
                             <Menu.Item key="whouseChange">小时库容数据</Menu.Item> 
-                            <Menu.Item key="minuteChange">5 分钟水雨情</Menu.Item> 
+                            <Menu.Item key="minuteChange">实时水质数据</Menu.Item> 
                         </SubMenu> 
                         <SubMenu key="waterPage" icon={<BranchesOutlined />} title="水情报表" onClick={onSelect} >
                             <Menu.Item key="hourWaterForm">分时水位明细报表</Menu.Item>

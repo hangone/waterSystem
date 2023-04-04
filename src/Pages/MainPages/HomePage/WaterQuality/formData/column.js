@@ -1,6 +1,6 @@
 // Here is an example of a basic format for a column component:
 
-import React from 'react';
+import React from 'react'
 
 
 const Columns = [
@@ -82,7 +82,7 @@ const Columns = [
     width: 150,
   },
   {
-    title:'总磷(mg/L)',
+    title: '总磷(mg/L)',
     dataIndex: 'total_phosphorus',
     width: 150,
   },
@@ -101,10 +101,10 @@ const Columns = [
     dataIndex: 'water_temperature',
     width: 150,
   },
-];
+]
 
 
-export default Columns;
+export default Columns
 
 // This component takes in data as a prop and renders a column chart using the Ant Design Charts library. 
 // The xField and yField props specify which fields in the data should be used for the x and y axes, respectively. 

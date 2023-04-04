@@ -449,7 +449,7 @@ function WaterChange() {
         console.error(error)
         setIsLoading(false)
         setDataSource([])
-        MessageTool('数据获取失败', 'error')
+        MessageTool('数据获取失败!', 'error')
       })
   }
   // 获取日数据
@@ -1262,14 +1262,15 @@ function WaterChange() {
               size="large"
               className="antdCas"
               placement="bottomLeft"
-              style={{ width: '8vw' }}></Cascader>
+              placeholder="请选择区域"
+              style={{ width: '12vw' }}></Cascader>
             <Search
               placeholder="请输入断面名称"
               allowClear
-              enterButton="Search"
+              enterButton="搜索"
               size="large"
               onSearch={onSearch}
-              style={{ width: '30vw' }}
+              style={{ width: '30vw' ,backgroundColor:'blue'}}
               className="antdSearch"
             />
           </div>
@@ -1278,7 +1279,10 @@ function WaterChange() {
             dataSource={dataSource}
             columns={columns}
             pagination={false}
-           
+            // style={{width:'100%'}}
+            // scroll={{ y:  300 ,
+            // x: 400}}
+            
           />
         </div>
 

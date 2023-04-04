@@ -1,4 +1,18 @@
 .ant-table-body,
 .ant-table-body table {
   height: 100% !important;
+  overflow: auto !important;
+}
+.ant-table-body {
+  overflow: auto !important;
+}
+.ant-table-header {
+  overflow: auto !important;
+}
+.ant-input-group-addon {
+  background-color: #2a2a2a !important;
+}
+.theme-box {
+  display: flex;
+  justify-content: space-around;
 }
