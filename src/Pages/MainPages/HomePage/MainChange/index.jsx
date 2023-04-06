@@ -7,6 +7,7 @@ import { getWaterMinute1,getWaterMinute2,getWaterMinute3,
 import { changeDataLine,changeDataLine2,dateSort,judgeListData,
     stripDayUselessData,setDomInnerText } from 'Utils'
 import { resetTableTitleWidth} from 'Utils/layoutreset'
+import MapComponent from '../../../../Components/Map';
  
 
 // 引入兄弟传值模块 
@@ -316,74 +317,9 @@ function WaterChange(){
         <div className='waterChange-div homeTable-div commTable-div'  >  
             <div className='body-bottom-div' style={{'background':'white'}}>  
                 <Spin tip="加载数据中" spinning={isLoading} style={{display:isLoading ? 'flex' : 'none'}}></Spin>
-                <div className='bottom-top home-img-div' style={{height:isTableCollapse ? 'inherit' : '50%',position:isTableCollapse ? 'absolute' : 'relative'}}>     
-                    <img src={bgHome} className="bg-img" alt="" />
-                    <div className='flow-flag-div '>
-                        {/* 雨量部分 */} 
-                        <div className='flow-item rain-item'>
-                            <div className='icon-img'><img src={flagRain} alt="" /></div>
-                            <div className='inner-txt'>
-                               <div className='title'>张佳坊</div> 
-                               <div>雨量:<span className='inner'>*</span>&nbsp;mm</div>  
-                            </div>
-                        </div>     
-                        <div className='flow-item rain-item'>
-                            <div className='icon-img'><img src={flagRain} alt="" /></div>
-                            <div className='inner-txt'>
-                               <div className='title'>西江口</div> 
-                               <div>雨量:<span className='inner'>*</span>&nbsp;mm</div>  
-                            </div>
-                        </div>     
-                        <div className='flow-item rain-item'>
-                            <div className='icon-img'><img src={flagRain} alt="" /></div>
-                            <div className='inner-txt'>
-                               <div className='title'>老庵里</div> 
-                               <div>雨量:<span className='inner'>*</span>&nbsp;mm</div>  
-                            </div>
-                        </div>     
-                        <div className='flow-item rain-item'>
-                            <div className='inner-txt'>
-                               <div className='title'>新泉站</div> 
-                               <div>雨量:<span className='inner'>*</span>&nbsp;mm</div>   
-                               <div>水位:<span className='inner-water'>*</span>&nbsp;m</div>  
-                               <div>入库流量:<span className='inflow'>*</span>&nbsp;m³/s</div> 
-                            </div>
-                            <div className='icon-img'><img src={flagRain} alt="" /></div>
-                        </div>     
-                        <div className='flow-item rain-item'>
-                            <div className='inner-txt'>
-                               <div className='title'>王狗冲</div> 
-                               <div>雨量:<span className='inner'>*</span>&nbsp;mm</div>  
-                            </div>
-                            <div className='icon-img'><img src={flagRain} alt="" /></div>
-                        </div>     
-                        {/* 水位部分 */}
-                        <div className='flow-item water-item'>
-                            <div className='icon-img'><img src={flagWater} alt="" /></div>
-                            <div className='inner-txt'>
-                               <div className='title'>厂房站</div> 
-                               <div>水位:<span className='inner'>*</span>&nbsp;m</div>   
-                               <div>出库流量:<span className='outflow'>*</span>&nbsp;m³/s</div> 
-                            </div>
-                        </div>     
-                        <div className='flow-item water-item'>
-                            <div className='icon-img'><img src={flagWater} alt="" /></div>
-                            <div className='inner-txt'>
-                               <div className='title'>闸室站</div>  
-                               <div>水位:<span className='inner'>*</span>&nbsp;m</div>  
-                               <div>库容:<span className='kurong'>*</span>&nbsp;wm³</div>    
-                            </div>
-                        </div>     
-                        <div className='flow-item water-item' style={{'display':'none'}}>
-                            <div className='icon-img'><img src={flagWater} alt="" /></div>
-                            <div className='inner-txt'>
-                               <div className='title'>新泉站</div> 
-                               <div>水位:<span className='inner'>*</span>&nbsp;m</div>  
-                            </div>
-                        </div>     
-
-                    </div>
-                </div>  
+                
+                {/* 加载地图组件 */}
+               <MapComponent></MapComponent>
             </div>
         </div>
     )
