@@ -26,6 +26,7 @@
     "pubsub-js": "^1.9.4",
     "querystring": "^0.2.1",
     "react": "^17.0.2",
+    "react-amap": "^1.2.8",
     "react-animated-router": "^0.2.4",
     "react-app-rewired": "^2.2.1",
     "react-document-title": "^2.0.3",

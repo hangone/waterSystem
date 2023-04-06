@@ -1,32 +1,55 @@
-import { useState, useEffect } from 'react'
-import AMapLoader from '@amap/amap-jsapi-loader'
+import React, { Component } from 'react';
+import { Col, Input, Row } from 'antd';
 
-const MapComponent = () => {
-  const [map, setMap] = useState({})
+import SearchAddress from './search';
+import AdvancedMap from './map';
 
-  useEffect(() => {
-    AMapLoader.load({
-      key: 'a279907eb60fb01990b6f623eba607d2', // 申请好的Web端开发者Key，首次调用 load 时必填
-      version: '2.0', // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
-      plugins: [''], // 需要使用的的插件列表，如比例尺'AMap.Scale'等
+class Index extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      position: {
+        lng:104.679127,
+        lat:31.467673,
+      },
+      addressName:''
+    }
+  }
+
+  changePosition = (value) => {
+    this.setState({
+      position:value
     })
-      .then((AMap) => {
-        setMap(
-          new AMap.Map('container', {
-            // 设置地图容器id
-            viewMode: '3D', // 是否为3D地图模式
-            zoom: 5, // 初始化地图级别
-            center: [105.602725, 37.076636], // 初始化地图中心点位置
-          })
-        )
-      })
-      .catch((e) => {
-        console.log(e)
-      })
-  }, [])
+  }
 
-  // 初始化创建地图容器,div标签作为地图容器，同时为该div指定id属性；
-  return <div id="container" className="map" style={{ height: '800px' }}></div>
+  changeAddressName = (value) => {
+    this.setState({
+      addressName:value
+    })
+  }
+  
+  render() {
+    const {position,addressName} = this.state;
+    return (
+      <div style={{ width: '100%', height: '500px' }}>
+        <Row gutter={24}>
+          <Col span={8}>
+            <SearchAddress
+              changePosition={this.changePosition}
+              changeAddressName={this.changeAddressName}
+              addressName={addressName}
+            />
+          </Col>
+        </Row>
+        <br />
+        <AdvancedMap
+          position={position}
+          changePosition={this.changePosition}
+          changeAddressName={this.changeAddressName}
+        />
+      </div>
+    );
+  }
 }
 
-export default MapComponent
+export default Index;

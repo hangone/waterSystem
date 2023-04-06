@@ -9593,6 +9593,11 @@
     "rc-resize-observer" "^1.0.0"
     "rc-util" "^5.15.0"
 
+"react-amap@^1.2.8":
+  "integrity" "sha512-uHPEUXti+CcwFyCeqGGqR0ACnXJA9D8S/lQYal9AG3XEOrwkaOFbWUavrvXxjcfAclROIWg8uKxzlRpMQnkHFg=="
+  "resolved" "https://registry.npmmirror.com/react-amap/-/react-amap-1.2.8.tgz"
+  "version" "1.2.8"
+
 "react-animated-router@^0.2.4":
   "integrity" "sha512-QIVxAq7pgncWk+RSi7mBIuh+hskEFeO4LKzGIpLPYn0qWLtXdjBs5qcokLZJ43dUC6iCuj8I/e2mqVKpO+zdfQ=="
   "resolved" "https://registry.npmmirror.com/react-animated-router/-/react-animated-router-0.2.4.tgz"
