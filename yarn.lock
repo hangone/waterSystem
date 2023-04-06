@@ -3874,6 +3874,11 @@
   "resolved" "https://registry.npmmirror.com/cookie/-/cookie-0.4.2.tgz"
   "version" "0.4.2"
 
+"coordtransform@^2.1.2":
+  "integrity" "sha512-0xLJApBlrUP+clyLJWIaqg4GXE5JTbAJb5d/CDMqebIksAMMze8eAyO6YfHEIxWJ+c42mXoMHBzWTeUrG7RFhw=="
+  "resolved" "https://registry.npmmirror.com/coordtransform/-/coordtransform-2.1.2.tgz"
+  "version" "2.1.2"
+
 "copy-anything@^2.0.1":
   "integrity" "sha512-1j20GZTsvKNkc4BY3NpMOM8tt///wY3FpIzozTOFO2ffuZcV61nojHXVKIy3WM+7ADCy5FVhdZYHYDdgTU0yJw=="
   "resolved" "https://registry.npmmirror.com/copy-anything/-/copy-anything-2.0.6.tgz"
@@ -7294,6 +7299,11 @@
   "version" "1.0.5"
   dependencies:
     "language-subtag-registry" "~0.3.2"
+
+"leaflet@^1.9.3":
+  "integrity" "sha512-iB2cR9vAkDOu5l3HAay2obcUHZ7xwUBBjph8+PGtmW/2lYhbLizWtG7nTeYht36WfOslixQF9D/uSIzhZgGMfQ=="
+  "resolved" "https://registry.npmmirror.com/leaflet/-/leaflet-1.9.3.tgz"
+  "version" "1.9.3"
 
 "less-loader@5.0.0":
   "integrity" "sha512-bquCU89mO/yWLaUq0Clk7qCsKhsF/TZpJUzETRvJa9KSVEL9SO3ovCvdEHISBhrC81OwC8QSVX7E0bzElZj9cg=="

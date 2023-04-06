@@ -26,6 +26,7 @@ import './index.css';
 import bgHome from '../../../../Assets/images/pic/bg-home.png';
 import flagWater from '../../../../Assets/images/pic/flag-water.png';
 import flagRain from '../../../../Assets/images/pic/flag-rain.png';
+import { map } from 'leaflet'
  
 
 function WaterChange(){    
