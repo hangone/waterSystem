@@ -6,15 +6,15 @@ const { Option } = Select;
 const SearchAddress = ({ addressName, changeAddressName, changePosition }) => {
   const [positionList, setPositionList] = useState([]);
 
-  const onSearch = (val, callback) => {
+  const onSearch = (val) => {
   console.log(val)
-  const place = new window.AMap.PlaceSearch({
+  let placeSearch = new window.AMap.PlaceSearch({
     pageSize: 10,
     pageIndex: 1,
-    city: '绵阳',
+    city: '南昌',
   });
 
-  place.search(val, (status, result) => {
+  placeSearch.search(val, (status, result) => {
     console.log(val,status,result)
     if (status === 'complete' && result.info === 'OK') {
       const {
@@ -23,7 +23,6 @@ const SearchAddress = ({ addressName, changeAddressName, changePosition }) => {
       if (pois && Array.isArray(pois)) {
         setPositionList(pois);
         console.log(pois); // added console.log
-        callback(pois);
       }
     }
   });
@@ -62,7 +61,7 @@ const SearchAddress = ({ addressName, changeAddressName, changePosition }) => {
         value={addressName}
         style={{ width: 400 }}
         showSearch
-        placeholder="请输入地址"
+        placeholder="请输入断面地址"
         onSearch={debounce((val) => onSearch(val), 300)}
         onChange={onChange}
         optionFilterProp="children"

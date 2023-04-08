@@ -1,55 +1,45 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Col, Input, Row } from 'antd';
 
 import SearchAddress from './search';
 import AdvancedMap from './map';
 
-class Index extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      position: {
-        lng:104.679127,
-        lat:31.467673,
-      },
-      addressName:''
-    }
+const Index = () => {
+  const [position, setPosition] = useState({
+    lng:115.796127,
+    lat:28.647924,
+  });
+  const [addressName, setAddressName] = useState('');
+
+  const changePosition = (value) => {
+    setPosition(value);
   }
 
-  changePosition = (value) => {
-    this.setState({
-      position:value
-    })
-  }
-
-  changeAddressName = (value) => {
-    this.setState({
-      addressName:value
-    })
+  const changeAddressName = (value) => {
+    setAddressName(value);
   }
   
-  render() {
-    const {position,addressName} = this.state;
-    return (
-      <div style={{ width: '100%', height: '500px' }}>
-        <Row gutter={24}>
-          <Col span={8}>
-            <SearchAddress
-              changePosition={this.changePosition}
-              changeAddressName={this.changeAddressName}
-              addressName={addressName}
-            />
-          </Col>
-        </Row>
-        <br />
-        <AdvancedMap
-          position={position}
-          changePosition={this.changePosition}
-          changeAddressName={this.changeAddressName}
-        />
-      </div>
-    );
-  }
+  return (
+    <div style={{ width: '100%', height: '500px' }}>
+      <Row gutter={24}>
+        <Col span={8}>
+          <SearchAddress
+            changePosition={changePosition}
+            changeAddressName={changeAddressName}
+            addressName={addressName}
+            
+          />
+        </Col>
+      </Row>
+      <br />
+      <AdvancedMap
+        position={position}
+        changePosition={changePosition}
+        changeAddressName={changeAddressName}
+      />
+    </div>
+  );
 }
 
 export default Index;
+

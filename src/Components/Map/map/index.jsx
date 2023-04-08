@@ -14,8 +14,8 @@ class AdvancedMap extends Component {
 
   static defaultProps = {
     position :{
-      lng:104.679127,
-      lat:31.467673,
+      lng:115.796127,
+      lat:28.647924,
     },
     plugins: ["ToolBar", 'Scale']
   };
@@ -65,11 +65,11 @@ class AdvancedMap extends Component {
           amapkey={MAP_KEY}
           plugins={plugins}
           events={this.handleMapEvents}
-          zoom={17}
-          center={[lng, lat]}
+          zoom={15}
+          center={[lng,lat]}
           doubleClickZoom={false}
         >
-          <Marker position={[lng, lat]} />
+          <Marker position={[lng,lat]} />
         </Map>
       </Fragment>
     );
@@ -77,3 +77,4 @@ class AdvancedMap extends Component {
 }
 
 export default AdvancedMap;
+

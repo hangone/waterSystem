@@ -6,7 +6,6 @@ import columns from '../WaterQuality/formData/column'
 import RadarChart from '../WaterQuality/charts'
 // 引入兄弟传值模块
 
-// 引入时间模块
 import { getWaterQualityData } from '../../../../Services/waterQuality'
 
 import * as echarts from 'echarts'
