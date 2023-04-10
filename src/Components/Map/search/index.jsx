@@ -1,3 +1,5 @@
+// This file contains the SearchAddress component which is used to search for a specific address and display its water quality data and location on a map.
+
 import React, { useState } from 'react'
 import { Select, Table } from 'antd'
 import { getWaterQualityData } from '../../../Services/waterQuality'
@@ -11,17 +13,22 @@ const SearchAddress = ({ addressName, changeAddressName, changePosition }) => {
   const [dataSource, setDataSource] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
+  // Function to modify the value of the search input before searching for it
   const modifyValue = (val) => {
     // Replace this with your own logic to modify the value
-
-    getWaterQualityData(val)
+    console.log(val)
+    return new Promise((resolve, reject) => {
+      getWaterQualityData(val)
       .then((res) => {
         setDataSource(res.tbody)
-        console.log(res.tbody[0].section)
-        let modifyValue = res.tbody[0].province+res.tbody[0].section
-        setIsLoading(false)
-        console.log(modifyValue)
-        return modifyValue
+        
+        if (res.tbody.length > 0) {
+          console.log(res.tbody[0].section)
+          let modifyValue = res.tbody[0].province + res.tbody[0].section
+          setIsLoading(false)
+          console.log(modifyValue)
+          return modifyValue
+        }
       })
       .catch((error) => {
         console.error(error)
@@ -29,31 +36,42 @@ const SearchAddress = ({ addressName, changeAddressName, changePosition }) => {
         setDataSource([])
         MessageTool('数据获取失败!', 'error')
       })
-    return val.toUpperCase()
+    })
+    
+    // return val.toUpperCase()
   }
+
+  // Function to search for the input value using the AMap API
   const onSearch = (val) => {
-    console.log(val)
-    val = modifyValue(val) // added line
-    let placeSearch = new window.AMap.PlaceSearch({
-      pageSize: 10,
-      pageIndex: 1,
-      city: '南昌',
-    })
-
-    placeSearch.search(val, (status, result) => {
-      console.log(val, status, result)
-      if (status === 'complete' && result.info === 'OK') {
-        const {
-          poiList: { pois },
-        } = result
-        if (pois && Array.isArray(pois)) {
-          setPositionList(pois)
-          console.log(pois) // added console.log
-        }
-      }
-    })
+    modifyValue(val)
+      .then((modifiedVal) => {
+        let placeSearch = new window.AMap.PlaceSearch({
+          pageSize: 10,
+          pageIndex: 1,
+          city: '南昌',
+        })
+  
+        placeSearch.search(modifiedVal, (status, result) => {
+          console.log(modifiedVal, status, result)
+          if (status === 'complete' && result.info === 'OK') {
+            const {
+              poiList: { pois },
+            } = result
+            if (pois && Array.isArray(pois)) {
+              setPositionList(pois)
+              console.log(pois) // added console.log
+            }
+          }
+        })
+      })
+      .catch((error) => {
+        console.error(error)
+        setIsLoading(false)
+        setDataSource([])
+        MessageTool('数据获取失败!', 'error')
+      })
   }
-
+  // Function to debounce the onSearch function to prevent excessive API calls
   const debounce = (fn, time) => {
     let timerId = null
     return function (val) {
@@ -67,8 +85,9 @@ const SearchAddress = ({ addressName, changeAddressName, changePosition }) => {
     }
   }
 
+  // Function to handle the change event of the search input
   const onChange = (event) => {
-    if (event.keyCode === 13) {
+    if (event && event.target && event.target.value) {
       for (const item of positionList) {
         const { name: itemName, id: itemId } = item
         if (itemId === event.target.value) {
@@ -76,21 +95,22 @@ const SearchAddress = ({ addressName, changeAddressName, changePosition }) => {
             location: { lng, lat },
           } = item
           const position = { lng, lat }
-          changePosition(position)
+          changePosition(position) // Call changePosition with the position object
           changeAddressName(itemName)
         }
       }
     }
   }
-
+  // Render the SearchAddress component
   return (
     <div>
       <Select
+      key={addressName}
         value={addressName}
         style={{ width: 400 }}
         showSearch
         placeholder="请输入断面地址"
-        onSearch={debounce((val) => onSearch(val), 300)}
+        onSearch={debounce((val) => onSearch(val), 1000)}
         onChange={onChange}
         optionFilterProp="children">
         {positionList.map((item) => (
@@ -112,4 +132,3 @@ const SearchAddress = ({ addressName, changeAddressName, changePosition }) => {
 }
 
 export default SearchAddress
-
