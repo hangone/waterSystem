@@ -1,33 +1,66 @@
-import React, { useState } from 'react';
-import { Select } from 'antd';
+import React, { useState, useEffect } from 'react'
+import { Select, Table } from 'antd'
+import { getWaterQualityData } from '../../../Services/waterQuality'
+import { MessageTool } from '../../../Components/Tools/MessageTool'
+import columns from '../../..//Pages//MainPages//HomePage//WaterQuality//formData//column'
 
 const { Option } = Select;
 
 const SearchAddress = ({ addressName, changeAddressName, changePosition }) => {
   const [positionList, setPositionList] = useState([]);
 
-  const onSearch = (val, callback) => {
-  console.log(val)
-  const place = new window.AMap.PlaceSearch({
-    pageSize: 10,
-    pageIndex: 1,
-    city: '绵阳',
-  });
+  const [dataSource, setDataSource] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  
+  const modifyValue = (val) => {
+    return new Promise((resolve, reject) => {
+      getWaterQualityData(val)
+        .then((res) => {
+          setDataSource(res.tbody)
 
-  place.search(val, (status, result) => {
-    console.log(val,status,result)
-    if (status === 'complete' && result.info === 'OK') {
-      const {
-        poiList: { pois },
-      } = result;
-      if (pois && Array.isArray(pois)) {
-        setPositionList(pois);
-        console.log(pois); // added console.log
-        callback(pois);
-      }
-    }
-  });
-};
+          if (res.tbody.length > 0) {
+            let modifyValue = res.tbody[0].province + res.tbody[0].section
+            setIsLoading(false)
+            resolve(modifyValue)
+          }
+        })
+        .catch((error) => {
+          console.error(error)
+          setIsLoading(false)
+          setDataSource([])
+          MessageTool('数据获取失败!', 'error')
+        })
+    })
+  }
+  const onSearch = (val) => {
+    modifyValue(val)
+      .then((modifiedVal) => {
+        let placeSearch = new window.AMap.PlaceSearch({
+          pageSize: 10,
+          pageIndex: 1,
+          city: '南昌',
+        })
+
+        placeSearch.search(modifiedVal, (status, result) => {
+          console.log(modifiedVal, status, result)
+          if (status === 'complete' && result.info === 'OK') {
+            const {
+              poiList: { pois },
+            } = result
+            if (pois && Array.isArray(pois)) {
+              setPositionList(pois)
+              console.log(pois) // added console.log
+            }
+          }
+        })
+      })
+      .catch((error) => {
+        console.error(error)
+        setIsLoading(false)
+        setDataSource([])
+        MessageTool('数据获取失败!', 'error')
+      })
+  }
 
   const debounce = (fn, time) => {
     let timerId = null;
@@ -73,6 +106,14 @@ const SearchAddress = ({ addressName, changeAddressName, changePosition }) => {
           </Option>
         ))}
       </Select>
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        pagination={true}
+        loading={isLoading}
+        style={{ width: '100%' }}
+        scroll={{ y: 300, x: 800 }}
+      />
     </div>
   );
 };
