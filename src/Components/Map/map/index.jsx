@@ -1,28 +1,15 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import {Map, Marker} from 'react-amap';
 import PropTypes from 'prop-types';
 import { message } from 'antd';
-//import { MAP_KEY } from '@/utils/Enum';
 
 const MAP_KEY = 'a279907eb60fb01990b6f623eba607d2'
 
-class AdvancedMap extends Component {
-  static propTypes = {
-    position:PropTypes.object,
-    plugins: PropTypes.array,
-  };
+const AdvancedMap = ({ position: { lng, lat }, plugins, changePosition, changeAddressName }) => {
+  const [mapEvents, setMapEvents] = useState(null);
 
-  static defaultProps = {
-    position :{
-      lng:115.796127,
-      lat:28.647924,
-    },
-    plugins: ["ToolBar", 'Scale']
-  };
-
-  constructor(props) {
-    super(props);
-    this.handleMapEvents =  {
+  useEffect(() => {
+    const handleMapEvents = {
       created: () => {
         window.AMap.plugin('AMap.PlaceSearch', () => {
           new window.AMap.PlaceSearch({
@@ -38,7 +25,6 @@ class AdvancedMap extends Component {
       },
       click: (e) => {
         const { lnglat:lnglatObj,lnglat: {lng,lat} } = e;
-        const { changePosition,changeAddressName } = this.props;
         const lnglatArr = [lng,lat]
         const geocoder = new window.AMap.Geocoder({
           city: '0816'
@@ -54,27 +40,37 @@ class AdvancedMap extends Component {
         })
       }
     }
-  }
+    setMapEvents(handleMapEvents);
+  }, [changeAddressName, changePosition]);
 
-
-  render() {
-    const {position: { lng,lat }, plugins} = this.props;
-    return (
-      <Fragment>
-        <Map
-          amapkey={MAP_KEY}
-          plugins={plugins}
-          events={this.handleMapEvents}
-          zoom={15}
-          center={[lng,lat]}
-          doubleClickZoom={false}
-        >
-          <Marker position={[lng,lat]} />
-        </Map>
-      </Fragment>
-    );
-  }
+  return (
+    <Fragment>
+      <Map
+        amapkey={MAP_KEY}
+        plugins={plugins}
+        events={mapEvents}
+        zoom={15}
+        center={[lng,lat]}
+        doubleClickZoom={false}
+      >
+        <Marker position={[lng,lat]} />
+      </Map>
+    </Fragment>
+  );
 }
+
+AdvancedMap.propTypes = {
+  position:PropTypes.object,
+  plugins: PropTypes.array,
+};
+
+AdvancedMap.defaultProps = {
+  position :{
+    lng:115.796127,
+    lat:28.647924,
+  },
+  plugins: ["ToolBar", 'Scale']
+};
 
 export default AdvancedMap;
 
