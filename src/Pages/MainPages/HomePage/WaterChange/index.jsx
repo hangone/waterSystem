@@ -113,7 +113,7 @@ class WaterChange extends Component {
         this.state.myChart6.setOption({
           title: {
             show: true,
-            text: '近6个月观众活跃趋势',
+            text: '近6个月x趋势',
             x: 'center',
             textStyle: {
               //主标题文本样式{"fontSize": 18,"fontWeight": "bolder","color": "#333"}
@@ -217,7 +217,7 @@ class WaterChange extends Component {
         this.state.myChart5.setOption({
           title: {
             show: true,
-            text: '近6个月主播活跃趋势',
+            text: '近6个月趋势',
             x: 'center',
             textStyle: {
               //主标题文本样式{"fontSize": 18,"fontWeight": "bolder","color": "#333"}
@@ -810,7 +810,7 @@ class WaterChange extends Component {
         <header className="header_main">
           <div className="left_bg"></div>
           <div className="right_bg"></div>
-          <h3>Baby张数据平台</h3>
+          <h3>数据平台</h3>
         </header>
         <div className="wrapper">
           <div className="container-fluid">
@@ -850,7 +850,7 @@ class WaterChange extends Component {
                     
                     
                     <div style={{width:'100%', position:'absolute',top:10,display:'flex',left:'50%', justifyContent:'center',color:'#fff',alignItems:'center',transform:'translateX(-50%)'}}>
-                      <p>全国淘宝主播数量：</p>
+                      <p>全国水利状况</p>
                       <div className="databg">6</div>
                       <div className="databg">6</div>
                       <div className="databg">6</div>
@@ -861,7 +861,7 @@ class WaterChange extends Component {
                       <div className="databg">6</div>
                       <div className="databg">6</div>
                     </div>
-                    <div>全淘宝主播数量</div>
+                    <div>数量xx</div>
                     <div
                       style={{
                         height: 60,
@@ -908,7 +908,7 @@ class WaterChange extends Component {
                   className="xpanel-wrapper xpanel-wrapper-6"
                   style={{ position: 'relative' }}
                 >
-                  <div className="content_title">主播类型占比</div>
+                  <div className="content_title">数量xx</div>
                   <BorderBox1>
                     <div className="xpanel">
                       <div className="fill-h" id="provinceMap"></div>
@@ -919,7 +919,7 @@ class WaterChange extends Component {
                   className="xpanel-wrapper xpanel-wrapper-6"
                   style={{ position: 'relative' }}
                 >
-                  <div className="content_title">重点品类排名</div>
+                  <div className="content_title">排名</div>
                   <BorderBox1>
                     <div className="xpanel">
                       <div className="fill-h" id="cityMap"></div>
@@ -930,7 +930,7 @@ class WaterChange extends Component {
                   className="xpanel-wrapper xpanel-wrapper-4"
                   style={{ position: 'relative' }}
                 >
-                  <div className="content_title">Top10城市各品类占比</div>
+                  <div className="content_title">占比</div>
                   <BorderBox1>
                     <div className="xpanel">
                       <div className="fill-h" id="countyMap"></div>
