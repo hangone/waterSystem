@@ -318,7 +318,6 @@ function WaterChange(){
         <div className='waterChange-div homeTable-div commTable-div'  >  
             <div className='body-bottom-div' style={{'background':'white','height':'80vh'}}>  
                 <Spin tip="加载数据中" spinning={isLoading} style={{display:isLoading ? 'flex' : 'none'}}></Spin>
-                
                 {/* 加载地图组件 */}
                <MapComponent></MapComponent>
             </div>
