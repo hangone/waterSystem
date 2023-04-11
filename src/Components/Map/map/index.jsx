@@ -1,76 +1,85 @@
-import React, { Fragment, useState, useEffect } from 'react';
-import {Map, Marker} from 'react-amap';
-import PropTypes from 'prop-types';
-import { message } from 'antd';
+import React, { Component, Fragment } from 'react'
+import { Map, Marker } from 'react-amap'
+import PropTypes from 'prop-types'
+import { message } from 'antd'
+//import { MAP_KEY } from '@/utils/Enum';
 
 const MAP_KEY = 'a279907eb60fb01990b6f623eba607d2'
 
-const AdvancedMap = ({ position: { lng, lat }, plugins, changePosition, changeAddressName }) => {
-  const [mapEvents, setMapEvents] = useState(null);
+class AdvancedMap extends Component {
+  static propTypes = {
+    position: PropTypes.object,
+    plugins: PropTypes.array,
+  }
 
-  useEffect(() => {
-    const handleMapEvents = {
+  static defaultProps = {
+    position: {
+      lng: 115.796127,
+      lat: 28.647924,
+    },
+    plugins: ['ToolBar', 'Scale'],
+  }
+
+  constructor(props) {
+    super(props)
+    this.handleMapEvents = {
       created: () => {
         window.AMap.plugin('AMap.PlaceSearch', () => {
           new window.AMap.PlaceSearch({
             pageSize: 10,
             pageIndex: 1,
-          });
+          })
         })
-        window.AMap.plugin('AMap.Geocoder', () =>{
+        window.AMap.plugin('AMap.Geocoder', () => {
           new window.AMap.Geocoder({
-            city: '0816'
+            city: '0816',
           })
         })
       },
       click: (e) => {
-        const { lnglat:lnglatObj,lnglat: {lng,lat} } = e;
-        const lnglatArr = [lng,lat]
+        const {
+          lnglat: lnglatObj,
+          lnglat: { lng, lat },
+        } = e
+        const { changePosition, changeAddressName } = this.props
+        const lnglatArr = [lng, lat]
         const geocoder = new window.AMap.Geocoder({
-          city: '0816'
+          city: '0816',
         })
         changePosition(lnglatObj)
         geocoder.getAddress(lnglatArr, (status, result) => {
           if (status === 'complete' && result.info === 'OK') {
-            console.log(result,'result');
-            const { regeocode :{formattedAddress}} = result;
+            console.log(result, 'result')
+            const {
+              regeocode: { formattedAddress },
+            } = result
             changeAddressName(formattedAddress)
             message.success(formattedAddress)
           }
         })
-      }
+      },
     }
-    setMapEvents(handleMapEvents);
-  }, [changeAddressName, changePosition]);
+  }
 
-  return (
-    <Fragment>
-      <Map
-        amapkey={MAP_KEY}
-        plugins={plugins}
-        events={mapEvents}
-        zoom={15}
-        center={[lng,lat]}
-        doubleClickZoom={false}
-      >
-        <Marker position={[lng,lat]} />
-      </Map>
-    </Fragment>
-  );
+  render() {
+    const {
+      position: { lng, lat },
+      plugins,
+    } = this.props
+    return (
+      <Fragment>
+        <Map
+          amapkey={MAP_KEY}
+          plugins={plugins}
+          events={this.handleMapEvents}
+          zoom={13}
+          center={[lng, lat]}
+          doubleClickZoom={false}>
+          <Marker position={[lng, lat]} />
+        </Map>
+      </Fragment>
+    )
+  }
 }
 
-AdvancedMap.propTypes = {
-  position:PropTypes.object,
-  plugins: PropTypes.array,
-};
-
-AdvancedMap.defaultProps = {
-  position :{
-    lng:115.796127,
-    lat:28.647924,
-  },
-  plugins: ["ToolBar", 'Scale']
-};
-
-export default AdvancedMap;
-
+export default AdvancedMap

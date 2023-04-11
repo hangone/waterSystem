@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, Fragment } from 'react'
-import { MessageTool,MessageToolClear } from 'Components/Tools/MessageTool'; 
+import { MessageTool, MessageToolClear } from 'Components/Tools/MessageTool'
 //import { waterQualitySystemDomain } from 'Config'
 import {
   Button,
@@ -17,10 +17,9 @@ import {
 import { getWaterQualityData } from '../../../../Services/waterQuality'
 import RadarChart from './charts'
 
-
 import './index.css'
 import options from './formData/options'
-import Columns from './formData/column'
+import Columns from '../../../../Components/columns/column'
 
 const { Search } = Input
 //const columns = Columns
@@ -134,9 +133,12 @@ function BriefIndex() {
               y: 400,
             }}
           />
-          {data.length > 1 ? <RadarChart data={[]}/> : <RadarChart data={data}/>}
+          {data.length > 1 ? (
+            <RadarChart data={[]} />
+          ) : (
+            <RadarChart data={data} />
+          )}
         </div>
-        
       </div>
     </div>
   )

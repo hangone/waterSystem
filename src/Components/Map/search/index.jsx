@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Select, Table } from 'antd'
 import { getWaterQualityData } from '../../../Services/waterQuality'
 import { MessageTool } from '../../../Components/Tools/MessageTool'
-import columns from '../../..//Pages//MainPages//HomePage//WaterQuality//formData//column'
+import columns from '../../columns/columnSearch'
 
 const { Option } = Select;
 
@@ -13,10 +13,12 @@ const SearchAddress = ({ addressName, changeAddressName, changePosition }) => {
   const [isLoading, setIsLoading] = useState(false)
   
   const modifyValue = (val) => {
+    
     return new Promise((resolve, reject) => {
       getWaterQualityData(val)
         .then((res) => {
-          setDataSource(res.tbody)
+          const filteredData = filterData(res.tbody, ['province', 'basin', 'city', 'river', 'section', 'station_status', 'time', 'water_quality'])
+          setDataSource(filteredData)
 
           if (res.tbody.length > 0) {
             let modifyValue = res.tbody[0].province + res.tbody[0].section
@@ -31,6 +33,16 @@ const SearchAddress = ({ addressName, changeAddressName, changePosition }) => {
           MessageTool('数据获取失败!', 'error')
         })
     })
+  }
+  function filterData(data, columns) {
+    const filteredData = data.map((item) => {
+      const filteredItem = {}
+      columns.forEach((column) => {
+        filteredItem[column] = item[column]
+      })
+      return filteredItem
+    })
+    return filteredData
   }
   const onSearch = (val) => {
     modifyValue(val)
@@ -93,7 +105,7 @@ const SearchAddress = ({ addressName, changeAddressName, changePosition }) => {
     <div>
       <Select
         value={addressName}
-        style={{ width: 400 }}
+        style={{ width: 400,height: 40 }}
         showSearch
         placeholder="请输入地址"
         onSearch={debounce((val) => onSearch(val), 300)}
@@ -111,8 +123,8 @@ const SearchAddress = ({ addressName, changeAddressName, changePosition }) => {
         columns={columns}
         pagination={true}
         loading={isLoading}
-        style={{ width: '100%' }}
-        scroll={{ y: 300, x: 800 }}
+        style={{ width: '90%' }}
+        // scroll={{ y: 300, x: 500 }}
       />
     </div>
   );

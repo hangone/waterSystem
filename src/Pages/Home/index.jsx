@@ -259,9 +259,9 @@ function Home(props){
                         mode="inline" theme="dark" inlineCollapsed={collapsed} onOpenChange={onOpenChange}>
                         <SubMenu key="homePage" icon={<AppstoreOutlined />} title="可视化分析"  onClick={onSelect} > 
                             <Menu.Item key="mainChange">地图可视化</Menu.Item>
-                            {/* <Menu.Item key="waterChange">小时水位数据</Menu.Item>
-                            <Menu.Item key="rainChange">小时雨量数据</Menu.Item>
-                            <Menu.Item key="whouseChange">小时库容数据</Menu.Item>  */}
+                            <Menu.Item key="waterChange">图表可视化</Menu.Item>
+                            <Menu.Item key="rainChange">河道可视化</Menu.Item>
+                            {/* <Menu.Item key="whouseChange">小时库容数据</Menu.Item>  */}
                             
                         </SubMenu> 
                         {/* <SubMenu key="waterPage" icon={<BranchesOutlined />} title="水情报表" onClick={onSelect} >
