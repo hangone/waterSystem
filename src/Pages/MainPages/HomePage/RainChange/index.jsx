@@ -1905,7 +1905,7 @@ function RainChange() {
   }
   return (
     <div className="rainChange-div homeTable-div commTable-div">
-      <div
+      {/* <div
         className="fixTitle-div"
         style={{ display: isShowTitle ? 'flex' : 'none' }}>
         <Radio.Group onChange={onChange} value={radioItem}>
@@ -1931,58 +1931,8 @@ function RainChange() {
             <Button type="default">{activeMenuName}</Button>
           </Dropdown>
         </div>
-      </div>
-      <div className="body-bottom-div">
-        <Spin
-          tip="加载数据中"
-          spinning={isLoading}
-          style={{ display: isLoading ? 'flex' : 'none' }}></Spin>
-        <div
-          className="bottom-top"
-          style={{
-            height: isTableCollapse ? 'inherit' : '50%',
-            position: isTableCollapse ? 'absolute' : 'relative',
-          }}>
-          <Table
-            dataSource={dataSource}
-            columns={columns}
-            pagination={false}
-            sticky
-          />
-        </div>
-        <div
-          className="bottom-bottom"
-          style={{
-            visibility: isTableCollapse ? 'hidden' : 'visible',
-            opacity: 0,
-          }}>
-          {/* <div className='mask-div' style={{'display':isShowEchart ?'none' : 'block'}}>  </div>   */}
-          <div
-            id="bottom-echart-top"
-            style={{
-              width: '600px',
-              height: '300px',
-              opacity: isShowEchart ? '1' : '0',
-            }}
-            ref={echartTopNodeRef}></div>
-          <div
-            id="bottom-echart-middle"
-            style={{
-              width: '600px',
-              height: '300px',
-              opacity: isShowEchart ? '1' : '0',
-            }}
-            ref={echartMiddleNodeRef}></div>
-          <div
-            id="bottom-echart-bottom"
-            style={{
-              width: '600px',
-              height: '300px',
-              opacity: isShowEchart ? '1' : '0',
-            }}
-            ref={echartBottomNodeRef}></div>
-        </div>
-      </div>
+      </div> */}
+      
       <div className="modelo-wrapper">
         {' '}
         <div

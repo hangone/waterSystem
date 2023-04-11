@@ -260,7 +260,7 @@ function Home(props){
                         <SubMenu key="homePage" icon={<AppstoreOutlined />} title="可视化分析"  onClick={onSelect} > 
                             <Menu.Item key="mainChange">地图可视化</Menu.Item>
                             <Menu.Item key="waterChange">图表可视化</Menu.Item>
-                            <Menu.Item key="rainChange">河道可视化</Menu.Item>
+                            <Menu.Item key="rainChange">模型可视化</Menu.Item>
                             {/* <Menu.Item key="whouseChange">小时库容数据</Menu.Item>  */}
                             
                         </SubMenu> 
