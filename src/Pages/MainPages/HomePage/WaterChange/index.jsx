@@ -1,4 +1,4 @@
-import React,{useEffect,useState,useRef, Fragment} from 'react' ;
+import React,{useEffect,useState,useRef, Fragment,Component} from 'react' ;
 import {  Button,Menu, Dropdown  ,Table,Radio,Spin  } from 'antd'; 
 import { MessageTool,MessageToolClear } from 'Components/Tools/MessageTool'; 
 import { getWaterChangeDay,getWaterChangeWeek,getWaterChangeMonth,
@@ -18,1602 +18,932 @@ import * as echarts from 'echarts'
 import Common from 'Common'; 
 import {formatDate} from 'Utils'
 import 'Assets/css/comm.css';
-import './index.less';
- 
 
-function WaterChange(){    
-    // 端点编码
-    let typeList  = []  
-    // 计时器
-    let ITimer = null;
-    // let [ITimerResponse,setITimerResponse] = useState(null);
-    // 图的实例
-    let myChartTop = null;
-    let myChartMiddle = null;
-    let myChartBottom = null;
-    // 设置响应式图的实例
-    let [myChartTopRes,setMyChartTopRes] = useState(null)
-    let [myChartMiddleRes,setMyChartMiddleRes] = useState(null)
-    let [myChartBottomRes,setMyChartBottomRes] = useState(null) 
-    // 图表节点
-    const echartTopNodeRef = useRef();
-    const echartMiddleNodeRef = useRef();
-    const echartBottomNodeRef = useRef();
-    // 顶部更多显示栏 
-    const preIsShowTitle =  sessionStorage.getItem("water_isShowTitle")
-    const [isShowTitle,setIsShowTitle] = useState((preIsShowTitle == 'true') ? preIsShowTitle :false)
-    // 单选按钮,日、 月、周
-    const [radioItem, setRadioItem] = useState('day')
-    // 是否正在加载
-    const [isLoading,setIsLoading] = useState(false)
-    const [isShowEchart,setIsShowEchart] = useState(false)
-    // 表格是否扩展
-    const [activeMenuName,setActiveMenuName] = useState( sessionStorage.getItem("water_isTableCollapse") == 'true' ?  '扩展型' : '紧缩型'  )
-    const [isTableCollapse,setIsTableCollapse] = useState( sessionStorage.getItem("water_isTableCollapse")  == 'true'  ? true : false)
 
-    // 用于初始化的标志位
-    let isLeftOk =  false 
-    let isCenterOk = false 
-    let isRightOk = false
+import 'echarts/map/js/china'
+import geoJson from 'echarts/map/json/china.json'
+// import { geoCoordMap, provienceData } from './geo'
+import { BorderBox1 ,BorderBox8 ,BorderBox13,Decoration1 ,ScrollBoard,ScrollRankingBoard } from '@jiaminghi/data-view-react'
+// import { Decoration9 ,Loading} from '@jiaminghi/data-view-react'
+import './index.css'
 
-    
-    // 刻度数据(y轴的刻度,series的颜色)
-    let myAxisObj = {
-        'yAxis':{ 
-            'day':{min:0, max:250},
-            'week':{min:0, max:250},
-            'month':{min:0, max:250},
-            'avg':5
+class WaterChange extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      myChart1: null,
+      myChart2: null,
+      myChart3: null,
+      myChart4: null,
+      myChart5: null,
+      myChart6: null,
+      topdata:{data: [
+        {
+          name: '周口',
+          value: 55
         },
-        'series':{ 
-            'day':[
-                {
-                    itemStyle:{ 
-                        // 常量颜色 c1
-                        normal:{ color: Common.colorChartArr.c1 } 
-                    }, 
-                    lineStyle:{ 
-                        normal:{width:1, color: Common.colorChartArr.c1  } 
-                    },
-                },
-                {
-                    itemStyle:{ 
-                        // 常量颜色 c2
-                        normal:{ color: Common.colorChartArr.c2 } 
-                    }, 
-                    lineStyle:{ 
-                        normal:{width:1, color: Common.colorChartArr.c2  } 
-                    },
-                },
-                {
-                    itemStyle:{ 
-                        // 常量颜色 c3
-                        normal:{ color: Common.colorChartArr.c3 } 
-                    }, 
-                    lineStyle:{ 
-                        normal:{width:1, color: Common.colorChartArr.c3  } 
-                    },
-                }
-            ],
-            'week':[
-                {
-                    itemStyle:{ 
-                        // 常量颜色 c1
-                        normal:{ color: Common.colorChartArr.c1 } 
-                    }, 
-                    lineStyle:{ 
-                        normal:{width:1, color: Common.colorChartArr.c1  } 
-                    },
-                },
-                {
-                    itemStyle:{ 
-                        // 常量颜色 c2
-                        normal:{ color: Common.colorChartArr.c2 } 
-                    }, 
-                    lineStyle:{ 
-                        normal:{width:1, color: Common.colorChartArr.c2  } 
-                    },
-                },
-                {
-                    itemStyle:{ 
-                        // 常量颜色 c3
-                        normal:{ color: Common.colorChartArr.c3 } 
-                    }, 
-                    lineStyle:{ 
-                        normal:{width:1, color: Common.colorChartArr.c3  } 
-                    },
-                }
-            ],
-            'month':[
-                {
-                    itemStyle:{ 
-                        // 常量颜色 c1
-                        normal:{ color: Common.colorChartArr.c1} 
-                    }, 
-                    lineStyle:{ 
-                        normal:{width:1, color: Common.colorChartArr.c1  } 
-                    },
-                },
-                {
-                    itemStyle:{ 
-                        // 常量颜色 c2
-                        normal:{ color: Common.colorChartArr.c2 } 
-                    }, 
-                    lineStyle:{ 
-                        normal:{width:1, color: Common.colorChartArr.c2  } 
-                    },
-                },
-                {
-                    itemStyle:{ 
-                        // 常量颜色 c3
-                        normal:{ color: Common.colorChartArr.c3 } 
-                    }, 
-                    lineStyle:{ 
-                        normal:{width:1, color: Common.colorChartArr.c3  } 
-                    },
-                }
-            ],
-        }
-    }
-    // 时间列数据转换(时间)
-    let columnsTimeList = [
-        ' 08时', ' 09时',  ' 10时',  ' 11时', ' 12时',
-        ' 13时', ' 14时', ' 15时', ' 16时', ' 17时', ' 18时',
-        ' 19时', ' 20时',  ' 21时', ' 22时', ' 23时', ' 00时',
-        ' 01时', ' 02时', ' 03时', ' 04时', ' 05时', ' 06时', ' 07时',
-    ]
-    // 图表默认数据(series数据)
-    let defaultObj = { 
-        // type: 'bar',
-        type: 'line',
-        // markPoint: {
-        //     data: [
-        //       { type: 'max', name: 'Max' },
-        //       { type: 'min', name: 'Min' }
-        //     ]
-        // }, 
-        smooth: true,
-        emphasis: {
-            focus: 'series'
+        {
+          name: '南阳',
+          value: 120
         },
-        
-        itemStyle:{ 
-            normal:{ color: "rgb(146, 53, 53)" } 
-        }, 
-        lineStyle:{ 
-            normal:{width:1, color: "rgb(146, 53, 53)"  } 
-        }, 
-        // 线条阴影
-        // areaStyle: {
-        //     normal: {
-        //       color: {
-        //         x: 0,
-        //         y: 0,
-        //         x2: 0,
-        //         y2: 1,
-        //         colorStops: [{
-        //             offset: 0,
-        //             color: "#dc3881" // 0% 处的颜色
-        //           }, {
-        //             offset: 0.7,
-        //             color: "rgba(20,56,129,0)" // 100% 处的颜色
-        //            }],
-        //             globalCoord: false // 缺省为 false
-        //           }
-        //         }
-        //   },
+        {
+          name: '西峡',
+          value: 78
+        },
+        {
+          name: '驻马店',
+          value: 66
+        },
+        {
+          name: '新乡',
+          value: 80
+        },
+        {
+          name: '信阳',
+          value: 45
+        },
+        {
+          name: '漯河',
+          value: 29
+        }
+      ],
+      carousel: 'page'},
+    tabledata:{
+      header: ['列1', '列2', '列3'],
+      data: [
+        ['行1列1', '行1列2', '行1列3'],
+        ['行2列1', '行2列2', '行2列3'],
+        ['行3列1', '行3列2', '行3列3'],
+        ['行4列1', '行4列2', '行4列3'],
+        ['行5列1', '行5列2', '行5列3'],
+        ['行6列1', '行6列2', '行6列3'],
+        ['行7列1', '行7列2', '行7列3'],
+        ['行8列1', '行8列2', '行8列3'],
+        ['行9列1', '行9列2', '行9列3'],
+        ['行10列1', '行10列2', '行10列3']
+      ],
+      index: true,
+      columnWidth: [50],
+      align: ['center']
     }
-    // 表格行、列数据（表头）
-    const [columns,setColumns] = useState()  
-    // 表格行、列数据 （表体）
-    const [dataSource,setDataSource] = useState([])  
-    // // 图表x轴、y轴数据（表头, 数据传递不及时 ）
-    // const [echartNamesList,setEchartNamesList] = useState([])
-    // // 图表x轴、y轴数据（数据传递不及时 ）
-    // const [echartList,setEchartList] = useState({
-    //     xArr:[],
-    //     yArr:[]
-    // })
-  
-    // 二、监听数据
-    // 初始化加载
-    useEffect(()=>{
-        try{ 
-            // const preIsShowTitle =  sessionStorage.getItem("water_isShowTitle")
-            // setIsShowTitle (preIsShowTitle == 'true' ? preIsShowTitle :false)
-            
-            // 清除提示
-            MessageToolClear();
-
-
-            setIsLoading(true)
-            
-            // 获取平均水位站点数据
-            typeList  = Common.waterData 
-  
-            // 首次查询表格数据, 月、 周、日   
-            onSearch('month',true);  
-            onSearch('week',true);  
-            onSearch('day',true);  
-            ITimer = setInterval(()=>{ 
-                // 查询表格数据
-                hideCharts()
-                onSearch(radioItem);
-                // 更新提示
-                MessageTool("数据已经更新","success")
-            },Common.refreshDelay)  
-            sessionStorage.setItem('ITimerResponse',ITimer)
- 
-        }catch(err){
-            console.log("出现异常",err)
-            MessageTool('系统出现异常！请刷新重试','error')
-        }  
-        return ()=>{
-            //  清除定时器
-            let ITimerResponse = sessionStorage.getItem('ITimerResponse' )
-            if(ITimerResponse) clearInterval(ITimerResponse) 
-            if(ITimer) clearInterval(ITimer) 
-            // 取消消息订阅
-            PubSub.unsubscribe("water_titleMenu");  
-        }
-    },[]) 
-    // 监听页面的尺寸变化 
-    useEffect(() => {    
-        window.addEventListener("resize", function() { 
-            // 重新设置表头宽度   
-            resetTableTitleWidth()  
- 
-            // 重新设置图的宽高
-            if(myChartTop) myChartTop.resize()
-            if(myChartMiddle) myChartMiddle.resize()
-            if(myChartBottom) myChartBottom.resize() 
-        });  
-        // document.querySelector(".bottom-bottom").addEventListener("click", function() { 
-        //     if(myChartTop) myChartTop.resize()
-        //     if(myChartMiddle) myChartMiddle.resize()
-        //     if(myChartBottom) myChartBottom.resize() 
-        // });  
-        return () => {
-            window.removeEventListener("resize",()=>{});
-            // document.querySelector(".bottom-bottom").removeEventListener("click",()=>{});
-            if(myChartTop) myChartTop.dispose()
-            if(myChartMiddle) myChartMiddle.dispose()
-            if(myChartBottom) myChartBottom.dispose() 
-        };
-    }, [window]); 
-    // 监听PubSub.subscribe 的变化
-    useEffect(()=>{ 
-        PubSub.subscribe("water_titleMenu",(msg,stateObj)=>{ 
-            if(stateObj && Object.keys(stateObj)){ 
-                const show =  stateObj.isShowTitle 
-                setIsShowTitle(show)
-                sessionStorage.setItem("water_isShowTitle",show)
-            }
-        })  
-        PubSub.subscribe("water_leftcollapsed",(msg,stateObj)=>{    
-            // 修改表格的宽度
-            resetTableTitleWidth()
-
-            let parentNode1 = document.querySelector("#bottom-echart-top")
-            let childrenNode1 = document.querySelector("#bottom-echart-top>div")
-            let canvasNode1 = document.querySelector("#bottom-echart-top>div canvas")
-            parentNode1.style.cssText = "width:33.3%!important;height:100%!important"; 
-            childrenNode1.style.cssText = "width:100%!important;height:100%!important;display:flex!important;justify-content:center";  
-            canvasNode1.style.cssText = "width:100%!important;height:96%!important;z-index:999"; 
-            if(myChartTopRes) myChartTopRes.resize() 
-                    
-            let parentNode2 = document.querySelector("#bottom-echart-bottom")
-            let childrenNode2 = document.querySelector("#bottom-echart-bottom>div")
-            let canvasNode2 = document.querySelector("#bottom-echart-bottom>div canvas")
-            parentNode2.style.cssText = "width:33.3%!important;height:100%!important"; 
-            childrenNode2.style.cssText = "width:100%!important;height:100%!important;display:flex!important;justify-content:center";  
-            canvasNode2.style.cssText = "width:100%!important;height:96%!important;z-index:999";  
-            if(myChartBottomRes) myChartBottomRes.resize()  
-                
-            let parentNode3 = document.querySelector("#bottom-echart-middle")
-            let childrenNode3 = document.querySelector("#bottom-echart-middle>div")
-            let canvasNode3 = document.querySelector("#bottom-echart-middle>div canvas")
-            parentNode3.style.cssText = "width:33.3%!important;height:100%!important"; 
-            childrenNode3.style.cssText = "width:100%!important;height:100%!important;display:flex!important;justify-content:center";  
-            canvasNode3.style.cssText = "width:100%!important;height:96%!important;z-index:999";  
-            if(myChartMiddleRes) myChartMiddleRes.resize()  
-
-            setMyChartTopRes(myChartTopRes)
-            setMyChartMiddleRes(myChartMiddleRes)
-            setMyChartBottomRes(myChartBottomRes) 
-        })   
-        return ()=>{
-            PubSub.unsubscribe("water_titleMenu")
-            PubSub.unsubscribe("water_leftcollapsed")
-        }
-    },[PubSub.subscrib ])
-    // 监听图的显示
-    useEffect(()=>{ 
-        if(echartTopNodeRef.current){ 
-            echartTopNodeRef.current.style.cssText = "width:33.3%!important;height:100%!important";  
-        }  
-        if(echartMiddleNodeRef.current){ 
-            echartMiddleNodeRef.current.style.cssText = "width:33.3%!important;height:100%!important"; 
-        } 
-        if(echartBottomNodeRef.current){ 
-            echartBottomNodeRef.current.style.cssText = "width:33.3%!important;height:100%!important"; 
-        }   
-
-        // // 再次修正位置   
-        if(myChartTop) myChartTop.resize()
-        if(myChartMiddle) myChartMiddle.resize()
-        if(myChartBottom) myChartBottom.resize() 
-    },[isShowEchart]) 
-     // 监听时间的变化
-     useEffect(()=>{ 
-        dragTableScroll();
-    },[moment().format("HH"),dataSource]) 
-
-    // 三、功能操作
-    // 主动滚动当前滚动条, 传递目标时间
-    const dragTableScroll = () =>{
-        // 目标滚动容器
-        var goalNode = document.querySelector('.bottom-top');
-        if(!goalNode){
-            console.log("错误！当前无法自动滚动！")
-            return;
-        }
-        // 当前的滚动减少的行数
-        var declineRow = 3;
-        // 通过比较当前的时间，来拖动滚动条。
-        var totalRow = dataSource.length; 
-        // 计算滚动的比例
-        let turnsRow = 0;
-        switch(radioItem){
-            case 'day':
-                const currentDayTime = moment().format("HH")
-                const goalCurrentDayTime = moment().format("YYYY-MM-DD HH时") 
-                let isNotArriveDay = true;
-                // map是可修改数据
-                dataSource.map(item=>{ 
-                    if(isNotArriveDay){ 
-                        turnsRow ++;
-                        if(item.tm == goalCurrentDayTime|| item.tm == '*' + goalCurrentDayTime){
-                            isNotArriveDay = false; 
-                        }
-                    } 
-                })  
-                break;
-            case 'week': 
-                const currentWeekTime = moment().format("ddd")
-                const goalCurrentWeekTime = moment().format("ddd") 
-                let isNotArriveWeek = true;
-                // map是可修改数据
-                dataSource.map(item=>{ 
-                    if(isNotArriveWeek){ 
-                        turnsRow ++;
-                        if(item.tm == goalCurrentWeekTime || item.tm == '*' + goalCurrentWeekTime){
-                            isNotArriveWeek = false; 
-                        }
-                    } 
-                })  
-                break;
-            case 'month':
-                const currentMonthTime = moment().format("HH")
-                const goalCurrentMonthTime = currentMonthTime + '日' 
-                let isNotArriveMonth = true;
-                // map是可修改数据
-                dataSource.map(item=>{ 
-                    if(isNotArriveMonth){ 
-                        turnsRow ++;
-                        if(item.tm == goalCurrentMonthTime || item.tm == '*' + goalCurrentMonthTime){
-                            isNotArriveMonth = false; 
-                        }
-                    } 
-                })  
-                break;
-        }
-        // 按照比例拖动滚动条
-        turnsRow -= declineRow
-        turnsRow = turnsRow > 0 ? turnsRow : 0
-        goalNode.scrollTop = goalNode.scrollHeight * turnsRow / totalRow
     }
-    // 搜索表格信息,(先获取远程数据，再绘制表格)
-    const onSearch = (t_radioItem=null,isInit = false)=>{    
-        switch(t_radioItem){
-            case 'day':
-                getDayData(isInit);
-                break; 
-            case 'week':
-                getWeekData(isInit);
-                break; 
-            case 'month':
-                getMonthData(isInit);
-                break; 
-        }
+  }
+  componentDidMount() {
+    this.initalECharts()
+    this.initalECharts1()
+    this.initalECharts2()
+    this.initalECharts3()
+    this.initalECharts4()
+    this.initalECharts5()
+    const that = this
+    window.onresize = function() {
+      console.log(that.state.myChart1,'2222222222222')
+      that.state.myChart1.resize()
+      that.state.myChart2.resize()
+      that.state.myChart3.resize()
+      that.state.myChart4.resize()
+      that.state.myChart5.resize()
+      that.state.myChart6.resize()
     }
-    // 切换表格显示信息 
-    const onChange = (e) => {
-        setIsLoading(true)
-        setRadioItem(e.target.value); 
-        // 重新设置一下数据
-        typeList = Common.waterData;
-        onSearch(e.target.value);
-        // 清空原定时器，启动新的定时器 
-        let ITimerResponse = sessionStorage.getItem("ITimerResponse")
-        if(ITimerResponse)  clearInterval(ITimerResponse) 
-        if(ITimer)  clearInterval(ITimer) 
-        ITimer = setInterval(()=>{  
-            hideCharts()
-            onSearch(e.target.value); 
-            MessageTool("数据已经更新","success")
-        },Common.refreshDelay) 
-        sessionStorage.setItem('ITimerResponse',ITimer) 
-        // 关闭旋转器
-        // setTimeout(()=>{ 
-        //     setIsLoading(false)
-        // },1000)
- 
-    };
- 
-    // 五、获取远程数据
-    // 获取日数据
-    const getDayData = async(isInit=false) =>{ 
-        // 入库流量，出库流量，库容
-        let dayData1 = await getCapChangeDay() 
-        let dayData2 = await getInflowChangeDay() 
-        let dayData3 = await getOutflowChangeDay() 
-
-        // // 判断结果是否为空
-        // if(!day1.data || !day2.data || !day3.data){
-        //     MessageTool("数据为空",'warning')
-        //     return;
-        // }
-
-        // // 获取列表数据  
-        // let dayData1 = dateSort(Object.keys(day1.data)).map(item=>{
-        //     return day1.data[item]
-        // })
-        // let dayData2 = dateSort(Object.keys(day2.data)).map(item=>{
-        //     return day2.data[item]
-        // })
-        // let dayData3 = dateSort(Object.keys(day3.data)).map(item=>{
-        //     return day3.data[item]
-        // })
- 
-        getWaterChangeDay().then(res=>{
-            console.log("getWaterChangeDay返回的数据day是",res) 
-
-            let t_columns = [ 
-                {
-                    title: '时间(时)',
-                    dataIndex:'tm',
-                    key:'tm',
-                    align:'center',
-                    width:150,
-                    // fixed: 'left',
-                },
-            ] 
-            typeList.forEach((item,index)=>{  
-                t_columns.push({
-                    title:item.stnm + '(米)',
-                    dataIndex:item.stcd+'rz',
-                    key:item.stcd+'rz',
-                    align:'center',
-                    width:80,
-                })
-                // 间隔加入
-                switch(index){
-                    case 0: 
-                        t_columns.push({
-                            title: '库容(万立方米)',
-                            dataIndex:typeList[0].stcd+'w',
-                            key:typeList[0].stcd+'w',
-                            align:'center',
-                            width:120,
-                        }) 
-                        break;
-                    case 1: 
-                        t_columns.push({
-                            title:'入库流量(立方米/秒)',
-                            dataIndex:typeList[1].stcd+'inflow',
-                            key:typeList[1].stcd+'inflow',
-                            align:'center',
-                            width:120,
-                        }) 
-                        break;
-                    case 2:       
-                        t_columns.push({
-                            title:'出库流量(立方米/秒)',
-                            dataIndex:typeList[2].stcd+'outflow',
-                            key:typeList[2].stcd+'outflow',
-                            align:'center',
-                            width:120,
-                        }) 
-                        break;
-                }
-            }) 
-
-            setColumns(t_columns) 
-
- 
-            // // （1.获取图表数据
-            var t_res = []
-            let t_echartsX = [];
-            let t_echartsY = []; 
-            const t_subData0 = [];
-            const t_subData1 = [];
-            const t_subData2 = [];
-            const prefixDate = formatDate(new Date(),'yyyy-MM-dd') 
-            let nowTime = parseInt(moment().format("HH"))
-            nowTime  = nowTime - 8
-            if(nowTime<0) nowTime += 25 
-            let t_max = 0; // 没有负值
-            let t_min = 1000000; // 没有极大值 
-  
-        //     // 切割超出的时数据  
-        //     res = stripDayUselessData(res)
-
-            // 获取当前的时间列表
-            let datetimeList = getDatetimeList() 
-
-            datetimeList.forEach((item,index)=>{ 
-                let item1,item2,item3;
-                res.some((subitem,subindex)=>{ 
-                    if(subitem.tm==item){
-                        switch(subitem.stcd){
-                            case typeList[0].stcd: 
-                                item1 = subitem;
-                                break;
-                            case typeList[1].stcd: 
-                                item2 = subitem;
-                                break;
-                            case typeList[2].stcd: 
-                                item3 = subitem;
-                                break;
-                            default:
-                                break;
-                        }
-                        return false;
-                    }
-                }) 
-                // 表格数据  
-                t_res.push( { 
-                    order:(index == nowTime ? '*' : '' )+(index+1),  
-                    [item1.stcd]:item1.stcd,
-                    [item1.stcd+'rz']: changeDataLine(item1.rz),  
-                    [item2.stcd]:item2.stcd,
-                    [item2.stcd+'rz']: changeDataLine(item2.rz), 
-                    [item3.stcd]:item3.stcd,
-                    [item3.stcd+'rz']: changeDataLine(item3.rz), 
- 
-                    [typeList[0].stcd+'w']:changeDataLine(dayData1[index].w ), 
-                    [typeList[1].stcd+'inflow']:changeDataLine(dayData2[index].inq ),
-                    [typeList[2].stcd+'outflow']:changeDataLine(dayData3[index].otq), 
- 
-                    // tm:  prefixDate + columnsTimeList[index]  ,
-                    tm:  reverseFormatDate2(datetimeList[index]) ,
-                }) 
-                // 图表数据
-                t_echartsX.push((index  == nowTime ? '*' : '' )+columnsTimeList[index])
-                t_subData0.push(changeDataLine(item1.rz )) 
-                t_subData1.push(changeDataLine(item2.rz )) 
-                t_subData2.push(changeDataLine(item3.rz )) 
-                // 计算最大值和最小值
-                if(item1.rz ||  item1.rz == 0){
-                    if(item1.rz > t_max){
-                        t_max = parseInt(item1.rz)
-                    }
-                    if(item1.rz < t_min){
-                        t_min = item1.rz 
-                    }
-                }
-                if(item2.rz ||  item2.rz == 0){
-                    if(item2.rz > t_max){
-                        t_max = parseInt(item2.rz)
-                    }
-                    if(item2.rz < t_min){
-                        t_min = item2.rz 
-                    }
-                }
-                if(item3.rz ||  item3.rz == 0){
-                    if(item3.rz > t_max){
-                        t_max = parseInt(item3.rz)
-                    }
-                    if(item3.rz < t_min){
-                        t_min = item3.rz 
-                    }
-                }
-            })  
-            setDataSource(t_res)  
- 
-            // 填补图的空数据（表格不填充） 日数据
-            let hasLen = t_subData0.length
-            let moreNullDataLen = 23 - hasLen;
-
-            if(moreNullDataLen>0){ 
-                while(moreNullDataLen--){
-                    hasLen ++ ;
-                    t_echartsX.push(columnsTimeList[hasLen])
-                    t_subData0.push(null)  
-                    t_subData1.push(null) 
-                    t_subData2.push(null)  
-                }
+  }
+  initalECharts5() {
+    this.setState(
+      { myChart6: echarts.init(document.getElementById('mainMap3')) },
+      () => {
+        this.state.myChart6.setOption({
+          title: {
+            show: true,
+            text: '近6个月观众活跃趋势',
+            x: 'center',
+            textStyle: {
+              //主标题文本样式{"fontSize": 18,"fontWeight": "bolder","color": "#333"}
+              fontSize: 14,
+              fontStyle: 'normal',
+              fontWeight: 'normal',
+              color: '#01c4f7'
             }
-
-
-            // (2.计算日数据的最大值 与最小值，确认刻度的区间。
-            // if(t_min < 0) t_min = 0  // 可能存放负值
-            if(t_max < t_min){
-                t_max = 250;
-                t_min = 0
-            } 
-            let realAvg = 0
-            if((t_max - t_min )  / 10 > myAxisObj.yAxis.avg  || t_max == t_min ){
-                realAvg  = myAxisObj.yAxis.avg  
-            }else{ 
-                realAvg  = (t_max - t_min )  / 10 
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow'
             }
-            if(realAvg < 0) realAvg = myAxisObj.yAxis.avg // 可能存放负值
-           
-            t_max = Math.ceil(t_max + realAvg )
-            t_min = Math.floor(t_min - realAvg )
-            
-            // if(t_min < 0) t_min = 0  // 可能存放负值
-            myAxisObj = {
-                ...myAxisObj,
-                'yAxis':{
-                    ...myAxisObj.yAxis,
-                    'day':{min:t_min, max:t_max}
-                }
-            } 
-   
-            // // （3.绘制表格.
-            // // 日数据表格
-            t_echartsY  = [{
-                ...defaultObj,
-                name:typeList[0].stnm,
-                data:t_subData0,
-                ...myAxisObj.series.day[0]
-            },{
-                ...defaultObj,
-                name:typeList[1].stnm,
-                data:t_subData1,
-                ...myAxisObj.series.day[1]
-            },{
-                ...defaultObj,
-                name:typeList[2].stnm,
-                data:t_subData2,
-                ...myAxisObj.series.day[2]
-            }]  
-            drawContentRightTop({
-                xArr:t_echartsX,
-                yArr:t_echartsY
-            })
+          },
+          legend: {
+            data: ['观看人数、次数（个）', '场均观看数（场）'],
+            textStyle: {
+              fontSize: 12,
+              color: '#ffffff'
+            },
+            top: 20,
+            itemWidth: 20, // 设置宽度
 
-            // 暂停旋转器
-            isLeftOk = true
-            showCharts()
+            itemHeight: 12, // 设置高度
 
-            // 重新设置表头宽度
-            setTimeout(()=>{ 
-                resetTableTitleWidth()
-            },1000)
-        }).catch(err=>{ 
-
-            
-            // 暂停旋转器
-            setIsLoading(false)  
-            console.log("请求超时！请重试",err)
-            MessageTool('请求超时！请重试','error')
+            itemGap: 10 // 设置间距
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'category',
+            data: ['1月', '2月', '3月', '4月', '五月', '6月'],
+            splitLine: {
+              show: true,
+              lineStyle: {
+                color: ['#07234d']
+              }
+            },
+            axisLabel: {
+              show: true,
+              textStyle: {
+                color: '#c3dbff', //更改坐标轴文字颜色
+                fontSize: 12 //更改坐标轴文字大小
+              }
+            }
+          },
+          yAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01],
+            splitLine: {
+              show: true,
+              lineStyle: {
+                color: ['#07234d']
+              }
+            },
+            axisLabel: {
+              show: true,
+              textStyle: {
+                color: '#c3dbff', //更改坐标轴文字颜色
+                fontSize: 12 //更改坐标轴文字大小
+              }
+            }
+          },
+          series: [
+            {
+              name: '观看人数、次数（个）',
+              type: 'bar',
+              data: [140, 170, 90,180, 90, 90],
+              itemStyle: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  { offset: 0, color: '#9408fc' },
+                  { offset: 1, color: '#05aed3' }
+                ])
+              }
+            },
+            {
+              name: '场均观看数（场）',
+              type: 'bar',
+              data: [120, 130, 80, 130, 120, 120],
+              itemStyle: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  { offset: 0, color: '#13b985' },
+                  { offset: 1, color: '#dc9b18' }
+                ])
+              }
+            }
+          ]
         })
-    } 
-    // 获取周数据
-    const getWeekData = (isInit=false) =>{  
-        getWaterChangeWeek().then(res=>{ 
-            // console.log("getWaterChangeWeek返回的数据month是",res)   
-
-            // （0.重新获取表头数据
-            let t_columns = [ 
-                {
-                    title:'日期(日)',
-                    dataIndex:'tm',
-                    key:'tm',
-                    align:'center',
-                    width:150,
-                    // fixed: 'left',
-                },
-            ] 
-            typeList.forEach(item=>{  
-                t_columns.push({
-                    title:item.stnm + '(米)',
-                    dataIndex:item.stcd+'rz',
-                    key:item.stcd+'rz',
-                    align:'center',
-                    width:80,
-                })
-            }) 
-
-
- 
-            // // // （1.获取图表数据
-            var t_res = []
-            let t_echartsX = [];
-            let t_echartsY = []; 
-            const t_subData0 = [];
-            const t_subData1 = [];
-            const t_subData2 = [];
-            // const prefixDate = formatDate(new Date(),'yyyy-MM-dd')
-            const prefixDate = ''
-            // 方案一：获取当前月的数据
-            const start = parseInt(moment().format("e")) 
-            const todayDay =  parseInt(moment().format("D")) 
-            // 方案二：获取上一个月的数据
-            let dateLen = res.length;
-
-            let t_max = 0; // 没有负值
-            let t_min = 1000000; // 没有极大值
-            let turns = 0;
-            const turnsList = ['一','二','三','四','五','六','日']
-
-            //  月份初期,填补周数据
-            let declineDay = start - todayDay + 1; 
-            if(todayDay < 7 && declineDay > 0){ 
-                while(declineDay--){ 
-                    turns += 1;
-                    // 表格数据  
-                    t_res.push( { 
-                        tm: '周'+turnsList[turns-1],
-                        // tm:reverseFormatDate(newTime), 
-                        [typeList[0].stcd]:typeList[0].stcd,
-                        [typeList[0].stcd+'rz']:'-', 
-                        [typeList[1].stcd]:typeList[1].stcd,
-                        [typeList[1].stcd+'rz']:'-', 
-                        [typeList[2].stcd]:typeList[2].stcd,
-                        [typeList[2].stcd+'rz']:'-', 
-                    }) 
-                    // 图表数据
-                    t_echartsX.push('周'+turnsList[turns-1])
-
-                    t_subData0.push(null) 
-                    t_subData1.push(null) 
-                    t_subData2.push(null) 
-                }
-            }
- 
-            // 切割超出的数据（每月的日数据）
-            res = stripMonthUselessData(res)
-
-            res.some((item,index)=>{  
-                // （1.方案一
-                if(todayDay - start <= index + 1 && turns < 7 ){ 
-                    turns += 1;
- 
-                // （2.方案二
-                // 获取前31日的日期
-                // let newTime =  moment().subtract(dateLen,'day').format("YYYY-MM-DD");
-                // dateLen -= 1
-                // if(dateLen < 7){ 
- 
-                    // 表格数据  
-                    t_res.push( { 
-                        tm: (turns-1 == start ? '*' : '' )+'周'+turnsList[turns-1],
-                        // tm:reverseFormatDate(newTime),
-                        // sttp:item[0].sttp == 'RR' ? '水库水文站' :'-',
-                        [item[0].stcd]:item[0].stcd,
-                        [item[0].stcd+'rz']:changeDataLine(item[0].rz), 
-                        [item[1].stcd]:item[1].stcd,
-                        [item[1].stcd+'rz']:changeDataLine(item[1].rz), 
-                        [item[2].stcd]:item[2].stcd,
-                        [item[2].stcd+'rz']:changeDataLine(item[2].rz), 
-                    }) 
-                    // 图表数据
-                    t_echartsX.push((turns-1 == start ? '*' : '' )+'周'+turnsList[turns-1])
-                    // t_echartsX.push(newTime)
-
-                    t_subData0.push(changeDataLine(item[0].rz )) 
-                    t_subData1.push(changeDataLine(item[1].rz )) 
-                    t_subData2.push(changeDataLine(item[2].rz )) 
-                    // 计算最大值和最小值
-                        
-                    if(item[0].rz ||  item[0].rz == 0){
-                        if(item[0].rz > t_max){
-                            t_max = parseInt(item[0].rz)
-                        }
-                        if(item[0].rz < t_min){
-                            t_min = item[0].rz 
-                        }
-                    }
-                    if(item[1].rz ||  item[1].rz == 0){
-                        if(item[1].rz > t_max){
-                            t_max = parseInt(item[1].rz)
-                        }
-                        if(item[1].rz < t_min){
-                            t_min = item[1].rz 
-                        }
-                    }
-                    if(item[2].rz ||  item[2].rz == 0){
-                        if(item[2].rz > t_max){
-                            t_max = parseInt(item[2].rz)
-                        }
-                        if(item[2].rz < t_min){
-                            t_min = item[2].rz 
-                        }
-                    }
-                } 
-            }) 
-
-            // 填补图的空数据（表格不填充） 周数据
-            let hasLen = t_subData0.length
-            let moreNullDataLen = 7 - hasLen;
-            while(moreNullDataLen--){
-                hasLen ++ ;
-                t_echartsX.push('周'+turnsList[hasLen-1])
-                t_subData0.push(null)  
-                t_subData1.push(null) 
-                t_subData2.push(null)  
-            } 
-
-            // 首次加载时不抢占位置  
-            if(!isInit){
-                setColumns(t_columns)  
-                setDataSource(t_res)   
-            }
-
-            // // (2.计算日数据的最大值 与最小值，确认刻度的区间。
-            // if(t_min < 0) t_min = 0  // 可能存放负值
-            if(t_max < t_min){
-                t_max = 250;
-                t_min = 0
-            } 
-            let realAvg = 0
-            if((t_max - t_min )  / 10 > myAxisObj.yAxis.avg  || t_max == t_min  ){
-                realAvg  = myAxisObj.yAxis.avg  
-            }else{ 
-                realAvg  = (t_max - t_min )  / 10 
-            }
-            
-            if(realAvg < 0) realAvg = myAxisObj.yAxis.avg // 可能存放负值
-
-            t_max = Math.ceil(t_max + realAvg )
-            t_min = Math.floor(t_min - realAvg )
-            
-            // if(t_min < 0) t_min = 0  // 可能存放负值
-            myAxisObj = {
-                ...myAxisObj,
-                'yAxis':{
-                    ...myAxisObj.yAxis,
-                    'week':{min:t_min, max:t_max}
-                }
-            }
-   
-            // // （3.绘制表格.
-            // // 日数据表格
-            t_echartsY  = [{
-                ...defaultObj,
-                name:typeList[0].stnm,
-                data:t_subData0,
-                ...myAxisObj.series.week[0]
-            },{
-                ...defaultObj,
-                name:typeList[1].stnm,
-                data:t_subData1,
-                ...myAxisObj.series.week[1]
-            },{
-                ...defaultObj,
-                name:typeList[2].stnm,
-                data:t_subData2,
-                ...myAxisObj.series.week[2]
-            }]  
-            drawContentRightMiddle({
-                xArr:t_echartsX,
-                yArr:t_echartsY
-            }) 
-            
-            // 暂停旋转器
-            // setIsLoading(false) 
-            isCenterOk = true
-            if(isInit == false){
-                showCharts()
-            } 
-            
-            // 重新设置表头宽度
-            setTimeout(()=>{ 
-                resetTableTitleWidth()
-            },1000)
-        }).catch(err=>{ 
-            
-            // 暂停旋转器
-            setIsLoading(false)  
-            console.log("请求超时！请重试",err)
-            MessageTool('请求超时！请重试','error')
-        }) 
-    }
-    // 获取月数据
-    const getMonthData = (isInit=false) =>{  
-        getWaterChangeMonth().then(res=>{
-            // console.log("getWaterChangeMonth返回的数据month是",res)   
-            // （0.重新获取表头数据
-            let t_columns = [ 
-                {
-                    title:formatDate(new Date(),'MM')+'月份(日)',
-                    dataIndex:'tm',
-                    key:'tm',
-                    align:'center',
-                    width:150,
-                    // fixed: 'left',
-                },
-            ] 
-            typeList.forEach(item=>{  
-                t_columns.push({
-                    title:item.stnm + '(米)',
-                    dataIndex:item.stcd+'rz',
-                    key:item.stcd+'rz',
-                    align:'center',
-                    width:80,
-                })
-            })  
-
- 
-            // // （1.获取图表数据
-            var t_res = []
-            let t_echartsX = [];
-            let t_echartsY = []; 
-            const t_subData0 = [];
-            const t_subData1 = [];
-            const t_subData2 = [];
-            // 方案一：获取当前月的数据 
-            const prefixDate = formatDate(new Date(),'yyyy-MM-')
-            // const prefixDate = ''
-
-            // 方案二：获取上一个月的数据
-            const nowTime = parseInt(moment().format("DD")) 
-            let dateLen = res.length;
- 
-            let t_max = 0; // 没有负值
-            let t_min = 1000000; // 没有极大值
-            
-            
-            // 切割超出的数据（每月的日数据）
-            res = stripMonthUselessData(res)
-
-            res.forEach((item,index)=>{ 
-                // (1.方案一
-                
-                let t = index  + 1;
-                let t_tm = prefixDate+(t < 10 ? '0'+ t : t)
-
-                // （2.方案二
-                // 表格数据  
-                // 获取前31日的日期
-                // let newTime =  moment().subtract(dateLen,'day').format("YYYY-MM-DD");
-                // dateLen -= 1
-
-
-                t_res.push( { 
-                    tm:(index + 1 == nowTime ? '*' : '' )+reverseFormatDate(t_tm),
-                    // tm:reverseFormatDate(newTime),
-                    // sttp:item[0].sttp == 'RR' ? '水库水文站' :'-',
-                    [item[0].stcd]:item[0].stcd,
-                    [item[0].stcd+'rz']:changeDataLine(item[0].rz), 
-                    [item[1].stcd]:item[1].stcd,
-                    [item[1].stcd+'rz']:changeDataLine(item[1].rz), 
-                    [item[2].stcd]:item[2].stcd,
-                    [item[2].stcd+'rz']:changeDataLine(item[2].rz), 
-                }) 
-                // 图表数据 
-                t_echartsX.push((index + 1 == nowTime ? '*' : '' )+t_tm)
-                // t_echartsX.push(newTime)
-
-                t_subData0.push(changeDataLine(item[0].rz )) 
-                t_subData1.push(changeDataLine(item[1].rz )) 
-                t_subData2.push(changeDataLine(item[2].rz )) 
-                // 计算最大值和最小值
-                if(item[0].rz ||  item[0].rz == 0){
-                    if(item[0].rz > t_max){
-                        t_max = parseInt(item[0].rz)
-                    }
-                    if(item[0].rz < t_min){
-                        t_min = item[0].rz 
-                    }
-                }
-                if(item[1].rz ||  item[1].rz == 0){
-                    if(item[1].rz > t_max){
-                        t_max = parseInt(item[1].rz)
-                    }
-                    if(item[1].rz < t_min){
-                        t_min = item[1].rz 
-                    }
-                }
-                if(item[2].rz ||  item[2].rz == 0){
-                    if(item[2].rz && item[2].rz > t_max){
-                        t_max = parseInt(item[2].rz)
-                    }
-                    if(item[2].rz < t_min){
-                        t_min = item[2].rz 
-                    }
-                }
-            }) 
-            
-            // 填补图的空数据（表格不填充） 周数据
-            let hasLen = t_subData0.length
-            let monthLen = parseInt(moment(moment().format('"YYYY-MM"'), "YYYY-MM").daysInMonth());  
-            let moreNullDataLen = monthLen - hasLen; 
-
-            while(moreNullDataLen--){
-                hasLen ++ ;
-
-                let t = hasLen ;
-                let t_tm = prefixDate+(t < 10 ? '0'+ t : t)
-                t_echartsX.push(t_tm)
-                t_subData0.push(null)  
-                t_subData1.push(null) 
-                t_subData2.push(null)  
-            }  
-
-
-            // 首次加载时不抢占位置  
-            if(!isInit){
-                setColumns(t_columns)  
-                setDataSource(t_res)   
-            }
-
-            // (2.计算日数据的最大值 与最小值，确认刻度的区间。
-            // if(t_min < 0) t_min = 0 // 可能存放负值
-            if(t_max < t_min){
-                t_max = 250;
-                t_min = 0
-            } 
-            let realAvg = 0
-            if((t_max - t_min )  / 10 > myAxisObj.yAxis.avg  || t_max == t_min ){
-                realAvg  = myAxisObj.yAxis.avg  
-            }else{ 
-                realAvg  = (t_max - t_min )  / 10 
-            }
-            if(realAvg < 0) realAvg = myAxisObj.yAxis.avg // 可能存放负值
-            
-            t_max = Math.ceil(t_max + realAvg )
-            t_min = Math.floor(t_min - realAvg )
-            
-            // if(t_min < 0) t_min = 0   // 可能存放负值
-            myAxisObj = {
-                ...myAxisObj,
-                'yAxis':{
-                    ...myAxisObj.yAxis,
-                    'month':{min:t_min, max:t_max}
-                }
-            }
-   
-            // // （3.绘制表格.
-            // // 日数据表格
-            t_echartsY  = [{
-                ...defaultObj,
-                name:typeList[0].stnm,
-                data:t_subData0,
-                ...myAxisObj.series.month[0]
-            },{
-                ...defaultObj,
-                name:typeList[1].stnm,
-                data:t_subData1,
-                ...myAxisObj.series.month[1]
-            },{
-                ...defaultObj,
-                name:typeList[2].stnm,
-                data:t_subData2,
-                ...myAxisObj.series.month[2]
-            }]  
-            drawContentRightBottom({
-                xArr:t_echartsX,
-                yArr:t_echartsY
-            }) 
-            
-            // 暂停旋转器
-            // setIsLoading(false)  
-            isRightOk  = true
-            if(isInit == false){
-                showCharts()
-            } 
-            
-            // 重新设置表头宽度
-            setTimeout(()=>{ 
-                resetTableTitleWidth()
-            },1000)
-        }).catch(err=>{ 
-            // 暂停旋转器
-            setIsLoading(false)  
-            console.log("请求超时！请重试",err)
-            MessageTool('请求超时！请重试','error')
-        })
-    }
-    
-    // 六、图表显示
-    // 显示的图表，顶部
-    const drawContentRightTop = (t_echartList ) =>{   
-        // 1.基于准备好的dom，初始化echarts实例
-        // 清除已经生成的页面节点 
-        let parentNodes = document.querySelector('#bottom-echart-top'); 
-        parentNodes.innerHTML = ""
-        // 清除原来的实例（但这里没有实际效果）
-        if (myChartTop)  myChartTop = null;  
-        // 删除原来的实例属性（或者设置为空也行）
-        if(parentNodes.hasAttributes("_echarts_instance_"))  parentNodes.removeAttribute("_echarts_instance_")    
-        // 注销后，重新创建实例
-        myChartTop = echarts.init(document.getElementById('bottom-echart-top'),'dark');
-           
-        // 2.指定图表的配置项和数据
-        var option = {
-            title: {
-                text: '日水位变化曲线', 
-                color:'white',
-                x:'center',
-                y: 'bottom',
-            },
-            tooltip: {  
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'line'
-                }
-            },
-            legend: {
-                top:5,
-                left:5,
-                data:[typeList[0].stnm,typeList[1].stnm,typeList[2].stnm]
-            },
-            grid: {
-                top: 70,
-                bottom: 50
-            },
-            toolbox: { 
-                show: true,
-                orient: 'horizontal',    
-                right: 10,
-                top: 10,  
-                feature: {  
-                    magicType: {            //动态类型切换
-                        show: true,           //是否显示该工具
-                        type: ['line', 'bar'], //启用的动态类型
-                        title:{
-                            line:'折线图',    // 名称
-                            bar:'柱状图'
-                        }
-                    }, 
-                    saveAsImage: { show: true , title:'下载',} 
-                }
-            
-            }, 
-            xAxis: [
-                    { 
-                        type: 'category', 
-                        position:'bottom',
-                        name: '时间',
-                        min: 0,   // 起始值
-                        max: 23,  // 结束值  
-                        nameTextStyle:{   // name标签文字样式
-                            padding:[0,0,0,-10],  
-                        },
-                        data: t_echartList.xArr, 
-                        axisTick: {      // 轴线刻度  
-                            length: 7,//刻度线的长度
-                            interval: 3,  //该{}中的data全部显示
-                            lineStyle: { 
-                                color: '#ccc',
-                                fontSize: '20px'
-                            }
-                        },
-                        axisLine: {       // 轴线颜色 
-                            onZero: false,             // 保持轴线在底部， 非0位置
-                            symbol:["none","arrow"],    //轴线箭头
-                            symbolSize: [8, 10] 
-                        },
-                        boundaryGap: false       // 不留白，从原点开始
-                    },
-                    {  
-                        type: 'category', 
-                        position:'bottom',
-                        min: 0,   // 起始值
-                        max: 23,  // 结束值  
-                        nameTextStyle:{   // name标签文字样式
-                            padding:[0,0,0,-10],  
-                        },
-                        data: t_echartList.xArr, 
-                        axisTick: {      // 轴线刻度  
-                            length: 3,//刻度线的长度
-                            interval: 0,  //该{}中的data全部显示
-                            lineStyle: { 
-                                color: '#ccc',
-                                fontSize: '20px'
-                            }
-                        },
-                        axisLine: {       // 轴线颜色 
-                            onZero: false,             // 保持轴线在底部， 非0位置
-                            symbol:["none","arrow"],    //轴线箭头
-                            symbolSize: [8, 10] 
-                        },
-                        boundaryGap: false       // 不留白，从原点开始
-                    }
-            ],
-            yAxis:  {
-                type: 'value',
-                name: '水位(米)', 
-                min: 238,
-                max: 230, 
-                // 替换y轴刻度的最大值和最小值
-                ...myAxisObj.yAxis.day, 
-                axisLabel: {      // 纵轴刻度标签 
-                    formatter: '{value}',  //  轴线标签
-                    align: 'right'    // 轴线相对标签的位置
-                }, 
-	            boundaryGap: false       // 不留白，从原点开始
-            },
-            series: t_echartList.yArr
-        };   
-        // 3.使用刚指定的配置项和数据显示图表。
-        myChartTop.setOption(option); 
-        setMyChartTopRes(myChartTop)
-
-        // 4.修正位置 
-        if(echartTopNodeRef.current) echartTopNodeRef.current.style.cssText = "width:33.3%!important;height:100%!important";
-        // 再次修正位置  
-        if(myChartTop) myChartTop.resize()
-        if(myChartMiddle) myChartMiddle.resize()
-        if(myChartBottom) myChartBottom.resize() 
-        // 显示图表，vue中采用v-show
-        setTimeout(()=>{ 
-            setIsShowEchart(true);
-        },1000)
-    }
-    // 显示的图表，中部
-    const drawContentRightMiddle = (t_echartList ) =>{    
-        // 1.基于准备好的dom，初始化echarts实例
-        // 清除已经生成的页面节点 
-        let parentNodes = document.querySelector('#bottom-echart-middle'); 
-        parentNodes.innerHTML = ""
-        // 清除原来的实例（但这里没有实际效果）
-        if (myChartMiddle)  myChartMiddle = null;  
-        // 删除原来的实例属性（或者设置为空也行）
-        if(parentNodes.hasAttributes("_echarts_instance_"))  parentNodes.removeAttribute("_echarts_instance_")    
-        // 注销后，重新创建实例
-        myChartMiddle = echarts.init(document.getElementById('bottom-echart-middle'),'dark');
-       
-
-        // 2.指定图表的配置项和数据
-        var option = {
-            title: {
-                text: '周水位变化曲线', 
-                x:'center',
-                y: 'bottom',
-            },
-            tooltip: {  
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'line'
-                }
-            },
-            legend: {
-                top:5,
-                left:5,
-                data:  [typeList[0].stnm,typeList[1].stnm,typeList[2].stnm]
-            },
-            grid: {
-                top: 70,
-                bottom: 50
-            },
-            toolbox: { 
-                show: true,
-                orient: 'horizontal',    
-                right: 10,
-                top: 10,  
-                feature: {  
-                    magicType: {            //动态类型切换
-                        show: true,           //是否显示该工具
-                        type: ['line', 'bar'], //启用的动态类型
-                        title:{
-                            line:'折线图',    // 名称
-                            bar:'柱状图'
-                        }
-                    }, 
-                    saveAsImage: { show: true , title:'下载',} 
-                }
-            
-            }, 
-            xAxis:  [
-                { 
-                    type: 'category', 
-                    position:'bottom',
-                    name: '星期',
-                    min: 0,   // 起始值
-                    max: 6,  // 结束值  
-                    nameTextStyle:{   // name标签文字样式
-                        padding:[0,0,0,-10],  
-                    },
-                    data: t_echartList.xArr, 
-                    axisTick: {      // 轴线刻度  
-                        length: 7,//刻度线的长度
-                        interval: 0,  //该{}中的data全部显示
-                        lineStyle: { 
-                            color: '#ccc',
-                            fontSize: '20px'
-                        }
-                    },
-                    axisLine: {       // 轴线颜色 
-                        onZero: false,             // 保持轴线在底部， 非0位置
-                        symbol:["none","arrow"],    //轴线箭头
-                        symbolSize: [8, 10] 
-                    },
-                    boundaryGap: false       // 不留白，从原点开始
-                },
-                {  
-                    type: 'category', 
-                    position:'bottom',
-                    min: 0,   // 起始值
-                    max: 6,  // 结束值  
-                    nameTextStyle:{   // name标签文字样式
-                        padding:[0,0,0,-10],  
-                    },
-                    data: t_echartList.xArr, 
-                    axisTick: {      // 轴线刻度  
-                        length: 3,//刻度线的长度
-                        interval: 0,  //该{}中的data全部显示
-                        lineStyle: { 
-                            color: '#ccc',
-                            fontSize: '20px'
-                        }
-                    },
-                    axisLine: {       // 轴线颜色 
-                        onZero: false,             // 保持轴线在底部， 非0位置
-                        symbol:["none","arrow"],    //轴线箭头
-                        symbolSize: [8, 10] 
-                    },
-                    boundaryGap: false       // 不留白，从原点开始
-                }
-            ],
-            yAxis:  {
-                type: 'value',
-                name: '水位(米)', 
-                min: 238,
-                max: 230, 
-                // 替换y轴刻度的最大值和最小值
-                ...myAxisObj.yAxis.week,
-                axisLabel: {      // 纵轴刻度标签 
-                    formatter: '{value}',  //  轴线标签
-                    align: 'right'    // 轴线相对标签的位置
-                }, 
-	            boundaryGap: false       // 不留白，从原点开始
-            },
-            series: t_echartList.yArr
-        };   
-        // 3.使用刚指定的配置项和数据显示图表。
-        myChartMiddle.setOption(option);
-        setMyChartMiddleRes(myChartMiddle)
-
-        // 4.修正位置 
-        if(echartMiddleNodeRef.current) echartMiddleNodeRef.current.style.cssText = "width:33.3%!important;height:100%!important";
-        // 再次修正位置  
-        if(myChartTop) myChartTop.resize()
-        if(myChartMiddle) myChartMiddle.resize()
-        if(myChartBottom) myChartBottom.resize() 
-    }
-    // 显示的图表，底部
-    const drawContentRightBottom = (t_echartList ) =>{     
-        // 1.基于准备好的dom，初始化echarts实例
-        // 清除已经生成的页面节点 
-        let parentNodes = document.querySelector('#bottom-echart-bottom'); 
-        parentNodes.innerHTML = ""
-        // 清除原来的实例（但这里没有实际效果）
-        if (myChartBottom)  myChartBottom = null;  
-        // 删除原来的实例属性（或者设置为空也行）
-        if(parentNodes.hasAttributes("_echarts_instance_"))  parentNodes.removeAttribute("_echarts_instance_")    
-        // 注销后，重新创建实例
-        myChartBottom = echarts.init(document.getElementById('bottom-echart-bottom'),'dark');
- 
-
-        // 2.指定图表的配置项和数据
-        var option = {
-            title: {
-                text: '月水位变化曲线', 
-                x:'center',
-                y: 'bottom',
-            },
-            tooltip: {  
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'line'
-                }
-            },
-            legend: {
-                top:5,
-                left:5,
-                data: [typeList[0].stnm,typeList[1].stnm,typeList[2].stnm]
-            },
-            grid: {
-                top: 70,
-                bottom: 50
-            },
-            toolbox: { 
-                show: true,
-                orient: 'horizontal',    
-                right: 10,
-                top: 10,  
-                feature: {  
-                    magicType: {            //动态类型切换
-                        show: true,           //是否显示该工具
-                        type: ['line', 'bar'], //启用的动态类型
-                        title:{
-                            line:'折线图',    // 名称
-                            bar:'柱状图'
-                        }
-                    }, 
-                    saveAsImage: { show: true , title:'下载',} 
-                }
-            
-            }, 
-            xAxis:  [
-                { 
-                    type: 'category', 
-                    position:'bottom',
-                    name: '日期',
-                    min: 0,   // 起始值
-                    max: 30,  // 结束值  
-                    nameTextStyle:{   // name标签文字样式
-                        padding:[0,0,0,-10],  
-                    },
-                    data: t_echartList.xArr, 
-                    axisTick: {      // 轴线刻度  
-                        length: 7,//刻度线的长度
-                        interval: 8,  //该{}中的data全部显示
-                        lineStyle: { 
-                            color: '#ccc',
-                            fontSize: '20px'
-                        }
-                    },
-                    axisLine: {       // 轴线颜色 
-                        onZero: false,             // 保持轴线在底部， 非0位置
-                        symbol:["none","arrow"],    //轴线箭头
-                        symbolSize: [8, 10] 
-                    },
-                    boundaryGap: false       // 不留白，从原点开始
-                },
-                {  
-                    type: 'category', 
-                    position:'bottom',
-                    min: 0,   // 起始值
-                    max: 30,  // 结束值  
-                    nameTextStyle:{   // name标签文字样式
-                        padding:[0,0,0,-10],  
-                    },
-                    data: t_echartList.xArr, 
-                    axisTick: {      // 轴线刻度  
-                        length: 3,//刻度线的长度
-                        interval: 0,  //该{}中的data全部显示
-                        lineStyle: { 
-                            color: '#ccc',
-                            fontSize: '20px'
-                        }
-                    },
-                    axisLine: {       // 轴线颜色 
-                        onZero: false,             // 保持轴线在底部， 非0位置
-                        symbol:["none","arrow"],    //轴线箭头
-                        symbolSize: [8, 10] 
-                    },
-                    boundaryGap: false       // 不留白，从原点开始
-                }
-            ], 
-            yAxis:{
-                type: 'value',
-                name: '水位(米)', 
-                min: 238,
-                max: 230, 
-                
-                // 替换y轴刻度的最大值和最小值
-                ...myAxisObj.yAxis.month,
-                axisLabel: {      // 纵轴刻度标签 
-                    formatter: '{value}',  //  轴线标签
-                    align: 'right'    // 轴线相对标签的位置
-                }, 
-	            boundaryGap: false       // 不留白，从原点开始
-            },
-            series: t_echartList.yArr
-        };   
-        // 3.使用刚指定的配置项和数据显示图表。
-        myChartBottom.setOption(option);
-        setMyChartBottomRes(myChartBottom)
-
-        // 4.修正位置 
-        if(echartBottomNodeRef.current) echartBottomNodeRef.current.style.cssText = "width:33.3%!important;height:100%!important";
-        // 再次修正位置  
-        if(myChartTop) myChartTop.resize()
-        if(myChartMiddle) myChartMiddle.resize()
-        if(myChartBottom) myChartBottom.resize() 
-    }
- 
-    // 设置表格扩展类型
-    const onSelectDropdown = (name)=>{ 
-
-         // 设置下拉菜单项  
-         if(name == '紧缩型'){
-             setIsTableCollapse(false)
-             setActiveMenuName("紧缩型")
-             sessionStorage.setItem("water_isTableCollapse",false)
-
-              
-            // 修正位置 
-            setIsShowEchart(false);
-            if(echartTopNodeRef.current){ 
-                echartTopNodeRef.current.style.cssText = "width:33.3%!important;height:100%!important";  
-            }  
-            if(echartMiddleNodeRef.current){ 
-                echartMiddleNodeRef.current.style.cssText = "width:33.3%!important;height:100%!important"; 
-            } 
-            if(echartBottomNodeRef.current){ 
-                echartBottomNodeRef.current.style.cssText = "width:33.3%!important;height:100%!important"; 
-            }   
-
-            // // 再次修正位置   
-            if(myChartTop) myChartTop.resize()
-            if(myChartMiddle) myChartMiddle.resize()
-            if(myChartBottom) myChartBottom.resize() 
-            setTimeout(()=>{ 
-                setIsShowEchart(true);
-            },1000)
-         }else{
-            setIsTableCollapse(true)
-            setActiveMenuName("扩展型")
-            sessionStorage.setItem("water_isTableCollapse",true)
-         }
-  
-    }  
-
-
-    // 展示图表数据
-    const hideCharts = ()=>{ 
-        setIsLoading(true)
-    }
-    const showCharts = ()=>{
-        if(isLeftOk && isCenterOk && isRightOk){ 
-            document.querySelector(".bottom-bottom").style.opacity = 1;
-            setIsLoading(false) 
-        }else{
-            // 延时加载
-            setTimeout(()=>{
-                document.querySelector(".bottom-bottom").style.opacity = 1;
-                setIsLoading(false) 
-            },1000) 
-        } 
-    }
-    return (
-        <div className='waterChange-div homeTable-div commTable-div'  > 
-            <div className='fixTitle-div' style={{display:isShowTitle ? 'flex' : 'none'}}>     
-                <Radio.Group onChange={onChange} value={radioItem}>
-                    <Radio value={'day'}>日水位数据</Radio>
-                    <Radio value={'week'}>周水位数据</Radio>
-                    <Radio value={'month'}>月水位数据</Radio>  
-                </Radio.Group>
-                <div className='table-mode-div'> 
-                    <div>表格模式：</div>
-                    <Dropdown overlay={
-                            <Menu>      
-                                    <Menu.Item onClick={()=>onSelectDropdown('紧缩型')}>
-                                        <div > 紧缩型 </div>
-                                    </Menu.Item>  
-                                    <Menu.Item onClick={()=>onSelectDropdown('扩展型')}>
-                                        <div > 扩展型 </div>
-                                    </Menu.Item>  
-                            </Menu>
-                            } placement="bottomLeft">
-                                <Button type='default'>{activeMenuName}</Button>
-                            </Dropdown>
-                </div>
-            </div>
-            <div className='body-bottom-div' style={{'background':'white'}}>  
-                <Spin tip="加载数据中" spinning={isLoading} style={{display:isLoading ? 'flex' : 'none'}}></Spin>
-                <div className='bottom-top' style={{height:isTableCollapse ? 'inherit' : '50%',position:isTableCollapse ? 'absolute' : 'relative'}}>     
-                    <Table dataSource={dataSource} columns={columns} pagination={false} sticky />
-                </div> 
-      
-                <div className='bottom-bottom'  style={{'visibility':isTableCollapse ? 'hidden' : 'visible', 'opacity':0}} >   
-                    {/* <div className='mask-div' style={{'display':isShowEchart ?'none' : 'block'}}>  </div> */}
-                    <div id='bottom-echart-top' style={{width:'600px',height:'300px'}} ref={echartTopNodeRef}></div>
-                    <div id='bottom-echart-middle' style={{width:'600px',height:'300px' }} ref={echartMiddleNodeRef}></div>
-                    <div id='bottom-echart-bottom' style={{width:'600px',height:'300px' }} ref={echartBottomNodeRef}></div>            
-                 </div>     
-            </div>
-        </div>
+      }
     )
-}
+  }
+  initalECharts4() {
+    this.setState(
+      { myChart5: echarts.init(document.getElementById('mainMap2')) },
+      () => {
+        this.state.myChart5.setOption({
+          title: {
+            show: true,
+            text: '近6个月主播活跃趋势',
+            x: 'center',
+            textStyle: {
+              //主标题文本样式{"fontSize": 18,"fontWeight": "bolder","color": "#333"}
+              fontSize: 14,
+              fontStyle: 'normal',
+              fontWeight: 'normal',
+              color: '#01c4f7'
+            }
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow'
+            }
+          },
+          legend: {
+            data: ['开播主播数（个）', '开播场次数（场）'],
+            textStyle: {
+              fontSize: 12,
+              color: '#ffffff'
+            },
+            top: 20,
+            itemWidth: 20, // 设置宽度
 
+            itemHeight: 12, // 设置高度
+
+            itemGap: 10 // 设置间距
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'category',
+            data: ['1月', '2月', '3月', '4月', '五月', '6月'],
+            splitLine: {
+              show: true,
+              lineStyle: {
+                color: ['#07234d']
+              }
+            },
+            axisLabel: {
+              show: true,
+              textStyle: {
+                color: '#c3dbff', //更改坐标轴文字颜色
+                fontSize: 12 //更改坐标轴文字大小
+              }
+            }
+          },
+          yAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01],
+            splitLine: {
+              show: true,
+              lineStyle: {
+                color: ['#07234d']
+              }
+            },
+            axisLabel: {
+              show: true,
+              textStyle: {
+                color: '#c3dbff', //更改坐标轴文字颜色
+                fontSize: 12 //更改坐标轴文字大小
+              }
+            }
+          },
+          series: [
+            {
+              name: '开播主播数（个）',
+              type: 'bar',
+              data: [140, 170, 90,180, 90, 90],
+              itemStyle: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  { offset: 0, color: '#9408fc' },
+                  { offset: 1, color: '#05aed3' }
+                ])
+              }
+            },
+            {
+              name: '开播场次数（场）',
+              type: 'bar',
+              data: [120, 130, 80, 130, 120, 120],
+              itemStyle: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  { offset: 0, color: '#13b985' },
+                  { offset: 1, color: '#dc9b18' }
+                ])
+              }
+            }
+          ]
+        })
+      }
+    )
+  }
+  initalECharts3() {
+    this.setState(
+      { myChart4: echarts.init(document.getElementById('countyMap')) },
+      () => {
+        this.state.myChart4.setOption({
+          color: ['#ff832e', '#37cbff', '#b3e269'],
+          legend: {
+            top: 30,
+            data: ['美妆', '理财', '教育', '母婴', '百货'],
+            textStyle: {
+              fontSize: 12,
+              color: '#ffffff'
+            },
+            icon: 'circle',
+            itemWidth: 10, // 设置宽度
+
+            itemHeight: 10, // 设置高度
+
+            itemGap: 10 // 设置间距
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'value',
+            splitLine: {
+              show: true,
+              lineStyle: {
+                color: ['#07234d']
+              }
+            },
+            axisLabel: {
+              show: true,
+              textStyle: {
+                color: '#c3dbff', //更改坐标轴文字颜色
+                fontSize: 12 //更改坐标轴文字大小
+              }
+            }
+          },
+          yAxis: {
+            type: 'category',
+            data: ['上海', '广州', '杭州', '天津', '北京', '厦门', '合肥'],
+            axisLabel: {
+              show: true,
+              textStyle: {
+                color: '#c3dbff', //更改坐标轴文字颜色
+                fontSize: 12 //更改坐标轴文字大小
+              }
+            }
+          },
+          series: [
+            {
+              name: '美妆',
+              type: 'bar',
+              stack: '总量',
+              label: {
+                show: false,
+                position: 'insideRight'
+              },
+              data: [320, 302, 301, 334, 390, 330, 320]
+            },
+            {
+              name: '理财',
+              type: 'bar',
+              stack: '总量',
+              label: {
+                show: false,
+                position: 'insideRight'
+              },
+              data: [120, 132, 101, 134, 90, 230, 210]
+            },
+            {
+              name: '教育',
+              type: 'bar',
+              stack: '总量',
+              label: {
+                show: false,
+                position: 'insideRight'
+              },
+              data: [220, 182, 191, 234, 290, 330, 310]
+            },
+            {
+              name: '母婴',
+              type: 'bar',
+              stack: '总量',
+              label: {
+                show: false,
+                position: 'insideRight'
+              },
+              data: [150, 212, 201, 154, 190, 330, 410]
+            },
+            {
+              name: '百货',
+              type: 'bar',
+              stack: '总量',
+              label: {
+                show: false,
+                position: 'insideRight'
+              },
+              data: [820, 832, 901, 934, 1290, 1330, 1320]
+            }
+          ]
+        })
+      }
+    )
+  }
+  initalECharts2() {
+    this.setState(
+      { myChart3: echarts.init(document.getElementById('cityMap')) },
+      () => {
+        this.state.myChart3.setOption({
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 1,
+            y2: 0,
+            colorStops: [
+              {
+                offset: 0,
+                color: '#d000d0' // 0% 处的颜色
+              },
+              {
+                offset: 1,
+                color: '#7006d9' // 100% 处的颜色
+              }
+            ],
+            globalCoord: false
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              // 坐标轴指示器，坐标轴触发有效
+              type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+            }
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: [
+            {
+              type: 'value',
+              splitLine: {
+                show: true,
+                lineStyle: {
+                  color: ['#07234d']
+                }
+              },
+              axisLabel: {
+                show: true,
+                textStyle: {
+                  color: '#c3dbff', //更改坐标轴文字颜色
+                  fontSize: 12 //更改坐标轴文字大小
+                }
+              }
+            }
+          ],
+          yAxis: [
+            {
+              type: 'category',
+              data: ['科技', '母婴', '男士', '美妆', '珠宝', '宠物'],
+              axisTick: {
+                alignWithLabel: true
+              },
+              axisLabel: {
+                show: true,
+                textStyle: {
+                  color: '#c3dbff', //更改坐标轴文字颜色
+                  fontSize: 12 //更改坐标轴文字大小
+                }
+              }
+            }
+          ],
+          series: [
+            {
+              name: '直接访问',
+              type: 'bar',
+              barWidth: '60%',
+              data: [10, 52, 200, 334, 390, 330]
+            }
+          ]
+        })
+      }
+    )
+  }
+  initalECharts1() {
+    this.setState(
+      { myChart2: echarts.init(document.getElementById('provinceMap')) },
+      () => {
+        this.state.myChart2.setOption({
+          color: ['#9702fe', '#ff893b', '#37cbff', '#d90051', '#b2e269'],
+          tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b}: {c} ({d}%)'
+          },
+          legend: {
+            orient: 'vertical',
+            top: 30,
+            right: '20%',
+            data: ['美妆', '百度', '教育', '理财', '母婴'],
+            textStyle: {
+              fontSize: 12,
+              color: '#ffffff'
+            },
+            icon: 'circle',
+            itemWidth: 10, // 设置宽度
+
+            itemHeight: 10, // 设置高度
+
+            itemGap: 10 // 设置间距
+          },
+          series: [
+            {
+              name: '访问来源',
+              type: 'pie',
+              radius: ['50%', '70%'],
+              center: ['35%', '50%'],
+              avoidLabelOverlap: false,
+              label: {
+                show: false,
+                position: 'center'
+              },
+              emphasis: {
+                label: {
+                  show: true,
+                  fontSize: '30',
+                  fontWeight: 'bold'
+                }
+              },
+              labelLine: {
+                show: false
+              },
+              data: [
+                { value: 335, name: '美妆' },
+                { value: 310, name: '百度' },
+                { value: 234, name: '教育' },
+                { value: 135, name: '理财' },
+                { value: 1548, name: '母婴' }
+              ]
+            }
+          ]
+        })
+      }
+    )
+  }
+  initalECharts() {
+    echarts.registerMap('zhongguo', geoJson)
+    const flyGeo = {
+      洛阳: [112.460299, 34.62677],
+      西安: [108.946466, 34.347269],
+      兰州: [103.84044, 36.067321],
+      乌鲁木齐: [87.62444, 43.830763],
+      包头: [109.846544, 40.662929],
+      西宁: [101.78443, 36.623393],
+      银川: [106.258602, 38.487834],
+      成都: [104.081534, 30.655822],
+      重庆: [106.558434, 29.568996],
+      拉萨: [91.120789, 29.65005],
+      昆明: [102.852448, 24.873998],
+      贵阳: [106.636577, 26.653325],
+      太原: [112.534919, 37.873219],
+      武汉: [114.311582, 30.598467],
+      长沙: [112.945473, 28.234889],
+      南昌: [115.864589, 28.689455],
+      合肥: [117.233443, 31.826578],
+      杭州: [120.215503, 30.253087],
+      广州: [113.271431, 23.135336],
+      北京: [116.413384, 39.910925],
+      天津: [117.209523, 39.093668]
+    }
+
+    //飞线数据
+    const flyVal = [
+      [{ name: '洛阳' }, { name: '洛阳', value: 100 }],
+      [{ name: '洛阳' }, { name: '西安', value: 35 }],
+      [{ name: '洛阳' }, { name: '兰州', value: 25 }],
+      [{ name: '洛阳' }, { name: '乌鲁木齐', value: 55 }],
+      [{ name: '洛阳' }, { name: '包头', value: 60 }],
+      [{ name: '洛阳' }, { name: '西宁', value: 45 }],
+      [{ name: '洛阳' }, { name: '银川', value: 35 }],
+      [{ name: '洛阳' }, { name: '成都', value: 35 }],
+      [{ name: '洛阳' }, { name: '重庆', value: 40 }],
+      [{ name: '洛阳' }, { name: '拉萨', value: 205 }],
+      [{ name: '洛阳' }, { name: '昆明', value: 50 }],
+      [{ name: '洛阳' }, { name: '贵阳', value: 55 }],
+      [{ name: '洛阳' }, { name: '太原', value: 60 }],
+      [{ name: '洛阳' }, { name: '武汉', value: 65 }],
+      [{ name: '洛阳' }, { name: '长沙', value: 70 }],
+      [{ name: '洛阳' }, { name: '南昌', value: 75 }],
+      [{ name: '洛阳' }, { name: '合肥', value: 80 }],
+      [{ name: '洛阳' }, { name: '杭州', value: 85 }],
+      [{ name: '洛阳' }, { name: '广州', value: 90 }],
+      [{ name: '洛阳' }, { name: '北京', value: 95 }],
+      [{ name: '洛阳' }, { name: '天津', value: 60 }]
+    ]
+    //数据转换，转换后格式：[{fromName:'cityName', toName:'cityName', coords:[[lng, lat], [lng, lat]]}, {...}]
+
+    //数据转换，转换后格式：[{fromName:'cityName', toName:'cityName', coords:[[lng, lat], [lng, lat]]}, {...}]
+    const convertFlyData = function(data) {
+      let res = []
+      for (let i = 0; i < data.length; i++) {
+        let dataItem = data[i]
+        let toCoord = flyGeo[dataItem[0].name]
+        let fromCoord = flyGeo[dataItem[1].name]
+        if (fromCoord && toCoord) {
+          res.push({
+            fromName: dataItem[1].name,
+            toName: dataItem[0].name,
+            coords: [fromCoord, toCoord]
+          })
+        }
+      }
+      return res
+    }
+    //报表配置
+    const originName = '浙江'
+    const flySeries = []
+    ;[[originName, flyVal]].forEach(function(item, i) {
+      flySeries.push(
+        {
+          name: item[0],
+          type: 'lines',
+          zlevel: 1,
+          symbol: ['none', 'none'],
+          symbolSize: 0,
+          effect: {
+            //特效线配置
+            show: true,
+            period: 5, //特效动画时间，单位s
+            trailLength: 0.1, //特效尾迹的长度，从0到1
+            symbol: 'arrow',
+            symbolSize: 5
+          },
+          lineStyle: {
+            normal: {
+              color: '#f19000',
+              width: 1,
+              opacity: 0.6,
+              curveness: 0.2 //线的平滑度
+            }
+          },
+          data: convertFlyData(item[1])
+        },
+        {
+          name: item[0],
+          type: 'effectScatter',
+          coordinateSystem: 'geo',
+          zlevel: 2,
+          rippleEffect: {
+            //涟漪特效
+            period: 5, //特效动画时长
+            scale: 4, //波纹的最大缩放比例
+            brushType: 'stroke' //波纹的绘制方式：stroke | fill
+          },
+          label: {
+            normal: {
+              show: false,
+              position: 'right',
+              formatter: '{b}'
+            }
+          },
+          symbol: 'circle',
+          symbolSize: function(val) {
+            //根据某项数据值设置符号大小
+            return val[2] / 10
+          },
+          itemStyle: {
+            normal: {
+              color: '#f19000'
+            }
+          },
+          data: item[1].map(function(dataItem) {
+            return {
+              name: dataItem[1].name,
+              value: flyGeo[dataItem[1].name].concat([dataItem[1].value])
+            }
+          })
+        },
+        {
+          //与上层的点叠加
+          name: item[0],
+          type: 'scatter',
+          coordinateSystem: 'geo',
+          zlevel: 3,
+          symbol: 'circle',
+          symbolSize: function(val) {
+            //根据某项数据值设置符号大小
+            return val[2] / 15
+          },
+          itemStyle: {
+            normal: {
+              color: '#f00'
+            }
+          },
+          data: item[1].map(function(dataItem) {
+            return {
+              name: dataItem[1].name,
+              value: flyGeo[dataItem[1].name].concat([dataItem[1].value])
+            }
+          })
+        }
+      )
+    })
+
+    this.setState(
+      { myChart1: echarts.init(document.getElementById('mainMap')) },
+      () => {
+        this.state.myChart1.setOption({
+          tooltip: {
+            trigger: 'item'
+          },
+         
+          visualMap: {
+            // orient: 'horizontal',
+            min: 0,
+            left: '20%',
+            max: 10000,
+            text: ['高', '低'], // 文本，默认为数值文本
+            splitNumber: 0,
+            color: ['#0054bb', '#85ADDE'],
+            textStyle: {
+              color: '#c3dbff'
+            }
+          },
+
+          series: [
+            {
+              name: '2011全国GDP分布',
+              type: 'map',
+              mapType: 'china',
+              mapLocation: {
+                x: 'left'
+              },
+              // selectedMode: 'multiple',
+              itemStyle: {
+                normal: { label: { show: true, color: '#fff' }, borderWidth: 0 }
+                // emphasis: { label: { show: true } },
+                // borderWidth: 0,
+                // borderColor: '#eee',
+              },
+
+              data: [
+                { name: '西藏', value: 700 },
+                { name: '青海', value: 1670.44 },
+                { name: '宁夏', value: 2102.21 },
+                { name: '海南', value: 2522.66 },
+                { name: '甘肃', value: 5020.37 },
+                { name: '贵州', value: 5701.84 },
+                { name: '新疆', value: 6610.05 },
+                { name: '云南', value: 22 },
+                { name: '重庆', value: 500 },
+                { name: '吉林', value: 1000 },
+                { name: '山西', value: 5000 },
+                { name: '天津', value: 4000 },
+                { name: '江西', value: 9000 },
+                { name: '广西', value: 689 },
+                { name: '陕西', value: 9982 },
+                { name: '黑龙江', value: 12582 },
+                { name: '内蒙古', value: 14359.88 },
+                { name: '安徽', value: 22 },
+                { name: '北京', value: 800 },
+                { name: '福建', value: 1223 },
+                { name: '上海', value: 19195.69 },
+                { name: '湖北', value: 537 },
+                { name: '湖南', value: 8872 },
+                { name: '四川', value: 21026.68 },
+                { name: '辽宁', value: 22226.7 },
+                { name: '河北', value: 24515.76 },
+                { name: '河南', value: 26931.03 },
+                { name: '浙江', value: 32318.85 },
+                { name: '山东', value: 45361.85 },
+                { name: '江苏', value: 49110.27 },
+                { name: '广东', value: 53210.28 },
+                { name: '台湾', value: 53210.28 },
+                { name: '南海诸岛', value: 53210.28 }
+              ]
+            }
+          ]
+        })
+      }
+    )
+  }
+  
+  render() { 
+    const { topdata ,tabledata} = this.state
+    return ( 
+      <div className="data">
+        <header className="header_main">
+          <div className="left_bg"></div>
+          <div className="right_bg"></div>
+          <h3>Baby张数据平台</h3>
+        </header>
+        <div className="wrapper">
+          <div className="container-fluid">
+            <div className="row fill-h" style={{ display: 'flex' }}>
+              <div className="col-lg-3 fill-h" style={{ width: '25%' }}>
+                <div className="xpanel-wrapper xpanel-wrapper-5">
+                  <BorderBox13>
+                    <div className="xpanel">
+                      <div className="fill-h" id="mainMap1">
+                        {/* <Loading style={{color:'#fff'}}>加载中...</Loading> */}
+                        <ScrollRankingBoard config={topdata}/>
+                      </div>
+                    </div>
+                  </BorderBox13>
+                </div>
+                <div className="xpanel-wrapper xpanel-wrapper-4">
+                  <BorderBox13>
+                    <div className="xpanel">
+                      <div className="fill-h" id="worldMap">
+                      <ScrollBoard config={tabledata}  />
+                      </div>
+                    </div>
+                  </BorderBox13>
+                </div>
+              </div>
+              <div className="col-lg-6 fill-h" style={{ width: '50%' }}>
+                <div className="xpanel-wrapper xpanel-wrapper-5">
+                  <div
+                    className="xpanel"
+                    style={{
+                      position: 'relative'
+                    }}
+                  >
+                    <div className="map_bg"></div>
+                    <div className="circle_allow"></div>
+                    <div className="circle_bg"></div>
+                    
+                    
+                    <div style={{width:'100%', position:'absolute',top:10,display:'flex',left:'50%', justifyContent:'center',color:'#fff',alignItems:'center',transform:'translateX(-50%)'}}>
+                      <p>全国淘宝主播数量：</p>
+                      <div className="databg">6</div>
+                      <div className="databg">6</div>
+                      <div className="databg">6</div>
+                      <div className="databg">6</div>
+                      <div className="databg">6</div>
+                      <div className="databg">6</div>
+                      <div className="databg">6</div>
+                      <div className="databg">6</div>
+                      <div className="databg">6</div>
+                    </div>
+                    <div>全淘宝主播数量</div>
+                    <div
+                      style={{
+                        height: 60,
+                        width: 200,
+                        position: 'absolute',
+                        top: 20,
+                        right: 20
+                      }}
+                    >
+                      <Decoration1 style={{ width: '100%', height: '100%' }} />
+                    </div>
+
+                    <div className="fill-h" id="mainMap"></div>
+                  </div>
+                </div>
+                <div
+                  className="xpanel-wrapper xpanel-wrapper-4"
+                  style={{ display: 'flex' }}
+                >
+                  <div
+                    style={{
+                      width: '50%',
+                      paddingRight: 8,
+                      position: 'relative'
+                    }}
+                  >
+                    <BorderBox8>
+                      <div className="xpanel">
+                        <div className="fill-h" id="mainMap2"></div>
+                      </div>
+                    </BorderBox8>
+                  </div>
+                  <div style={{ width: '50%', paddingLeft: 8 }}>
+                    <BorderBox8>
+                      <div className="xpanel">
+                        <div className="fill-h" id="mainMap3"></div>
+                      </div>
+                    </BorderBox8>
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-3 fill-h" style={{ width: '25%' }}>
+                <div
+                  className="xpanel-wrapper xpanel-wrapper-6"
+                  style={{ position: 'relative' }}
+                >
+                  <div className="content_title">主播类型占比</div>
+                  <BorderBox1>
+                    <div className="xpanel">
+                      <div className="fill-h" id="provinceMap"></div>
+                    </div>
+                  </BorderBox1>
+                </div>
+                <div
+                  className="xpanel-wrapper xpanel-wrapper-6"
+                  style={{ position: 'relative' }}
+                >
+                  <div className="content_title">重点品类排名</div>
+                  <BorderBox1>
+                    <div className="xpanel">
+                      <div className="fill-h" id="cityMap"></div>
+                    </div>
+                  </BorderBox1>
+                </div>
+                <div
+                  className="xpanel-wrapper xpanel-wrapper-4"
+                  style={{ position: 'relative' }}
+                >
+                  <div className="content_title">Top10城市各品类占比</div>
+                  <BorderBox1>
+                    <div className="xpanel">
+                      <div className="fill-h" id="countyMap"></div>
+                    </div>
+                  </BorderBox1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+     );
+  }
+}
+ 
 export default WaterChange;
