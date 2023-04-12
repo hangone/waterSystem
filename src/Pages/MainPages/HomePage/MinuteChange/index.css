@@ -1,13 +1,13 @@
 .ant-table-body,
 .ant-table-body table {
   height: 100% !important;
-  overflow: auto !important;
+  overflow: scroll !important;
 }
 .ant-table-body {
-  overflow: auto !important;
+  overflow: scroll !important;
 }
 .ant-table-header {
-  overflow: auto !important;
+  overflow: scroll !important;
 }
 .ant-input-group-addon {
   background-color: #2a2a2a !important;

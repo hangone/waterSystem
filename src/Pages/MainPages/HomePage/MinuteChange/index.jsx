@@ -284,8 +284,8 @@ function WaterChange() {
               columns={columns}
               pagination={true}
               loading={isLoading}
-              style={{ width: '100%' }}
-              // scroll={{ y: 300, x: 400 }}
+              style={{ width: '400' }}
+              scroll={{ y: 300, x: 800 }}
             />
           </div>
         </div>
