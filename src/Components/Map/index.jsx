@@ -20,7 +20,7 @@ const Index = () => {
   }
 
   return (
-    <div style={{ width: '100%', height: '500px'}}>
+    <div style={{ width: '100%', }}>
       <SearchAddress
         changePosition={changePosition}
         changeAddressName={changeAddressName}

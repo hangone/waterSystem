@@ -123,3 +123,6 @@
   display: flex;
   flex-direction: row;
 }
+.spaceAlign {
+  display: block !important;
+}

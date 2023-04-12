@@ -870,7 +870,7 @@ class WaterChange extends Component {
                     <div className="circle_allow"></div>
                     <div className="circle_bg"></div>
 
-                    <div
+                    {/* <div
                       style={{
                         width: '100%',
                         position: 'relative',
@@ -895,8 +895,7 @@ class WaterChange extends Component {
                       <div className="databg">6</div>
                       <div className="databg">6</div>
                       </div>
-                    </div>
-                    <div>数量xx</div>
+                    </div> */}
                     <div
                       style={{
                         height: 60,

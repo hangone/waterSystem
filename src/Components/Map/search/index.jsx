@@ -102,8 +102,9 @@ const SearchAddress = ({ addressName, changeAddressName, changePosition }) => {
   };
 
   return (
-    <div style={{display:'flex',alignItems:'center',flexDirection:'column'}}>
-      <Select
+    <div style={{display:'flex',alignItems:'center',flexDirection:'column',top:'0'}}>
+      <span>请输入河流断面名称</span>
+        <Select
         value={addressName}
         style={{ width: 400,height: 40,alignItems:'center' }}
         showSearch
