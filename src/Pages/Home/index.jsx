@@ -162,15 +162,16 @@ function Home(props){
     },[location])
     // 监听对应节点的变化
     useEffect(() => { 
-        window.addEventListener("resize", function() { 
-            if(window.innerWidth < 1200){ 
-                setCollapsed(true); 
-            }
-        });  
-        return () => {
-            window.removeEventListener("resize"); 
+        const handleResize = () => {
+          if(window.innerWidth < 1200){ 
+            setCollapsed(true); 
+          }
         };
-    }, [window]);   
+        window.addEventListener("resize", handleResize);  
+        return () => {
+          window.removeEventListener("resize", handleResize); 
+        };
+      }, [window]);
 
     // 切换折叠栏
     const toggleCollapsed = () => {  

@@ -102,10 +102,10 @@ const SearchAddress = ({ addressName, changeAddressName, changePosition }) => {
   };
 
   return (
-    <div>
+    <div style={{display:'flex',alignItems:'center',flexDirection:'column'}}>
       <Select
         value={addressName}
-        style={{ width: 400,height: 40 }}
+        style={{ width: 400,height: 40,alignItems:'center' }}
         showSearch
         placeholder="请输入地址"
         onSearch={debounce((val) => onSearch(val), 300)}

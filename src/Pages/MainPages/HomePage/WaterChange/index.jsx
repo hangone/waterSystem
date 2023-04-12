@@ -1,29 +1,47 @@
-import React,{useEffect,useState,useRef, Fragment,Component} from 'react' ;
-import {  Button,Menu, Dropdown  ,Table,Radio,Spin  } from 'antd'; 
-import { MessageTool,MessageToolClear } from 'Components/Tools/MessageTool'; 
-import { getWaterChangeDay,getWaterChangeWeek,getWaterChangeMonth,
-    getCapChangeDay,getInflowChangeDay,getOutflowChangeDay } from 'Services/Home'; 
-import { changeDataLine,reverseFormatDate,dateSort,
-    stripDayUselessData,stripMonthUselessData,
-    getDatetimeList,reverseFormatDate2} from 'Utils'
-import { resetTableTitleWidth} from 'Utils/layoutreset'
+import React, { useEffect, useState, useRef, Fragment, Component } from 'react'
+import { Button, Menu, Dropdown, Table, Radio, Spin } from 'antd'
+import { MessageTool, MessageToolClear } from 'Components/Tools/MessageTool'
+import {
+  getWaterChangeDay,
+  getWaterChangeWeek,
+  getWaterChangeMonth,
+  getCapChangeDay,
+  getInflowChangeDay,
+  getOutflowChangeDay,
+} from 'Services/Home'
+import {
+  changeDataLine,
+  reverseFormatDate,
+  dateSort,
+  stripDayUselessData,
+  stripMonthUselessData,
+  getDatetimeList,
+  reverseFormatDate2,
+} from 'Utils'
+import { resetTableTitleWidth } from 'Utils/layoutreset'
 
-// 引入兄弟传值模块 
+// 引入兄弟传值模块
 import PubSub from 'pubsub-js'
 
 // 引入时间模块
-import moment from 'moment';
+import moment from 'moment'
 
 import * as echarts from 'echarts'
-import Common from 'Common'; 
-import {formatDate} from 'Utils'
-import 'Assets/css/comm.css';
-
+import Common from 'Common'
+import { formatDate } from 'Utils'
+import 'Assets/css/comm.css'
 
 import 'echarts/map/js/china'
 import geoJson from 'echarts/map/json/china.json'
 // import { geoCoordMap, provienceData } from './geo'
-import { BorderBox1 ,BorderBox8 ,BorderBox13,Decoration1 ,ScrollBoard,ScrollRankingBoard } from '@jiaminghi/data-view-react'
+import {
+  BorderBox1,
+  BorderBox8,
+  BorderBox13,
+  Decoration1,
+  ScrollBoard,
+  ScrollRankingBoard,
+} from '@jiaminghi/data-view-react'
 // import { Decoration9 ,Loading} from '@jiaminghi/data-view-react'
 import './index.css'
 
@@ -37,55 +55,57 @@ class WaterChange extends Component {
       myChart4: null,
       myChart5: null,
       myChart6: null,
-      topdata:{data: [
-        {
-          name: '周口',
-          value: 55
-        },
-        {
-          name: '南阳',
-          value: 120
-        },
-        {
-          name: '西峡',
-          value: 78
-        },
-        {
-          name: '驻马店',
-          value: 66
-        },
-        {
-          name: '新乡',
-          value: 80
-        },
-        {
-          name: '信阳',
-          value: 45
-        },
-        {
-          name: '漯河',
-          value: 29
-        }
-      ],
-      carousel: 'page'},
-    tabledata:{
-      header: ['列1', '列2', '列3'],
-      data: [
-        ['行1列1', '行1列2', '行1列3'],
-        ['行2列1', '行2列2', '行2列3'],
-        ['行3列1', '行3列2', '行3列3'],
-        ['行4列1', '行4列2', '行4列3'],
-        ['行5列1', '行5列2', '行5列3'],
-        ['行6列1', '行6列2', '行6列3'],
-        ['行7列1', '行7列2', '行7列3'],
-        ['行8列1', '行8列2', '行8列3'],
-        ['行9列1', '行9列2', '行9列3'],
-        ['行10列1', '行10列2', '行10列3']
-      ],
-      index: true,
-      columnWidth: [50],
-      align: ['center']
-    }
+      topdata: {
+        data: [
+          {
+            name: '周口',
+            value: 55,
+          },
+          {
+            name: '南阳',
+            value: 120,
+          },
+          {
+            name: '西峡',
+            value: 78,
+          },
+          {
+            name: '驻马店',
+            value: 66,
+          },
+          {
+            name: '新乡',
+            value: 80,
+          },
+          {
+            name: '信阳',
+            value: 45,
+          },
+          {
+            name: '漯河',
+            value: 29,
+          },
+        ],
+        carousel: 'page',
+      },
+      tabledata: {
+        header: ['列1', '列2', '列3'],
+        data: [
+          ['行1列1', '行1列2', '行1列3'],
+          ['行2列1', '行2列2', '行2列3'],
+          ['行3列1', '行3列2', '行3列3'],
+          ['行4列1', '行4列2', '行4列3'],
+          ['行5列1', '行5列2', '行5列3'],
+          ['行6列1', '行6列2', '行6列3'],
+          ['行7列1', '行7列2', '行7列3'],
+          ['行8列1', '行8列2', '行8列3'],
+          ['行9列1', '行9列2', '行9列3'],
+          ['行10列1', '行10列2', '行10列3'],
+        ],
+        index: true,
+        columnWidth: [50],
+        align: ['center'],
+      },
     }
   }
   componentDidMount() {
@@ -96,8 +116,8 @@ class WaterChange extends Component {
     this.initalECharts4()
     this.initalECharts5()
     const that = this
-    window.onresize = function() {
-      console.log(that.state.myChart1,'2222222222222')
+    window.onresize = function () {
+      console.log(that.state.myChart1, '2222222222222')
       that.state.myChart1.resize()
       that.state.myChart2.resize()
       that.state.myChart3.resize()
@@ -120,33 +140,33 @@ class WaterChange extends Component {
               fontSize: 14,
               fontStyle: 'normal',
               fontWeight: 'normal',
-              color: '#01c4f7'
-            }
+              color: '#01c4f7',
+            },
           },
           tooltip: {
             trigger: 'axis',
             axisPointer: {
-              type: 'shadow'
-            }
+              type: 'shadow',
+            },
           },
           legend: {
             data: ['观看人数、次数（个）', '场均观看数（场）'],
             textStyle: {
               fontSize: 12,
-              color: '#ffffff'
+              color: '#ffffff',
             },
             top: 20,
             itemWidth: 20, // 设置宽度
 
             itemHeight: 12, // 设置高度
 
-            itemGap: 10 // 设置间距
+            itemGap: 10, // 设置间距
           },
           grid: {
             left: '3%',
             right: '4%',
             bottom: '3%',
-            containLabel: true
+            containLabel: true,
           },
           xAxis: {
             type: 'category',
@@ -154,16 +174,16 @@ class WaterChange extends Component {
             splitLine: {
               show: true,
               lineStyle: {
-                color: ['#07234d']
-              }
+                color: ['#07234d'],
+              },
             },
             axisLabel: {
               show: true,
               textStyle: {
                 color: '#c3dbff', //更改坐标轴文字颜色
-                fontSize: 12 //更改坐标轴文字大小
-              }
-            }
+                fontSize: 12, //更改坐标轴文字大小
+              },
+            },
           },
           yAxis: {
             type: 'value',
@@ -171,28 +191,28 @@ class WaterChange extends Component {
             splitLine: {
               show: true,
               lineStyle: {
-                color: ['#07234d']
-              }
+                color: ['#07234d'],
+              },
             },
             axisLabel: {
               show: true,
               textStyle: {
                 color: '#c3dbff', //更改坐标轴文字颜色
-                fontSize: 12 //更改坐标轴文字大小
-              }
-            }
+                fontSize: 12, //更改坐标轴文字大小
+              },
+            },
           },
           series: [
             {
               name: '观看人数、次数（个）',
               type: 'bar',
-              data: [140, 170, 90,180, 90, 90],
+              data: [140, 170, 90, 180, 90, 90],
               itemStyle: {
                 color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                   { offset: 0, color: '#9408fc' },
-                  { offset: 1, color: '#05aed3' }
-                ])
-              }
+                  { offset: 1, color: '#05aed3' },
+                ]),
+              },
             },
             {
               name: '场均观看数（场）',
@@ -201,11 +221,11 @@ class WaterChange extends Component {
               itemStyle: {
                 color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                   { offset: 0, color: '#13b985' },
-                  { offset: 1, color: '#dc9b18' }
-                ])
-              }
-            }
-          ]
+                  { offset: 1, color: '#dc9b18' },
+                ]),
+              },
+            },
+          ],
         })
       }
     )
@@ -224,33 +244,33 @@ class WaterChange extends Component {
               fontSize: 14,
               fontStyle: 'normal',
               fontWeight: 'normal',
-              color: '#01c4f7'
-            }
+              color: '#01c4f7',
+            },
           },
           tooltip: {
             trigger: 'axis',
             axisPointer: {
-              type: 'shadow'
-            }
+              type: 'shadow',
+            },
           },
           legend: {
             data: ['开播主播数（个）', '开播场次数（场）'],
             textStyle: {
               fontSize: 12,
-              color: '#ffffff'
+              color: '#ffffff',
             },
             top: 20,
             itemWidth: 20, // 设置宽度
 
             itemHeight: 12, // 设置高度
 
-            itemGap: 10 // 设置间距
+            itemGap: 10, // 设置间距
           },
           grid: {
             left: '3%',
             right: '4%',
             bottom: '3%',
-            containLabel: true
+            containLabel: true,
           },
           xAxis: {
             type: 'category',
@@ -258,16 +278,16 @@ class WaterChange extends Component {
             splitLine: {
               show: true,
               lineStyle: {
-                color: ['#07234d']
-              }
+                color: ['#07234d'],
+              },
             },
             axisLabel: {
               show: true,
               textStyle: {
                 color: '#c3dbff', //更改坐标轴文字颜色
-                fontSize: 12 //更改坐标轴文字大小
-              }
-            }
+                fontSize: 12, //更改坐标轴文字大小
+              },
+            },
           },
           yAxis: {
             type: 'value',
@@ -275,28 +295,28 @@ class WaterChange extends Component {
             splitLine: {
               show: true,
               lineStyle: {
-                color: ['#07234d']
-              }
+                color: ['#07234d'],
+              },
             },
             axisLabel: {
               show: true,
               textStyle: {
                 color: '#c3dbff', //更改坐标轴文字颜色
-                fontSize: 12 //更改坐标轴文字大小
-              }
-            }
+                fontSize: 12, //更改坐标轴文字大小
+              },
+            },
           },
           series: [
             {
               name: '开播主播数（个）',
               type: 'bar',
-              data: [140, 170, 90,180, 90, 90],
+              data: [140, 170, 90, 180, 90, 90],
               itemStyle: {
                 color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                   { offset: 0, color: '#9408fc' },
-                  { offset: 1, color: '#05aed3' }
-                ])
-              }
+                  { offset: 1, color: '#05aed3' },
+                ]),
+              },
             },
             {
               name: '开播场次数（场）',
@@ -305,11 +325,11 @@ class WaterChange extends Component {
               itemStyle: {
                 color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                   { offset: 0, color: '#13b985' },
-                  { offset: 1, color: '#dc9b18' }
-                ])
-              }
-            }
-          ]
+                  { offset: 1, color: '#dc9b18' },
+                ]),
+              },
+            },
+          ],
         })
       }
     )
@@ -325,36 +345,36 @@ class WaterChange extends Component {
             data: ['美妆', '理财', '教育', '母婴', '百货'],
             textStyle: {
               fontSize: 12,
-              color: '#ffffff'
+              color: '#ffffff',
             },
             icon: 'circle',
             itemWidth: 10, // 设置宽度
 
             itemHeight: 10, // 设置高度
 
-            itemGap: 10 // 设置间距
+            itemGap: 10, // 设置间距
           },
           grid: {
             left: '3%',
             right: '4%',
             bottom: '3%',
-            containLabel: true
+            containLabel: true,
           },
           xAxis: {
             type: 'value',
             splitLine: {
               show: true,
               lineStyle: {
-                color: ['#07234d']
-              }
+                color: ['#07234d'],
+              },
             },
             axisLabel: {
               show: true,
               textStyle: {
                 color: '#c3dbff', //更改坐标轴文字颜色
-                fontSize: 12 //更改坐标轴文字大小
-              }
-            }
+                fontSize: 12, //更改坐标轴文字大小
+              },
+            },
           },
           yAxis: {
             type: 'category',
@@ -363,9 +383,9 @@ class WaterChange extends Component {
               show: true,
               textStyle: {
                 color: '#c3dbff', //更改坐标轴文字颜色
-                fontSize: 12 //更改坐标轴文字大小
-              }
-            }
+                fontSize: 12, //更改坐标轴文字大小
+              },
+            },
           },
           series: [
             {
@@ -374,9 +394,9 @@ class WaterChange extends Component {
               stack: '总量',
               label: {
                 show: false,
-                position: 'insideRight'
+                position: 'insideRight',
               },
-              data: [320, 302, 301, 334, 390, 330, 320]
+              data: [320, 302, 301, 334, 390, 330, 320],
             },
             {
               name: '理财',
@@ -384,9 +404,9 @@ class WaterChange extends Component {
               stack: '总量',
               label: {
                 show: false,
-                position: 'insideRight'
+                position: 'insideRight',
               },
-              data: [120, 132, 101, 134, 90, 230, 210]
+              data: [120, 132, 101, 134, 90, 230, 210],
             },
             {
               name: '教育',
@@ -394,9 +414,9 @@ class WaterChange extends Component {
               stack: '总量',
               label: {
                 show: false,
-                position: 'insideRight'
+                position: 'insideRight',
               },
-              data: [220, 182, 191, 234, 290, 330, 310]
+              data: [220, 182, 191, 234, 290, 330, 310],
             },
             {
               name: '母婴',
@@ -404,9 +424,9 @@ class WaterChange extends Component {
               stack: '总量',
               label: {
                 show: false,
-                position: 'insideRight'
+                position: 'insideRight',
               },
-              data: [150, 212, 201, 154, 190, 330, 410]
+              data: [150, 212, 201, 154, 190, 330, 410],
             },
             {
               name: '百货',
@@ -414,11 +434,11 @@ class WaterChange extends Component {
               stack: '总量',
               label: {
                 show: false,
-                position: 'insideRight'
+                position: 'insideRight',
               },
-              data: [820, 832, 901, 934, 1290, 1330, 1320]
-            }
-          ]
+              data: [820, 832, 901, 934, 1290, 1330, 1320],
+            },
+          ],
         })
       }
     )
@@ -437,27 +457,27 @@ class WaterChange extends Component {
             colorStops: [
               {
                 offset: 0,
-                color: '#d000d0' // 0% 处的颜色
+                color: '#d000d0', // 0% 处的颜色
               },
               {
                 offset: 1,
-                color: '#7006d9' // 100% 处的颜色
-              }
+                color: '#7006d9', // 100% 处的颜色
+              },
             ],
-            globalCoord: false
+            globalCoord: false,
           },
           tooltip: {
             trigger: 'axis',
             axisPointer: {
               // 坐标轴指示器，坐标轴触发有效
-              type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-            }
+              type: 'shadow', // 默认为直线，可选为：'line' | 'shadow'
+            },
           },
           grid: {
             left: '3%',
             right: '4%',
             bottom: '3%',
-            containLabel: true
+            containLabel: true,
           },
           xAxis: [
             {
@@ -465,42 +485,42 @@ class WaterChange extends Component {
               splitLine: {
                 show: true,
                 lineStyle: {
-                  color: ['#07234d']
-                }
+                  color: ['#07234d'],
+                },
               },
               axisLabel: {
                 show: true,
                 textStyle: {
                   color: '#c3dbff', //更改坐标轴文字颜色
-                  fontSize: 12 //更改坐标轴文字大小
-                }
-              }
-            }
+                  fontSize: 12, //更改坐标轴文字大小
+                },
+              },
+            },
           ],
           yAxis: [
             {
               type: 'category',
               data: ['科技', '母婴', '男士', '美妆', '珠宝', '宠物'],
               axisTick: {
-                alignWithLabel: true
+                alignWithLabel: true,
               },
               axisLabel: {
                 show: true,
                 textStyle: {
                   color: '#c3dbff', //更改坐标轴文字颜色
-                  fontSize: 12 //更改坐标轴文字大小
-                }
-              }
-            }
+                  fontSize: 12, //更改坐标轴文字大小
+                },
+              },
+            },
           ],
           series: [
             {
               name: '直接访问',
               type: 'bar',
               barWidth: '60%',
-              data: [10, 52, 200, 334, 390, 330]
-            }
-          ]
+              data: [10, 52, 200, 334, 390, 330],
+            },
+          ],
         })
       }
     )
@@ -513,7 +533,7 @@ class WaterChange extends Component {
           color: ['#9702fe', '#ff893b', '#37cbff', '#d90051', '#b2e269'],
           tooltip: {
             trigger: 'item',
-            formatter: '{a} <br/>{b}: {c} ({d}%)'
+            formatter: '{a} <br/>{b}: {c} ({d}%)',
           },
           legend: {
             orient: 'vertical',
@@ -522,14 +542,14 @@ class WaterChange extends Component {
             data: ['美妆', '百度', '教育', '理财', '母婴'],
             textStyle: {
               fontSize: 12,
-              color: '#ffffff'
+              color: '#ffffff',
             },
             icon: 'circle',
             itemWidth: 10, // 设置宽度
 
             itemHeight: 10, // 设置高度
 
-            itemGap: 10 // 设置间距
+            itemGap: 10, // 设置间距
           },
           series: [
             {
@@ -540,27 +560,27 @@ class WaterChange extends Component {
               avoidLabelOverlap: false,
               label: {
                 show: false,
-                position: 'center'
+                position: 'center',
               },
               emphasis: {
                 label: {
                   show: true,
                   fontSize: '30',
-                  fontWeight: 'bold'
-                }
+                  fontWeight: 'bold',
+                },
               },
               labelLine: {
-                show: false
+                show: false,
               },
               data: [
                 { value: 335, name: '美妆' },
                 { value: 310, name: '百度' },
                 { value: 234, name: '教育' },
                 { value: 135, name: '理财' },
-                { value: 1548, name: '母婴' }
-              ]
-            }
-          ]
+                { value: 1548, name: '母婴' },
+              ],
+            },
+          ],
         })
       }
     )
@@ -588,7 +608,7 @@ class WaterChange extends Component {
       杭州: [120.215503, 30.253087],
       广州: [113.271431, 23.135336],
       北京: [116.413384, 39.910925],
-      天津: [117.209523, 39.093668]
+      天津: [117.209523, 39.093668],
     }
 
     //飞线数据
@@ -613,12 +633,12 @@ class WaterChange extends Component {
       [{ name: '洛阳' }, { name: '杭州', value: 85 }],
       [{ name: '洛阳' }, { name: '广州', value: 90 }],
       [{ name: '洛阳' }, { name: '北京', value: 95 }],
-      [{ name: '洛阳' }, { name: '天津', value: 60 }]
+      [{ name: '洛阳' }, { name: '天津', value: 60 }],
     ]
     //数据转换，转换后格式：[{fromName:'cityName', toName:'cityName', coords:[[lng, lat], [lng, lat]]}, {...}]
 
     //数据转换，转换后格式：[{fromName:'cityName', toName:'cityName', coords:[[lng, lat], [lng, lat]]}, {...}]
-    const convertFlyData = function(data) {
+    const convertFlyData = function (data) {
       let res = []
       for (let i = 0; i < data.length; i++) {
         let dataItem = data[i]
@@ -628,7 +648,7 @@ class WaterChange extends Component {
           res.push({
             fromName: dataItem[1].name,
             toName: dataItem[0].name,
-            coords: [fromCoord, toCoord]
+            coords: [fromCoord, toCoord],
           })
         }
       }
@@ -637,7 +657,7 @@ class WaterChange extends Component {
     //报表配置
     const originName = '浙江'
     const flySeries = []
-    ;[[originName, flyVal]].forEach(function(item, i) {
+    ;[[originName, flyVal]].forEach(function (item, i) {
       flySeries.push(
         {
           name: item[0],
@@ -651,17 +671,17 @@ class WaterChange extends Component {
             period: 5, //特效动画时间，单位s
             trailLength: 0.1, //特效尾迹的长度，从0到1
             symbol: 'arrow',
-            symbolSize: 5
+            symbolSize: 5,
           },
           lineStyle: {
             normal: {
               color: '#f19000',
               width: 1,
               opacity: 0.6,
-              curveness: 0.2 //线的平滑度
-            }
+              curveness: 0.2, //线的平滑度
+            },
           },
-          data: convertFlyData(item[1])
+          data: convertFlyData(item[1]),
         },
         {
           name: item[0],
@@ -672,31 +692,31 @@ class WaterChange extends Component {
             //涟漪特效
             period: 5, //特效动画时长
             scale: 4, //波纹的最大缩放比例
-            brushType: 'stroke' //波纹的绘制方式：stroke | fill
+            brushType: 'stroke', //波纹的绘制方式：stroke | fill
           },
           label: {
             normal: {
               show: false,
               position: 'right',
-              formatter: '{b}'
-            }
+              formatter: '{b}',
+            },
           },
           symbol: 'circle',
-          symbolSize: function(val) {
+          symbolSize: function (val) {
             //根据某项数据值设置符号大小
             return val[2] / 10
           },
           itemStyle: {
             normal: {
-              color: '#f19000'
-            }
+              color: '#f19000',
+            },
           },
-          data: item[1].map(function(dataItem) {
+          data: item[1].map(function (dataItem) {
             return {
               name: dataItem[1].name,
-              value: flyGeo[dataItem[1].name].concat([dataItem[1].value])
+              value: flyGeo[dataItem[1].name].concat([dataItem[1].value]),
             }
-          })
+          }),
         },
         {
           //与上层的点叠加
@@ -705,21 +725,21 @@ class WaterChange extends Component {
           coordinateSystem: 'geo',
           zlevel: 3,
           symbol: 'circle',
-          symbolSize: function(val) {
+          symbolSize: function (val) {
             //根据某项数据值设置符号大小
             return val[2] / 15
           },
           itemStyle: {
             normal: {
-              color: '#f00'
-            }
+              color: '#f00',
+            },
           },
-          data: item[1].map(function(dataItem) {
+          data: item[1].map(function (dataItem) {
             return {
               name: dataItem[1].name,
-              value: flyGeo[dataItem[1].name].concat([dataItem[1].value])
+              value: flyGeo[dataItem[1].name].concat([dataItem[1].value]),
             }
-          })
+          }),
         }
       )
     })
@@ -729,9 +749,9 @@ class WaterChange extends Component {
       () => {
         this.state.myChart1.setOption({
           tooltip: {
-            trigger: 'item'
+            trigger: 'item',
           },
-         
+
           visualMap: {
             // orient: 'horizontal',
             min: 0,
@@ -741,8 +761,8 @@ class WaterChange extends Component {
             splitNumber: 0,
             color: ['#0054bb', '#85ADDE'],
             textStyle: {
-              color: '#c3dbff'
-            }
+              color: '#c3dbff',
+            },
           },
 
           series: [
@@ -751,11 +771,14 @@ class WaterChange extends Component {
               type: 'map',
               mapType: 'china',
               mapLocation: {
-                x: 'left'
+                x: 'left',
               },
               // selectedMode: 'multiple',
               itemStyle: {
-                normal: { label: { show: true, color: '#fff' }, borderWidth: 0 }
+                normal: {
+                  label: { show: true, color: '#fff' },
+                  borderWidth: 0,
+                },
                 // emphasis: { label: { show: true } },
                 // borderWidth: 0,
                 // borderColor: '#eee',
@@ -794,23 +817,23 @@ class WaterChange extends Component {
                 { name: '江苏', value: 49110.27 },
                 { name: '广东', value: 53210.28 },
                 { name: '台湾', value: 53210.28 },
-                { name: '南海诸岛', value: 53210.28 }
-              ]
-            }
-          ]
+                { name: '南海诸岛', value: 53210.28 },
+              ],
+            },
+          ],
         })
       }
     )
   }
-  
-  render() { 
-    const { topdata ,tabledata} = this.state
-    return ( 
+
+  render() {
+    const { topdata, tabledata } = this.state
+    return (
       <div className="data">
         <header className="header_main">
           <div className="left_bg"></div>
           <div className="right_bg"></div>
-          <h3>数据平台</h3>
+          <h3>全国水利状况数据平台</h3>
         </header>
         <div className="wrapper">
           <div className="container-fluid">
@@ -821,7 +844,7 @@ class WaterChange extends Component {
                     <div className="xpanel">
                       <div className="fill-h" id="mainMap1">
                         {/* <Loading style={{color:'#fff'}}>加载中...</Loading> */}
-                        <ScrollRankingBoard config={topdata}/>
+                        <ScrollRankingBoard config={topdata} />
                       </div>
                     </div>
                   </BorderBox13>
@@ -830,7 +853,7 @@ class WaterChange extends Component {
                   <BorderBox13>
                     <div className="xpanel">
                       <div className="fill-h" id="worldMap">
-                      <ScrollBoard config={tabledata}  />
+                        <ScrollBoard config={tabledata} />
                       </div>
                     </div>
                   </BorderBox13>
@@ -841,16 +864,27 @@ class WaterChange extends Component {
                   <div
                     className="xpanel"
                     style={{
-                      position: 'relative'
-                    }}
-                  >
+                      position: 'relative',
+                    }}>
                     <div className="map_bg"></div>
                     <div className="circle_allow"></div>
                     <div className="circle_bg"></div>
-                    
-                    
-                    <div style={{width:'100%', position:'absolute',top:10,display:'flex',left:'50%', justifyContent:'center',color:'#fff',alignItems:'center',transform:'translateX(-50%)'}}>
+
+                    <div
+                      style={{
+                        width: '100%',
+                        position: 'relative',
+                        top: '0',
+                        display: 'flex',
+                        left: '50%',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        color: '#fff',
+                        alignItems: 'center',
+                        transform: 'translateX(-50%)',
+                      }}>
                       <p>全国水利状况</p>
+                      <div style={{display:'flex'}}>
                       <div className="databg">6</div>
                       <div className="databg">6</div>
                       <div className="databg">6</div>
@@ -860,6 +894,7 @@ class WaterChange extends Component {
                       <div className="databg">6</div>
                       <div className="databg">6</div>
                       <div className="databg">6</div>
+                      </div>
                     </div>
                     <div>数量xx</div>
                     <div
@@ -868,9 +903,8 @@ class WaterChange extends Component {
                         width: 200,
                         position: 'absolute',
                         top: 20,
-                        right: 20
-                      }}
-                    >
+                        right: 20,
+                      }}>
                       <Decoration1 style={{ width: '100%', height: '100%' }} />
                     </div>
 
@@ -879,15 +913,13 @@ class WaterChange extends Component {
                 </div>
                 <div
                   className="xpanel-wrapper xpanel-wrapper-4"
-                  style={{ display: 'flex' }}
-                >
+                  style={{ display: 'flex' }}>
                   <div
                     style={{
                       width: '50%',
                       paddingRight: 8,
-                      position: 'relative'
-                    }}
-                  >
+                      position: 'relative',
+                    }}>
                     <BorderBox8>
                       <div className="xpanel">
                         <div className="fill-h" id="mainMap2"></div>
@@ -906,8 +938,7 @@ class WaterChange extends Component {
               <div className="col-lg-3 fill-h" style={{ width: '25%' }}>
                 <div
                   className="xpanel-wrapper xpanel-wrapper-6"
-                  style={{ position: 'relative' }}
-                >
+                  style={{ position: 'relative' }}>
                   <div className="content_title">数量xx</div>
                   <BorderBox1>
                     <div className="xpanel">
@@ -917,8 +948,7 @@ class WaterChange extends Component {
                 </div>
                 <div
                   className="xpanel-wrapper xpanel-wrapper-6"
-                  style={{ position: 'relative' }}
-                >
+                  style={{ position: 'relative' }}>
                   <div className="content_title">排名</div>
                   <BorderBox1>
                     <div className="xpanel">
@@ -928,8 +958,7 @@ class WaterChange extends Component {
                 </div>
                 <div
                   className="xpanel-wrapper xpanel-wrapper-4"
-                  style={{ position: 'relative' }}
-                >
+                  style={{ position: 'relative' }}>
                   <div className="content_title">占比</div>
                   <BorderBox1>
                     <div className="xpanel">
@@ -942,8 +971,8 @@ class WaterChange extends Component {
           </div>
         </div>
       </div>
-     );
+    )
   }
 }
- 
-export default WaterChange;
+
+export default WaterChange

@@ -20,13 +20,12 @@ const Index = () => {
   }
 
   return (
-    <div style={{ width: '100%', height: '500px' }}>
+    <div style={{ width: '100%', height: '500px'}}>
       <SearchAddress
         changePosition={changePosition}
         changeAddressName={changeAddressName}
         addressName={addressName}
       />
-
       <br />
       <AdvancedMap
         position={position}
