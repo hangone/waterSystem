@@ -44,6 +44,7 @@ import {
 } from '@jiaminghi/data-view-react'
 // import { Decoration9 ,Loading} from '@jiaminghi/data-view-react'
 import './index.css'
+import { filterData } from '../../../../Services/waterQuality/filterData'
 
 class WaterChange extends Component {
   constructor(props) {
@@ -109,6 +110,7 @@ class WaterChange extends Component {
     }
   }
   componentDidMount() {
+    console.log(filterData())
     this.initalECharts()
     this.initalECharts1()
     this.initalECharts2()

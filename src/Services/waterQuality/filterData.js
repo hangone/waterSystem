@@ -1,20 +1,45 @@
 import axios from 'axios';
 
-export const getWaterQualityData = async (query = '') => {
-  let areaId = '';
-  let riverId = '';
-  let searchName = '';
-  let page = 1;
-  if (typeof query === 'string') {
-    searchName = query;
-  } else if (typeof query === 'number') {
-    areaId = query;
-  } else {
-    throw new Error('请提供有效的查询数据！');
-  }
+export const filterData = async () => {
   try {
-    const response = await axios.get(`https://water.miraitowa.tk/data?areaId=${areaId}&riverId=${riverId}&searchName=${searchName}&page=${page}`);
-    return response.data;
+    const response = await axios.get(`https://water.miraitowa.tk/waterpub_filter`);
+    const data = response.data;
+    const result = {};
+    for (const key in data) {
+      const item = data[key];
+      for (const subKey in item) {
+        const subItem = item[subKey];
+        if (typeof subItem === 'object' && subItem !== null) {
+          for (const subSubKey in subItem) {
+            if (subSubKey === 'location') {
+              const location = subItem[subSubKey];
+              if (!result.hasOwnProperty(location)) {
+                result[location] = {};
+              }
+            } else if (subSubKey === 'ph值') {
+              const location = subItem['provincech'] + subItem['citych'] + subItem['rivername'];
+              if (!result.hasOwnProperty(location)) {
+                result[location] = {};
+              }
+              result[location]['pH值'] = {
+                'location': location,
+                'data': subItem[subSubKey]
+              };
+            } else if (subSubKey === '五日生化需氧量') {
+              const location = subItem['provincech'] + subItem['citych'] + subItem['rivername'];
+              if (!result.hasOwnProperty(location)) {
+                result[location] = {};
+              }
+              result[location]['五日生化需氧量'] = {
+                'location': location,
+                'data': subItem[subSubKey]
+              };
+            }
+          }
+        }
+      }
+    }
+    return result;
   } catch (error) {
     throw new Error('获取水质数据失败，请稍后再试');
   }
