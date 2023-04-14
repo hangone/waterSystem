@@ -2644,7 +2644,7 @@
   "resolved" "https://registry.npmmirror.com/ansi-styles/-/ansi-styles-5.2.0.tgz"
   "version" "5.2.0"
 
-"antd@^4.18.9":
+"antd@^4.24.8":
   "integrity" "sha512-wrNy2Hi27uM3948okG3n2GwzQKBFUn1Qn5mn2I/ALcR28rC6cTjHYOuA248Zl9ECzz3jo4TY2R0SIa+5GZ/zGA=="
   "resolved" "https://registry.npmmirror.com/antd/-/antd-4.24.8.tgz"
   "version" "4.24.8"

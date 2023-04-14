@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, Fragment } from 'react'
 import { Button, Menu, Dropdown, Table, Radio, Spin } from 'antd'
-import { QuestionCircleOutlined, SyncOutlined } from '@ant-design/icons';
+// import { FloatButton } from 'antd';
+import { QuestionCircleOutlined, SyncOutlined } from '@ant-design/icons'
 import { MessageTool, MessageToolClear } from 'Components/Tools/MessageTool'
 import {
   getCapChangeDay,
@@ -46,7 +47,7 @@ function WaterChange() {
   const echartTopNodeRef = useRef()
   const echartMiddleNodeRef = useRef()
   const echartBottomNodeRef = useRef()
-  const tableRef = useRef(null);
+  const tableRef = useRef(null)
   // 顶部更多显示栏
   const preIsShowTitle = sessionStorage.getItem('water_isShowTitle')
   const [isShowTitle, setIsShowTitle] = useState(
@@ -390,23 +391,23 @@ function WaterChange() {
   useEffect(() => {
     dragTableScroll()
   }, [moment().format('HH'), dataSource])
-//   useEffect(() => {
-//     setInterval(() => {
-        
-//         realData().then((result) => {
-//           //console.log('result', result)
-//           setIsLoading(false)
-//           setDataSource(result)
-//           //t_res = result
-//           //console.log('t_res', t_res)
-//           MessageTool('数据已经更新', 'success')
-//         })
-//         //  setIsLoading(true)
-//       }, 10000)
-//     if (tableRef.current) {
-//       tableRef.current.scrollToTop();
-//     }
-//   }, [dataSource]);
+  //   useEffect(() => {
+  //     setInterval(() => {
+
+  //         realData().then((result) => {
+  //           //console.log('result', result)
+  //           setIsLoading(false)
+  //           setDataSource(result)
+  //           //t_res = result
+  //           //console.log('t_res', t_res)
+  //           MessageTool('数据已经更新', 'success')
+  //         })
+  //         //  setIsLoading(true)
+  //       }, 10000)
+  //     if (tableRef.current) {
+  //       tableRef.current.scrollToTop();
+  //     }
+  //   }, [dataSource]);
   // 三、功能操作
   // 主动滚动当前滚动条, 传递目标时间
   const dragTableScroll = () => {
@@ -515,29 +516,30 @@ function WaterChange() {
     setActiveMenuName1('自动更新')
     setIsLoading(true)
     setInterval(() => {
-                realData().then((result) => {
-                  //console.log('result', result)
-                  setIsLoading(false)
-                  setDataSource(result)
-                  //t_res = result
-                  //console.log('t_res', t_res)
-                  MessageTool('数据已经更新', 'success')
-                })
-                //  setIsLoading(true)
-              }, 10000)}
-  const updateData = () => {
-    setActiveMenuName1('手动更新')
-    setIsLoading(true)
-    realData().then((result) => {
+      realData().then((result) => {
         //console.log('result', result)
         setIsLoading(false)
         setDataSource(result)
         //t_res = result
         //console.log('t_res', t_res)
         MessageTool('数据已经更新', 'success')
-        })
-        //  setIsLoading(true)
-    }
+      })
+      //  setIsLoading(true)
+    }, 10000)
+  }
+  const updateData = () => {
+    setActiveMenuName1('手动更新')
+    setIsLoading(true)
+    realData().then((result) => {
+      //console.log('result', result)
+      setIsLoading(false)
+      setDataSource(result)
+      //t_res = result
+      //console.log('t_res', t_res)
+      MessageTool('数据已经更新', 'success')
+    })
+    //  setIsLoading(true)
+  }
 
   // 五、获取远程数据
   // 获取日数据
@@ -571,7 +573,6 @@ function WaterChange() {
       let dayData3 = await getOutflowChangeDay()
       // console.log("getOutflowChangeDay返回的数据day3是",day3)
 
-      
       // console.log(typeList)
       let t_columns = [
         {
@@ -1377,9 +1378,7 @@ function WaterChange() {
                 </Menu.Item>
               </Menu>
             }
-
             placement="bottomLeft">
-                
             <Button type="default">{activeMenuName}</Button>
             {/* 更新数据按钮 */}
             {/* <Button type="primary" onClick={updateData}>更新数据</Button> */}
@@ -1398,9 +1397,7 @@ function WaterChange() {
                 </Menu.Item>
               </Menu>
             }
-
             placement="bottomLeft">
-                
             <Button type="default">{activeMenuName1}</Button>
             {/* 更新数据按钮 */}
             {/* <Button type="primary" onClick={updateData}>更新数据</Button> */}
@@ -1427,7 +1424,7 @@ function WaterChange() {
             ref={tableRef}
           />
         </div>
-        <FloatButton icon={<SyncOutlined />} />
+        {/* <FloatButton icon={<SyncOutlined />} /> */}
         <div
           className="bottom-bottom"
           style={{
