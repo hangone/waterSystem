@@ -31,8 +31,8 @@ import Common from 'Common'
 import { formatDate } from 'Utils'
 import 'Assets/css/comm.css'
 
-import 'echarts/map/js/china'
 import geoJson from 'echarts/map/json/china.json'
+import 'echarts/map/js/china'
 // import { geoCoordMap, provienceData } from './geo'
 import {
   BorderBox1,

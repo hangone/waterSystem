@@ -262,7 +262,7 @@ function Home(props){
                             <Menu.Item key="mainChange">地图可视化</Menu.Item>
                             <Menu.Item key="waterChange">图表可视化</Menu.Item>
                             <Menu.Item key="rainChange">模型可视化</Menu.Item>
-                            {/* <Menu.Item key="whouseChange">小时库容数据</Menu.Item>  */}
+                            <Menu.Item key="whouseChange">实时数据</Menu.Item> 
                             
                         </SubMenu> 
                         {/* <SubMenu key="waterPage" icon={<BranchesOutlined />} title="水情报表" onClick={onSelect} >
