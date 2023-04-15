@@ -1437,7 +1437,12 @@ function WaterChange() {
           icon={<SyncOutlined />}
           onClick={updateData}
           className="dataUpdateBtn"
-          style={{ display: activeMenuName1 == '手动更新' ? 'none' : 'block' }}
+          style={{
+            display:
+              activeMenuName1 === '手动更新'
+                ? 'none !important'
+                : 'block !important',
+          }}
         />
         <div
           className="bottom-bottom"
