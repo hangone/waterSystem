@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, Fragment } from 'react'
 import { Button, Menu, Dropdown, Table, Radio, Spin } from 'antd'
-// import { FloatButton } from 'antd';
+//   import { FloatButton } from 'antd';
 import { QuestionCircleOutlined, SyncOutlined } from '@ant-design/icons'
 import { MessageTool, MessageToolClear } from 'Components/Tools/MessageTool'
 import {
@@ -22,12 +22,13 @@ import PubSub from 'pubsub-js'
 // 引入时间模块
 import moment from 'moment'
 import { realData } from '../../../../Services/waterQuality/realData'
+//引入FloatButton
 
 import * as echarts from 'echarts'
 import Common from 'Common'
 import { formatDate } from 'Utils'
 import 'Assets/css/comm.css'
-import './index.less'
+import './index.css'
 
 function WaterChange() {
   // 端点编码
@@ -279,7 +280,7 @@ function WaterChange() {
         hideCharts()
         onSearch(radioItem)
         // 更新提示
-        MessageTool('数据已经更新', 'success')
+        // MessageTool('数据已经更新', 'success')
       }, Common.refreshDelay)
       sessionStorage.setItem('ITimerResponse', ITimer)
     } catch (err) {
@@ -502,7 +503,7 @@ function WaterChange() {
     if (ITimer) clearInterval(ITimer)
     ITimer = setInterval(() => {
       onSearch(e.target.value)
-      MessageTool('数据已经更新', 'success')
+      //   MessageTool('数据已经更新', 'success')
     }, Common.refreshDelay)
     sessionStorage.setItem('ITimerResponse', ITimer)
     // 关闭旋转器
@@ -515,6 +516,14 @@ function WaterChange() {
   const autoUpdateData = () => {
     setActiveMenuName1('自动更新')
     setIsLoading(true)
+    realData().then((result) => {
+      //console.log('result', result)
+      setIsLoading(false)
+      setDataSource(result)
+      //t_res = result
+      //console.log('t_res', t_res)
+      MessageTool('数据已经更新', 'success')
+    })
     setInterval(() => {
       realData().then((result) => {
         //console.log('result', result)
@@ -1424,7 +1433,12 @@ function WaterChange() {
             ref={tableRef}
           />
         </div>
-        {/* <FloatButton icon={<SyncOutlined />} /> */}
+        <Button
+          icon={<SyncOutlined />}
+          onClick={updateData}
+          className="dataUpdateBtn"
+          style={{ display: activeMenuName1 == '手动更新' ? 'none' : 'block' }}
+        />
         <div
           className="bottom-bottom"
           style={{
