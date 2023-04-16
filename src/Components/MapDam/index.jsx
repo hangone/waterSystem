@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom';
 import React, { useState, useRef } from 'react';
 import { Map, Marker, APILoader, InfoWindow } from '@uiw/react-amap';
 
-const MapDam = () => {
+const Example = () => {
   const [show, setShow] = useState(false);
   const [winPosition, setWinPosition] = useState();
   const [content, setContent] = useState('<div>高德软件</div>');
@@ -42,7 +42,7 @@ const MapDam = () => {
               offset={{ x: 0, y: -10}}
               content={content}
               onClose={(evn) => {
-                // console.log('evn2', evn, show);
+                console.log('evn2', evn, show);
               }}
             />
           )}
@@ -52,10 +52,10 @@ const MapDam = () => {
   );
 }
 
-const Mount = () => (
+const MountMap = () => (
   <APILoader akey="a7a90e05a37d3f6bf76d4a9032fc9129">
-    <MapDam />
+    <Example />
   </APILoader>
 );
 
-export default MapDam;
+export default MountMap;

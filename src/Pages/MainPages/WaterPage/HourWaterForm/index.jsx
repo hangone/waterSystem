@@ -12,7 +12,7 @@ import { OutputExcel } from 'Components/Tools/OutputExcel'
 import { OutputPrint } from 'Components/Tools/OutputPrint'
 import MapComponent from '../../../../Components/Map'
 import Poi from '../../../../Components/MapSearch'
-import MapDam from '../../../../Components/MapDam'
+import MountMap from '../../../../Components/MapDam'
 import { Map, Marker, APILoader, InfoWindow } from '@uiw/react-amap'
 
 import Common from 'Common'
@@ -21,8 +21,6 @@ import { reverseFormatDate2, changeMomentType } from 'Utils'
 import './index.less'
 
 function DayWaterForm() {
-  
-
   return (
     <div className="dayWaterChart-div commTable-div">
       <div
@@ -30,13 +28,11 @@ function DayWaterForm() {
         style={{ background: 'white', height: '80vh' }}>
         {/* <Spin tip="加载数据中" spinning={isLoading} style={{display:isLoading ? 'flex' : 'none'}}></Spin> */}
         {/* 加载地图组件 */}
-        
+        <MountMap></MountMap>
         {/* <MapComponent></MapComponent> */}
       </div>
       {/* <Poi></Poi> */}
-      <APILoader akey="a7a90e05a37d3f6bf76d4a9032fc9129">
-          <MapDam />
-        </APILoader>
+     
     </div>
   )
 }
