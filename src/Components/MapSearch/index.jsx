@@ -45,7 +45,7 @@ export default function Poi(props) {
   //请求高德api
   async function send(value) {
     const { data: res } = await request({
-      key: '527cc0eb0b0ce5abb801d5ca920f67ee	', //高德key
+      key: '527cc0eb0b0ce5abb801d5ca920f67ee', //高德key
       keywords: value,
       region: 310151,
       city: '上海',
