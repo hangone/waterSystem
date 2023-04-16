@@ -382,7 +382,7 @@ function WaterChange() {
         {/* <Spin tip="加载数据中" spinning={isLoading} style={{display:isLoading ? 'flex' : 'none'}}></Spin> */}
         {/* 加载地图组件 */}
 
-        <MapComponent></MapComponent>
+        {/* <MapComponent></MapComponent> */}
       </div>
     </div>
   )
