@@ -341,91 +341,40 @@ function DayWaterForm() {
 
   return (
     <div className="dayWaterChart-div commTable-div">
-      <div className="body-top-div">
-        <div className="top-left">
-          <div className="date-div table-div">
-            <span>开始日期：</span>
-            <DatePicker
-              allowClear={false}
-              inputReadOnly={true}
-              onChange={onSelectStartDate}
-              picker="day"
-              defaultValue={defaultStartValue}
-              placeholder="请选择"
-            />
-          </div>
-          <div className="date-div table-div">
-            <span>结束日期：</span>
-            <DatePicker
-              allowClear={false}
-              inputReadOnly={true}
-              onChange={onSelectEndDate}
-              picker="day"
-              defaultValue={defaultEndValue}
-              placeholder="请选择"
-            />
-          </div>
-
-          {/* <div className='date-div'>
-                        <span>查询月份：</span>  
-                        <DatePicker onChange={onSelectDate} defaultValue={defaultValue}  picker="day" placeholder="请选择月份"/>
-                    </div> */}
-          <Button
-            type="default"
-            shape="round"
-            onClick={onSearchTable}
-            size="default"
-            icon={<SearchOutlined />}
+      <div>
+      <Table
+            dataSource={dataSource}
+            columns={columns}
+            pagination={false}
+            loading={isLoading}
+            sticky
+            bordered
           />
-        </div>
-        <div className="top-right">
-          <div className="top-title">分日水位明细报表</div>
-          <Button
-            type="default"
-            onClick={() => handleOutput('excel')}
-            shape="round"
-            size="default"
-            icon={<DownloadOutlined />}>
-            导出Excel
-          </Button>
-          <Button
-            type="default"
-            onClick={() => handleOutput('print')}
-            shape="round"
-            size="default"
-            icon={<PrinterOutlined />}>
-            打印报表
-          </Button>
-        </div>
-      </div>
-      <div className="body-bottom-div">
-        <Table dataSource={dataSource} columns={columns} loading={isLoading} />
-        <Table
-          dataSource={dataSource}
-          columns={columns}
-          id="outTable-div"
-          pagination={false}
-          style={{ display: 'none' }}
-        />
-        {/* <img src={bgEmpty} className="empty-img-div" style={{display:isLoading ? 'block' : 'none'}} /> */}
       </div>
       <div className="chartGroup">
       <div className="chart1">
-        <iframe
-          src="https://admin.sovitjs.com/publish_chart/3295777006116929540"
-          title="折线图"></iframe>
-      </div>
-      <div className="chart1">
-        <iframe
-          src="https://admin.sovitjs.com/publish_chart/3295776862059364361"
-          title="折线图"></iframe>
-      </div>
-      <div className="chart1">
-        <iframe
-          src="https://admin.sovitjs.com/publish_2d/3295793546967121924"
-          title="折线图"></iframe>
-      </div>
-      </div>
+    <iframe
+      src="https://admin.sovitjs.com/publish_2d/3295793546967121924"
+      title="折线图"
+      style={{ width: '350px', height: '250px' }}
+    ></iframe>
+  </div>
+  <div className="chart1">
+    <iframe
+      src="https://admin.sovitjs.com/publish_chart/3295777006116929540"
+      title="折线图"
+      style={{ width: '300px', height: '300px' }}
+    ></iframe>
+  </div>
+  <div className="chart1">
+    <iframe
+      src="https://admin.sovitjs.com/publish_chart/3295776862059364361"
+      title="折线图"
+      style={{ width: '300px', height: '300px' }}
+    ></iframe>
+  </div>
+  
+</div>
       
     </div>
   )

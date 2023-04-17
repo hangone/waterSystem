@@ -60,12 +60,12 @@ function WaterChange() {
           基于小水电清理整改的数字孪生监测系统
         </Title>
       <Divider style={{backgroundColor:'white'}}/>
-        <Text className="changeColor" style={{fontSize:'16px',fontWeight:'300'}}>
+        {/* <Text className="changeColor" style={{fontSize:'16px',fontWeight:'300'}}>
           该系统平台通过数字孪生技术和智能化监测和预警技术的应用，提高小水电站的监管和维护水平，实现对小水电清理整改的精细化管理，促进小水电清理整改工作的顺利实施。
-        </Text>
+        </Text> */}
         <Title level={2} className='changeColor'>平台背景</Title>
         <Paragraph style={{ color: 'white' ,fontSize:'16px',fontWeight:'300'}}>
-          平台基于
+          平台立足于党中央、国务院关于长江经济带“共抓大保护、不搞大开发”的决策部署和小水电清理整改工作要求，以赣州市安远县蔡坊水电站、黄地水电站、雲山水电站、黄沙水电站、九角水电站等5座水电站的清理整改为目标案例构建该平台，实现对小水电站的清理整改工作的精细化管理，促进小水电清理整改工作的顺利实施。
         </Paragraph>
         <Title level={2} className='changeColor'>平台特点：</Title>
         <Paragraph style={{ color: 'white' ,fontSize:'16px',fontWeight:'300'}}>
@@ -91,7 +91,7 @@ function WaterChange() {
             1、水质监测：实时监测水库水质数据，包括水温、溶解氧、电导率、PH值、浊度、氨氮
           </Text>
         </Paragraph> */}
-        <Title level={2} className="changeColor">联系我们</Title>
+        {/* <Title level={2} className="changeColor">联系我们</Title>
         <Paragraph style={{ color: 'white' ,fontSize:'16px',fontWeight:'300'}}>
           <Text className="changeColor">1、联系电话：17379698326</Text>
           
@@ -100,7 +100,7 @@ function WaterChange() {
         <Text className="changeColor">
             2、联系邮箱：wangyuhan@email.ncu.edu.cn
           </Text>
-        </Paragraph>
+        </Paragraph> */}
       </Typography>
     </div>
   )
