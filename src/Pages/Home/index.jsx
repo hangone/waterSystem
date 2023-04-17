@@ -32,7 +32,7 @@ const { SubMenu } = Menu;
 function Home(props){
     const [collapsed,setCollapsed] = useState(false) 
     const [activeTitle,setActiveTitle] = useState(null) 
-    const defaultTitle = '水雨情自动测报系统'
+    const defaultTitle = '小水电数字孪生监测系统'
       
     const [defaultSidebarMenu,setDefaultSidebarMenu] = useState([])
     const [preSidebarMenu,setPreSidebarMenu] = useState('homePage')
@@ -256,27 +256,28 @@ function Home(props){
                     </div>
                     <Menu openKeys={defaultSidebarMenu} selectedKeys={defaultSidebarItem} 
                         mode="inline" theme="dark" inlineCollapsed={collapsed} onOpenChange={onOpenChange}>
-                        <SubMenu key="homePage" icon={<AppstoreOutlined />} title="可视化分析"  onClick={onSelect} > 
-                            <Menu.Item key="mainChange">地图可视化</Menu.Item>
+                        <SubMenu key="homePage" icon={<AppstoreOutlined />} title="基础功能"  onClick={onSelect} > 
+                            <Menu.Item key="mainChange">背景介绍</Menu.Item>
+                            <Menu.Item key="hourWaterForm">位置分布</Menu.Item>
                             <Menu.Item key="waterChange">图表可视化</Menu.Item>
                             <Menu.Item key="rainChange">模型可视化</Menu.Item>
                             <Menu.Item key="whouseChange">实时数据</Menu.Item> 
                         </SubMenu> 
-                        <SubMenu key="waterPage" icon={<BranchesOutlined />} title="水情报表" onClick={onSelect} >
-                            <Menu.Item key="hourWaterForm">分时水位明细报表</Menu.Item>
+                        {/* <SubMenu key="waterPage" icon={<BranchesOutlined />} title="水情报表" onClick={onSelect} >
+                            
                             <Menu.Item key="dayWaterForm">分日水位明细报表</Menu.Item>
                             <Menu.Item key="monthWaterForm">分月水位明细报表</Menu.Item>
-                        </SubMenu> 
+                        </SubMenu>  */}
                         {/* <SubMenu key="rainPage" icon={<SlackOutlined />} title="雨情报表"  onClick={onSelect} >
                             <Menu.Item key="hourRainForm">分时雨量明细报表</Menu.Item> 
                             <Menu.Item key="dayRainForm">分日雨量明细报表</Menu.Item> 
                             <Menu.Item key="yearRainForm">全年雨量明细报表</Menu.Item>
                             <Menu.Item key="yearDayRainForm">全年逐日雨量明细报表</Menu.Item>
                             </SubMenu>  */}
-                        <SubMenu key="rainChart" icon={<PieChartOutlined />} title="雨量明细图"  onClick={onSelect} > 
-                            {/* <Menu.Item key="dayRainChart">日雨量明细图</Menu.Item>
-                            <Menu.Item key="yearRainChart">年雨量明细图</Menu.Item>  */}
-                        </SubMenu> 
+                        {/* <SubMenu key="rainChart" icon={<PieChartOutlined />} title="雨量明细图"  onClick={onSelect} > 
+                            <Menu.Item key="dayRainChart">日雨量明细图</Menu.Item>
+                            <Menu.Item key="yearRainChart">年雨量明细图</Menu.Item> 
+                        </SubMenu>  */}
                         <SubMenu key="handleData" icon={<TagsOutlined />} title="数据查询"  onClick={onSelect} >  
                             <Menu.Item key="historySearch">历史数据查询</Menu.Item>
                             <Menu.Item key="minuteChange">实时水质数据</Menu.Item> 
