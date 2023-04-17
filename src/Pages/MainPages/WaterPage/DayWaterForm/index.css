@@ -2,9 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  // width: 800px;
-  .chart1 {
-  
-   height: 400px;
-  }
+}
+.chartGroup .chart1 {
+  height: 400px;
 }

@@ -260,14 +260,14 @@ function Home(props){
                             <Menu.Item key="mainChange">背景介绍</Menu.Item>
                             <Menu.Item key="hourWaterForm">位置分布</Menu.Item>
                             <Menu.Item key="waterChange">图表可视化</Menu.Item>
-                            <Menu.Item key="rainChange">模型可视化</Menu.Item>
+                            <Menu.Item key="rainChange">3D模型</Menu.Item>
                             <Menu.Item key="whouseChange">实时数据</Menu.Item> 
                         </SubMenu> 
-                        {/* <SubMenu key="waterPage" icon={<BranchesOutlined />} title="水情报表" onClick={onSelect} >
+                        <SubMenu key="waterPage" icon={<BranchesOutlined />} title="水情报表" onClick={onSelect} >
                             
                             <Menu.Item key="dayWaterForm">分日水位明细报表</Menu.Item>
                             <Menu.Item key="monthWaterForm">分月水位明细报表</Menu.Item>
-                        </SubMenu>  */}
+                        </SubMenu> 
                         {/* <SubMenu key="rainPage" icon={<SlackOutlined />} title="雨情报表"  onClick={onSelect} >
                             <Menu.Item key="hourRainForm">分时雨量明细报表</Menu.Item> 
                             <Menu.Item key="dayRainForm">分日雨量明细报表</Menu.Item> 
