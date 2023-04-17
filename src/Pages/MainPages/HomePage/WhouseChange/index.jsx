@@ -1430,6 +1430,7 @@ function WaterChange() {
             pagination={false}
             loading={isLoading}
             sticky
+            bordered
             ref={tableRef}
           />
         </div>
