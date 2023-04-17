@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Button, Menu, Dropdown, Table, Radio, Spin, Descriptions } from 'antd'
+import { Button, Menu, Dropdown, Table, Radio, Spin, Descriptions,Divider } from 'antd'
 import { MessageTool, MessageToolClear } from 'Components/Tools/MessageTool'
 import {
   getRainChangeDay,
@@ -84,7 +84,7 @@ function RainChange() {
               {' '}
               <iframe
                 src=" https://app.modaiyun.com/embedded/1646168705471160320?viewport=false&autoplay=false&autorotate=false&hideTools=false&showBIM=false&showBBoxSize=false&showKooRender=false&showSettings=false"
-                style={{ width: '90%', height: '100%' }}
+                style={{ width: '100%', height: '120%' }}
                 frameBorder="0"
                 mozallowfullscreen="true"
                 webkitallowfullscreen="true"
@@ -92,36 +92,56 @@ function RainChange() {
             </div>{' '}
           </div>{' '}
         </div>
-       
-<div className="table-wrapper" style={{color: 'white'}}>
-  <div
-    style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      marginTop: '20px',
-      borderBottom: '1px solid white',
-      borderTop: '1px solid white',
-      padding: '10px',
-    }}>
-    <div style={{ fontSize: '20px', fontWeight: 'bold' }}>
-      实时数据监测
-    </div>
-    <div style={{ fontSize: '16px', textAlign: 'center' }}>
-      {moment().format('YYYY-MM-DD HH:mm:ss')}
-    </div>
-    <Descriptions
-      title="实时温度"
-      bordered
-      column={1}
-      size="small"
-      style={{ marginTop: '20px' }}>
-      <Descriptions.Item label="温度">37°</Descriptions.Item>
-    </Descriptions>
-  </div>
-</div>
 
-
+        <div className="table-wrapper" style={{ color: 'white' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              marginTop: '20px',
+              borderBottom: '1px solid white',
+              borderTop: '1px solid white',
+              padding: '10px',
+              width: '200px',
+              marginLeft: '10px',
+            }}>
+            <div style={{ fontSize: '20px', fontWeight: 'bold' }}>
+              实时数据监测
+            </div>
+            <div style={{ fontSize: '16px', textAlign: 'center', marginBottom:'20px', }}>
+              时间：{moment().format('YYYY-MM-DD HH:mm:ss')}
+            </div>
+            <Descriptions
+              title=""
+              column={1}
+              size="small"
+              labelStyle={{ color: 'white'}}
+              contentStyle={{color:'white'}}>
+              <Descriptions.Item label="温度" style={{ color: 'white' , borderBottom: '1px solid white',lineHeight:'24px'}} span={2}>
+                37°
+              </Descriptions.Item>
+              <Descriptions.Item label="温度" style={{ color: 'white' , borderBottom: '1px solid white',}} span={3}>
+                37°
+              </Descriptions.Item>
+              <Descriptions.Item label="温度" style={{ color: 'white' , borderBottom: '1px solid white',}} span={3}>
+                37°
+              </Descriptions.Item><Descriptions.Item label="温度" style={{ color: 'white' , borderBottom: '1px solid white',}} span={3}>
+                37°
+              </Descriptions.Item>
+              <Descriptions.Item label="温度" style={{ color: 'white' , borderBottom: '1px solid white',}} span={3}>
+                37°
+              </Descriptions.Item>
+              <Descriptions.Item label="温度" style={{ color: 'white' , borderBottom: '1px solid white',}} span={3}>
+                37°
+              </Descriptions.Item>
+              <Descriptions.Item label="温度" style={{ color: 'white' , borderBottom: '1px solid white',}} span={3}>
+                37°
+              </Descriptions.Item>
+              {/* <Divider style={{backgroundColor:'white' ,height:'1px'}}/> */}
+            </Descriptions>
+          </div>
+        </div>
       </div>
     </div>
   )
