@@ -517,7 +517,7 @@ function WaterChange() {
     setActiveMenuName1('自动更新')
     setIsLoading(true)
     realData().then((result) => {
-      //console.log('result', result)
+      console.log('result', result)
       setIsLoading(false)
       setDataSource(result)
       //t_res = result
@@ -1370,7 +1370,7 @@ function WaterChange() {
         className="fixTitle-div"
         style={{ display: isShowTitle ? 'flex' : 'none' }}>
         <Radio.Group onChange={onChange} value={radioItem}>
-          <Radio value={'day'}>日水位数据</Radio>
+          <Radio value={'day'}>实时数据</Radio>
           {/* <Radio value={'week'}>周水位数据</Radio>
                     <Radio value={'month'}>月水位数据</Radio>  */}
         </Radio.Group>
