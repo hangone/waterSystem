@@ -141,19 +141,19 @@ npm run build
 
 ### 1. 背景介绍
 
-![image-20230419110739706](C:\Users\18767\AppData\Roaming\Typora\typora-user-images\image-20230419110739706.png)
+![image-20230419110739706](./assets/image-20230419110739706.png)
 
 ### 2.位置分布
 
-![image-20230419110833338](C:\Users\18767\AppData\Roaming\Typora\typora-user-images\image-20230419110833338.png)
+![image-20230419110833338](./assets/image-20230419110833338.png)
 
-![image-20230419110846390](C:\Users\18767\AppData\Roaming\Typora\typora-user-images\image-20230419110846390.png)
+![image-20230419110846390](./assets/image-20230419110846390.png)
 
 ### 3.图表分析
 
 ### 4.实时水质数据
 
-![image-20230419111507479](C:\Users\18767\AppData\Roaming\Typora\typora-user-images\image-20230419111507479.png)
+![image-20230419111507479](./assets/image-20230419111507479.png)
 
-![image-20230419111437026](C:\Users\18767\AppData\Roaming\Typora\typora-user-images\image-20230419111437026.png)
+![image-20230419111437026](./assets/image-20230419111437026.png)
 
