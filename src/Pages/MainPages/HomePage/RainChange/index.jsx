@@ -83,7 +83,7 @@ function RainChange() {
               }}>
               {' '}
               <iframe
-                src=" https://app.modaiyun.com/embedded/1646168705471160320?viewport=false&autoplay=false&autorotate=false&hideTools=false&showBIM=false&showBBoxSize=false&showKooRender=false&showSettings=false"
+                src="https://app.modaiyun.com/embedded/1648606502265573376?viewport=false&autoplay=false&autorotate=false&hideTools=true&showBIM=false&showBBoxSize=false&showKooRender=false&showSettings=false&c_at0=-722.5801991249997&c_at1=-1204.1309803750135&c_at2=352.813092348389&c_theta=5.1008871437821375&c_phi=0.23393292519943296&c_dis=1904.2708111772058"
                 style={{ width: '100%', height: '120%' }}
                 frameBorder="0"
                 mozallowfullscreen="true"
@@ -154,3 +154,4 @@ export default RainChange
 //     https://app.modaiyun.com/embedded/1647987489293078528?viewport=false&autoplay=false&autorotate=true&hideTools=false&showBIM=false&showBBoxSize=false&showKooRender=false&showSettings=false" style="width:100%;height:100%;" frameborder="0" mozallowfullscreen webkitallowfullscreen
 //     allowfullscreen ></iframe> </div> </div> </div>
 // https://app.modaiyun.com/embedded/1646168705471160320?viewport=false&autoplay=false&autorotate=false&hideTools=false&showBIM=false&showBBoxSize=false&showKooRender=false&showSettings=false
+//https://app.modaiyun.com/embedded/1648606502265573376?viewport=false&autoplay=false&autorotate=true&hideTools=true&showBIM=false&showBBoxSize=false&showKooRender=false&showSettings=false&c_at0=-722.5801991249997&c_at1=-1204.1309803750135&c_at2=352.813092348389&c_theta=5.1008871437821375&c_phi=0.23393292519943296&c_dis=1904.2708111772058
