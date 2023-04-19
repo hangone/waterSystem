@@ -1407,6 +1407,7 @@ function DayWaterForm() {
           style={{
             height: '50%',
             position: 'relative',
+        
           }}>
           <Table
             dataSource={dataSource}
@@ -1416,6 +1417,7 @@ function DayWaterForm() {
             sticky
             bordered
             ref={tableRef}
+            scroll={{ x: 800, y: 300 }}
           />
         </div>
         <Button
@@ -1436,7 +1438,7 @@ function DayWaterForm() {
             flexDirection: 'row',
             display: 'flex',
             justifyContent: 'space-around',
-            marginTop: '20px',
+            marginTop: '30px',
           }}>
           {/* <div className='mask-div' style={{'display':isShowEchart ?'none' : 'block'}}>  </div> */}
           <div
