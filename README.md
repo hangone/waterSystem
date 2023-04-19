@@ -1,70 +1,142 @@
-# Getting Started with Create React App
+# 项目架构文件说明
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 项目结构
 
-## Available Scripts
+```
+├── src
+│   ├── App.jsx
+│   ├── index.js
+│   ├── Utils
+│   │   ├── index.js
+│   │   ├── layouttreset.js
+│   │   ├── tableconfig.js
+│   ├── Services
+│   │   ├── request.js
+│   │   ├── service.js
+│   │   ├── Home
+│   │   │   ├── index.js
+│   │   │   ├── minute.js
+│   │   │   ├── reset.js
+│   │   │   ├── search.js
+│   │   ├── waterQuality
+│   │   │   ├── index.js
+│   │   │   ├── filterData.js
+│   │   │   ├── realData.js
+│   │   ├── User
+│   │   │   ├── user.js
+│   ├── Router
+│   │   ├── index.js
+│   ├── Pages
+│   │   ├── Home
+│   │   │   ├── index.jsx
+│   │   │   ├── index.less
+│   │   │   ├── index.css
+│   │   ├── MainPages
+│   │   │   ├── HomePage
+│   │   │   │   ├── MainChange
+│   │   │   │   │   ├── index.jsx
+│   │   │   │   │   ├── index.less
+│   │   │   │   │   ├── index.css
+│   ├── Components
+│   │   ├── columns
+│   │   │   ├── column.js
+│   │   │   ├── columnSearch.js
+│   │   ├── Map
+│   │   │   ├── index.jsx
+│   │   │   ├── index.less
+│   │   │   ├── index.css
+│   │   │   ├── map
+│   │   │   │   ├── index.jsx
+│   │   │   ├── search
+│   │   │   │   ├── index.jsx
+│   │   ├── MapDam
+│   │   │   ├── index.jsx
+│   │   │   ├── index.css
+│   │   ├── MapSearch
+│   │   │   ├── index.jsx
+│   │   │   ├── index.css
+│   │   ├── Tools
+│   │   │   ├── MessageTool.js
+│   ├── Common
+│   │   ├── index.js
+│   ├── Assets
+│   │   ├── images
+│   │   │   ├── home
+│   │   │   ├── pic
+│   │   ├── plugins
+│   │   │   ├── animate.css
+│   │   │   ├── webpack.config.js
+│   │   ├── css
+│   │   │   ├── comm.css
+│   │   │   ├── comm.less
+│   │   │   ├── default.css
+│   │   ├── backup
+│   │   │   ├── HandleData
+│   │   │   ├── HomePage
+│   │   │   ├── Services
 
-In the project directory, you can run:
+```
 
-### `npm start`
+## 项目说明
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 1. HomePage 部分
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+主菜单页面，标题为基础功能
+映射关系，列出表格的列名和数据的映射关系
+|页面名称|对应的 page 页|
+|:---:|:---:|
+|背景介绍|mainChange|
+|位置分布|hourWaterForm|
+|图表分析|dayWaterForm|
+|3D 模型|rainChange|
+|实时数据|whouseChange|
+|图表可视化|waterChange|
+|实时水质数据|minuteChange|
+|历史数据查询|historySearch|
 
-### `npm test`
+### 2. 组件使用部分
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#### 2.1 MapDam 组件
 
-### `npm run build`
+地图组件，调用高德地图 API，安装了高德地图的 react 组件（react-amap），使用时需要在 index.html 中引入高德地图的 js 文件。实现了实时显示五个水库的地理位置，点击水库显示水库的详细信息。
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### 2.2 3D 模型组件
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+使用了 three.js 库，实现了 3D 模型的显示，使用了 three.js 的 OrbitControls 控制器，实现了鼠标控制模型的旋转，缩放，平移。同时调用 modaiyun 的 API，提升了展示效果。
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### 2.3 图表可视化组件
 
-### `npm run eject`
+使用了 echarts 库，实现了图表的显示，并对实时数据进行可视化分析，同时调用 sovitjs，提升了展示效果。
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 2.4 水质数据查询组件
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+使用了 antd 的 table 组件，实现了水质数据的查询，并通过后端接口获取国家水质自动综合监管平台的水质数据，实现了对于全国范围的水质数据的查询。
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 项目运行
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 1. 安装依赖
 
-## Learn More
+```
+npm install
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 2. 运行项目
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+npm run start
+```
 
-### Code Splitting
+### 3. 打包项目
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```
+npm run build
+```
 
-### Analyzing the Bundle Size
+## 项目部署
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+已有的项目部署在服务器上，可以直接访问
+网站地址：<https://water-fe.miraitowa.tk/>
 
-### Making a Progressive Web App
+## 项目展示
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### 1. 首页
