@@ -286,7 +286,7 @@ function WaterChange() {
               loading={isLoading}
               bordered
               style={{ width: '400' }}
-              scroll={{ y: 300, x: 800 }}
+              scroll={{ y: 800, x: 800 }}
             />
           </div>
         </div>
