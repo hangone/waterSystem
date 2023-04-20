@@ -67,7 +67,7 @@ function WaterChange() {
       : '紧缩型'
   )
   const [isTableCollapse, setIsTableCollapse] = useState(
-    sessionStorage.getItem('water_isTableCollapse') == 'true' ? true : false
+    sessionStorage.getItem('water_isTableCollapse') == 'true' ? false : true
   )
 
   // 用于初始化的标志位
@@ -597,6 +597,13 @@ function WaterChange() {
         title: '温度(℃)',
         dataIndex: 'temperature',
         key: 'temperature',
+        align: 'center',
+        width: 150,
+      })
+      t_columns.push({
+        title: 'TDS(mg/L)',
+        dataIndex: 'tds',
+        key: 'tds',
         align: 'center',
         width: 150,
       })
@@ -1379,12 +1386,12 @@ function WaterChange() {
           <Dropdown
             overlay={
               <Menu>
-                <Menu.Item onClick={() => onSelectDropdown('紧缩型')}>
-                  <div> 紧缩型 </div>
-                </Menu.Item>
-                <Menu.Item onClick={() => onSelectDropdown('扩展型')}>
+                 <Menu.Item onClick={() => onSelectDropdown('扩展型')}>
                   <div> 扩展型 </div>
                 </Menu.Item>
+                <Menu.Item onClick={() => onSelectDropdown('紧缩型')}>
+                  <div> 紧缩型 </div>
+                </Menu.Item>    
               </Menu>
             }
             placement="bottomLeft">
@@ -1440,7 +1447,7 @@ function WaterChange() {
           className="dataUpdateBtn"
           style={{
             display:
-              activeMenuName1 === '手动更新'
+              activeMenuName1 == '手动更新'
                 ? 'none !important'
                 : 'block !important',
           }}

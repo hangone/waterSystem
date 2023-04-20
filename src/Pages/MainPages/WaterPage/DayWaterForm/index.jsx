@@ -600,6 +600,13 @@ function DayWaterForm() {
         align: 'center',
         width: 150,
       })
+      t_columns.push({
+        title: 'TDS(mg/L)',
+        dataIndex: 'tds',
+        key: 'tds',
+        align: 'center',
+        width: 150,
+      })
       // t_columns.push({
       //     title:'入库流量(立方米/秒)',
       //     dataIndex:typeList[1].stcd+'inflow',
