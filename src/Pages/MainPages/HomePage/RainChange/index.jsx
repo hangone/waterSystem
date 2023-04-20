@@ -1,5 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Button, Menu, Dropdown, Table, Radio, Spin, Descriptions,Divider } from 'antd'
+import {
+  Button,
+  Menu,
+  Dropdown,
+  Table,
+  Radio,
+  Spin,
+  Descriptions,
+  Divider,
+} from 'antd'
 import { MessageTool, MessageToolClear } from 'Components/Tools/MessageTool'
 import {
   getRainChangeDay,
@@ -25,6 +34,7 @@ import moment from 'moment'
 import * as echarts from 'echarts'
 import Common from 'Common'
 import { formatDate } from 'Utils'
+import { realData } from '../../../../Services/waterQuality/realData'
 import 'Assets/css/comm.css'
 import './index.css'
 
@@ -34,6 +44,18 @@ function RainChange() {
   const [columns, setColumns] = useState([])
   //tableData
   const [dataSource, setDataSource] = useState([])
+  const updateData = () => {
+    setIsLoading(true)
+    realData().then((result) => {
+      console.log('result', result)
+      setIsLoading(false)
+      setDataSource(result[0])
+      //t_res = result
+      //console.log('t_res', t_res)
+      MessageTool('数据已经更新', 'success')
+    })
+    //  setIsLoading(true)
+  }
   return (
     <div className="rainChange-div homeTable-div commTable-div">
       {/* <div
@@ -109,37 +131,78 @@ function RainChange() {
             <div style={{ fontSize: '20px', fontWeight: 'bold' }}>
               实时数据监测
             </div>
-            <div style={{ fontSize: '16px', textAlign: 'center', marginBottom:'20px', }}>
-              时间：{moment().format('YYYY-MM-DD HH:mm:ss')}
+            <div
+              style={{
+                fontSize: '16px',
+                textAlign: 'center',
+                marginBottom: '20px',
+              }}>
+              时间：{dataSource.update_time}
             </div>
             <Descriptions
               title=""
               column={1}
               size="small"
-              labelStyle={{ color: 'white'}}
-              contentStyle={{color:'white'}}>
-              <Descriptions.Item label="温度" style={{ color: 'white' , borderBottom: '1px solid white',lineHeight:'24px'}} span={2}>
-                37°
+              labelStyle={{ color: 'white' }}
+              contentStyle={{ color: 'white' }}>
+              <Descriptions.Item
+                label="温度"
+                style={{
+                  color: 'white',
+                  borderBottom: '1px solid white',
+                  lineHeight: '24px',
+                }}
+                span={2}>
+                {dataSource.temperature === undefined
+                  ? 20
+                  : dataSource.temperature}
+                °
               </Descriptions.Item>
-              <Descriptions.Item label="温度" style={{ color: 'white' , borderBottom: '1px solid white',}} span={3}>
-                37°
+              <Descriptions.Item
+                label="TDS"
+                style={{ color: 'white', borderBottom: '1px solid white' }}
+                span={3}>
+                {dataSource.tds === undefined ? 10 : dataSource.tds}mg/L
               </Descriptions.Item>
-              <Descriptions.Item label="温度" style={{ color: 'white' , borderBottom: '1px solid white',}} span={3}>
-                37°
-              </Descriptions.Item><Descriptions.Item label="温度" style={{ color: 'white' , borderBottom: '1px solid white',}} span={3}>
-                37°
+              <Descriptions.Item
+                label="数据x"
+                style={{ color: 'white', borderBottom: '1px solid white' }}
+                span={3}>
+                30
               </Descriptions.Item>
-              <Descriptions.Item label="温度" style={{ color: 'white' , borderBottom: '1px solid white',}} span={3}>
-                37°
+              <Descriptions.Item
+                label="数据x"
+                style={{ color: 'white', borderBottom: '1px solid white' }}
+                span={3}>
+                30
               </Descriptions.Item>
-              <Descriptions.Item label="温度" style={{ color: 'white' , borderBottom: '1px solid white',}} span={3}>
-                37°
+              <Descriptions.Item
+                label="数据x"
+                style={{ color: 'white', borderBottom: '1px solid white' }}
+                span={3}>
+                30
               </Descriptions.Item>
-              <Descriptions.Item label="温度" style={{ color: 'white' , borderBottom: '1px solid white',}} span={3}>
-                37°
+              <Descriptions.Item
+                label="数据x"
+                style={{ color: 'white', borderBottom: '1px solid white' }}
+                span={3}>
+                30
+              </Descriptions.Item>
+              <Descriptions.Item
+                label="数据x"
+                style={{ color: 'white', borderBottom: '1px solid white' }}
+                span={3}>
+                30
               </Descriptions.Item>
               {/* <Divider style={{backgroundColor:'white' ,height:'1px'}}/> */}
             </Descriptions>
+            <Button
+              type="primary"
+              onClick={updateData}
+              style={{ marginTop: '20px' }}>
+              {' '}
+              更新数据{' '}
+            </Button>
           </div>
         </div>
       </div>
