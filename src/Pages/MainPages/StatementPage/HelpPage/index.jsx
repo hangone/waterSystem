@@ -18,12 +18,12 @@ function WhouseChange(){
                     </div>  
 
                     <h3>2.后端部分</h3>
-                    <div>后端采用Java的SSM框架，后端对数据的提取进行了多种方式的优化。极大地提高了数据提取速度，比较大程度上提升了
+                    <div>后端采用python的框架flask，后端对数据的提取进行了多种方式的优化。极大地提高了数据提取速度，比较大程度上提升了
                         当前项目的性能。当前系统的后端数据接口由三个单独的后端项目，后期维护与开发请提前了解各项目的内容。
                     </div>  
                 </div>
                 
-                <h2>二、操作提示</h2> 
+                {/* <h2>二、操作提示</h2> 
                 <div className='box-title-div' style={{'margin-bottom':'3rem'}}> 
                     <h3>1.自动刷新</h3> 
                     <div> 实时水雨情部分，采取5分钟自动刷新的功能。表格定时更新滚动，图定时更新重绘</div>  
@@ -39,10 +39,10 @@ function WhouseChange(){
   
                     <h3>5.用户管理</h3>
                     <div>用户管理机制，管理员无法删除当前账号，也无法删除最后一个管理员账号。</div>  
-                </div>
+                </div> */}
 
                 
-                <h2>三、功能亮点</h2> 
+                {/* <h2>三、功能亮点</h2> 
                 <div className='box-title-div' style={{'margin-bottom':'3rem'}}> 
 
                     <h3>1.实用功能</h3> 
@@ -65,7 +65,7 @@ function WhouseChange(){
                     <span>(1.页面预加载功能</span>
                     <span>(2.页面跳转清理功能</span>
                     <span>(3.页面异常捕获功能</span>
-                </div> 
+                </div>  */}
              <hr />
         </div>
     )
