@@ -294,8 +294,8 @@ function Home(props) {
               title="数据查询"
               onClick={onSelect}>
               <Menu.Item key="minuteChange">全国水质数据</Menu.Item>
-              <Menu.Item key="waterChange">图表可视化</Menu.Item>
-              <Menu.Item key="historySearch">历史数据查询</Menu.Item>
+              {/* <Menu.Item key="waterChange">图表可视化</Menu.Item>
+              <Menu.Item key="historySearch">历史数据查询</Menu.Item> */}
             </SubMenu>
           </Menu>
           {isHaveAuth ? (
