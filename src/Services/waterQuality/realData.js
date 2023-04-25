@@ -10,6 +10,7 @@ export const realData = async () => {
     let obj = {
       update_time: data[i].update_time,
       temperature: data[i].temperature,
+      tds: data[i].tds,
     };
     arr.push(obj);
   }
