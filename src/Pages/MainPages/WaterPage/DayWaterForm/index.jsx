@@ -873,7 +873,7 @@ function DayWaterForm() {
       // 暂停旋转器
       setIsLoading(false)
       console.log('获取数据异常！', err)
-      MessageTool('获取数据异常！请刷新重试', 'error')
+      // MessageTool('获取数据异常！请刷新重试', 'error')
     }
   }
 

@@ -8,7 +8,7 @@ const Columns = [
     title: '省份',
     dataIndex: 'province',
     width: 100,
-    fixed: 'left',
+    // fixed: 'left',
   },
   {
     title: '藻密度(cells/L)',
