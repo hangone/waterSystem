@@ -40,7 +40,7 @@ const { SubMenu } = Menu
 function Home(props) {
   const [collapsed, setCollapsed] = useState(false)
   const [activeTitle, setActiveTitle] = useState(null)
-  const defaultTitle = '小水电数字孪生监测系统'
+  const defaultTitle = '清逸智慧水系统'
 
   const [defaultSidebarMenu, setDefaultSidebarMenu] = useState([])
   const [preSidebarMenu, setPreSidebarMenu] = useState('homePage')
@@ -321,7 +321,7 @@ function Home(props) {
               </Button>
 
               <div className="useable-div" onClick={handleDisplay}>
-                监控大屏
+                使用说明
               </div>
               {/* <div className='useable-div' onClick={handleHelp}>使用帮助</div> */}
               {isShowTitleText ? (
