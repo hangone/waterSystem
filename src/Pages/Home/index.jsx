@@ -33,7 +33,7 @@ import './index.css'
 import { subRouterMap } from 'Router/index'
 import { formatDate } from 'Utils'
 
-import fgLogo1 from '../../Assets/images/home/fg-logo1.png'
+import fgLogo1 from '../../Assets/images/home/fg-logo2.png'
 
 const { SubMenu } = Menu
 
