@@ -207,18 +207,23 @@ function Home(props) {
   }
   // 选中侧边栏的子项
   const onSelect = (e) => {
+    console.log("🚀 ~ onSelect ~ e:", e)
     const { key } = e
+    console.log("🚀 ~ onSelect ~ key:", key)
     subRouterMap.some((item) => {
       if (item.path.endsWith(key)) {
+        console.log("🚀 ~ subRouterMap.some ~ item:", item)
         sessionStorage.setItem('water_sidebarItem', item.path)
         // 数据不能响应式变化
         const menuList = parseRoute(item.path)
         setDefaultSidebarItem(menuList[1])
-
+        console.log("🚀 ~ subRouterMap.some ~ path:", item.path)
         props.history.push(item.path)
         return false
       }
+       
     })
+  
   }
 
   // 大屏展示
@@ -275,9 +280,9 @@ function Home(props) {
               <Menu.Item key="rainChange">3D模型</Menu.Item>
               <Menu.Item key="whouseChange">实时数据</Menu.Item>
             </SubMenu>
-            {/* <SubMenu key="waterPage" icon={<BranchesOutlined />} title="水情报表" onClick={onSelect} >
-                            <Menu.Item key="monthWaterForm">分月水位明细报表</Menu.Item>
-                        </SubMenu>  */}
+            <SubMenu key="waterPage" icon={<BranchesOutlined />} title="问 AI" onClick={onSelect} >
+                          <Menu.Item key="waterQuality">清逸水系统大模型</Menu.Item>
+            </SubMenu> 
             {/* <SubMenu key="rainPage" icon={<SlackOutlined />} title="雨情报表"  onClick={onSelect} >
                             <Menu.Item key="hourRainForm">分时雨量明细报表</Menu.Item> 
                             <Menu.Item key="dayRainForm">分日雨量明细报表</Menu.Item> 

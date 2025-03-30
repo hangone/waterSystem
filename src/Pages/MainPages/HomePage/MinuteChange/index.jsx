@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react'
 import { Table, Spin, Cascader, Input, Divider } from 'antd'
 import { MessageTool } from 'Components/Tools/MessageTool'
-import options from '..//WaterQuality/formData/options'
+import options from '../../WaterPage/WaterQuality/formData/options'
 import columns from '../../../../Components/columns/column'
-import RadarChart from '../WaterQuality/charts'
+import RadarChart from '../../WaterPage/WaterQuality/charts'
 // 引入兄弟传值模块
 
 import { getWaterQualityData } from '../../../../Services/waterQuality'
