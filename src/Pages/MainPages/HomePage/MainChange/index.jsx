@@ -67,12 +67,12 @@ function WaterChange() {
       }}>
         {/* 标题容器 */}
         <div style={{ 
-          position: 'sticky',
-          top: '40px',
+          position: 'static', // 修改为 static 定位
+          // top: '40px', // 移除 sticky 定位相关属性
           zIndex: 1000,
           background: 'rgba(255,255,255,0.15)',
           backdropFilter: 'blur(20px)',
-          marginBottom: '56px', // 减少8px (原64→56)
+          marginBottom: '40px', 
           padding: '32px 0',
           borderBottom: '1px solid rgba(255,255,255,0.15)',
           borderRadius: '16px'
@@ -182,7 +182,7 @@ function WaterChange() {
                   lineHeight: 1.7,
                   letterSpacing: '0.1px'
                 }}>
-                  在数字孪生技术模块构建方面，我们采集水质数据，使用 Three.js 等 Web3D 技术在 Web 端平台的前端开发中构建水资源，河道的 3D 模型，并实时展示相关数据，可实现智能预警功能，以帮助运行管理部门进行快速处置，预防和降低水质问题对生态环境的影响，同时实现对水资源相关数据的可视化观测。
+                  在数字孪生技术模块构建方面，我们采集水质数据，使用 Three.js 等 Web3D 技术在 Web 端平台的前端开发中构建水资源，河道的 3D 模型，并实时展示相关数据，可实现智能预警功能，以帮助运行管理部门进行快速处置，prevent 和降低水质问题对生态环境的影响，同时实现对水资源相关数据的可视化观测。
                 </Paragraph>
               </div>
 
