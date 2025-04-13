@@ -49,51 +49,58 @@ function WaterChange() {
   return (
     <div className="waterChange-div" style={{ 
       margin: '0 10px',
-      minHeight: '100vh',
+      height: '100%',
       position: 'relative',
-      padding: '40px 0'
+      padding: '20px 0', // 减少上下边距
+      overflow: 'hidden',
+      boxSizing: 'border-box'
     }}>
       {/* 主容器 */}
       <div style={{
-        padding: '100px 48px 60px',
+        padding: '40px 5% 30px', // 调整上下内边距
         borderRadius: '24px',
         background: 'rgba(255,255,255,0.15)',
         backdropFilter: 'blur(20px)',
         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.05)',
         border: '1px solid rgba(255,255,255,0.15)',
         maxWidth: '1400px',
+        height: '100%',
         margin: '0 auto',
-        position: 'relative'
+        position: 'relative',
+        boxSizing: 'border-box',
+        overflowY: 'auto'
       }}>
         {/* 标题容器 */}
         <div style={{ 
-          position: 'static', // 修改为 static 定位
-          // top: '40px', // 移除 sticky 定位相关属性
+          position: 'static',
           zIndex: 1000,
           background: 'rgba(255,255,255,0.15)',
           backdropFilter: 'blur(20px)',
-          marginBottom: '40px', 
-          padding: '32px 0',
-          borderBottom: '1px solid rgba(255,255,255,0.15)',
-          borderRadius: '16px'
+          margin: '0 0 25px', // 移除负边距
+          padding: '24px 5%', // 与主容器padding对齐
+          border: '1px solid rgba(255,255,255,0.15)',
+          borderRadius: '16px',
+          boxSizing: 'border-box'
         }}>
           <Title style={{ 
             margin: 0,
             color: '#fff',
+            padding: '0', // 移除文字内边距
             fontWeight: 500,
-            fontSize: '2.4rem',
-            letterSpacing: '-1px',
-            lineHeight: 1.1,
-            textAlign: 'center'
+            fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', // 动态字号
+            lineHeight: 1.2,
+            textAlign: 'center',
+            whiteSpace: 'normal',
+            wordBreak: 'break-word'
           }}>
-            清逸智慧水系统
+            水环境可视化大模型系统
           </Title>
         </div>
 
         {/* 完整内容区域 */}
         <div style={{ 
           display: 'grid', 
-          gap: '64px', 
+          gap: '40px',  // 减少间距
           position: 'relative',
           zIndex: 50 
         }}>
@@ -115,7 +122,7 @@ function WaterChange() {
               letterSpacing: '0.2px',
               maxWidth: '800px'
             }}>
-              清逸智慧水系统的设计目标是通过物联网、云计算、大数据和人工智能等技术，建立智能化、数字化的水环境监测与管理服务平台，实现水环境的高效布控、智能监测和科学管理，全面提升水环境质量和水资源利用效率。
+              水环境可视化大模型系统的设计目标是通过物联网、云计算、大数据和人工智能等技术，建立智能化、数字化的水环境监测与管理服务平台，实现水环境的高效布控、智能监测和科学管理，全面提升水环境质量和水资源利用效率。
             </Paragraph>
           </section>
 
