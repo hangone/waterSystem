@@ -281,7 +281,7 @@ function Home(props) {
               <Menu.Item key="whouseChange">实时数据</Menu.Item>
             </SubMenu>
             <SubMenu key="waterPage" icon={<BranchesOutlined />} title="问 AI" onClick={onSelect} >
-                          <Menu.Item key="waterQuality">清逸水系统大模型</Menu.Item>
+                          <Menu.Item key="waterQuality">大模型系统</Menu.Item>
             </SubMenu> 
             {/* <SubMenu key="rainPage" icon={<SlackOutlined />} title="雨情报表"  onClick={onSelect} >
                             <Menu.Item key="hourRainForm">分时雨量明细报表</Menu.Item> 
