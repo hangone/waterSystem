@@ -90,6 +90,7 @@
   padding: 0.6rem;
   background-color: #393d49;
   color: white;
+  z-index: 9999;
 }
 .home-div .content-div .header-div .ant-btn,
 .home-div .content-div .header-div .ant-dropdown-trigger,

@@ -13,12 +13,6 @@ import './index.css'
 const { Search } = Input
 
 function WaterChange() {
-  // 计时器
-  let ITimer = null
-  const preIsShowTitle = sessionStorage.getItem('water_isShowTitle')
-  const [isShowTitle, setIsShowTitle] = useState(
-    preIsShowTitle == 'true' ? preIsShowTitle : false
-  )
   // 是否正在加载
   const [isLoading, setIsLoading] = useState(false)
   const [isTableCollapse, setIsTableCollapse] = useState(true)
@@ -59,51 +53,17 @@ function WaterChange() {
       })
   }
   return (
-    <div className="waterChange-div homeTable-div commTable-div">
-      <div className="body-bottom-div" style={{ background: 'white' }}>
-        <div
-          className="bottom-top"
-          style={{
-            height: isTableCollapse ? 'inherit' : '50%',
-            position: isTableCollapse ? 'absolute' : 'relative',
-          }}>
-          <div className="content">
-            <Spin
-              tip="加载数据中"
-              spinning={isLoading}
-              style={{ display: isLoading ? 'flex' : 'none' }}></Spin>
-            <Cascader
-              options={options}
-              onChange={onChange}
-              size="large"
-              className="antdCas"
-              placement="bottomLeft"
-              placeholder="请选择区域"
-              style={{ width: '12vw' }}></Cascader>
-            <Search
-              placeholder="请输入断面名称"
-              allowClear
-              enterButton="搜索"
-              size="large"
-              onSearch={onSearch}
-              style={{ width: '30vw', backgroundColor: 'blue' }}
-              className="antdSearch"
-            />
-          </div>
-          <div className="table">
-            <Divider />
-            <Table
-              dataSource={dataSource}
-              columns={columns}
-              pagination={true}
-              loading={isLoading}
-              bordered
-              style={{ width: '400' }}
-              scroll={{ y: 800, x: 800 }}
-            />
-          </div>
-        </div>
-      </div>
+    <div style={{ width: '100%', height: '100%', overflow: 'hidden', marginTop: '-10px' }}>
+      <iframe
+        title="全国水质数据"
+        src="https://szzdjc.cnemc.cn:8070/GJZ/Business/Publish/Main.html"
+        width="100%"
+        height="90vh"
+        sandbox="allow-same-origin allow-scripts allow-forms"
+        style={{ border: 'none', height: '100vh' }}
+      />
+      <div style={{ width: '100%', height: '54px', backgroundColor: '#0088BB', position:"absolute" ,top:'0px'}}></div>
+      <div />
     </div>
   )
 }
