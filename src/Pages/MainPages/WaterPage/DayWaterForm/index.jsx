@@ -30,6 +30,32 @@ import { formatDate } from 'Utils'
 import 'Assets/css/comm.css'
 import './index.css'
 
+// 仪表盘，折线图，雷达图的模拟数据
+const mockData = {
+  gauge: { 
+    value: 28,         // 温度值
+    name: '实时温度',  // 温度显示
+    unit: '℃'         // 添加单位
+  },
+  line: {
+    xData: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+    series: [
+      { 
+        name: 'TDS',   // TDS水质指标
+        data: [150, 220, 280, 190, 240, 260] // 典型TDS值范围(100-300)
+      }
+    ]
+  },
+  radar: {
+    indicator: [
+      { name: '稳定性', max: 100 },
+      { name: '安全性', max: 100 },
+      { name: '响应速度', max: 100 }
+    ],
+    data: [{ value: [85, 90, 80] }]
+  }
+};
+
 function DayWaterForm() {
   // 端点编码
   let typeList = []
@@ -1357,53 +1383,119 @@ function DayWaterForm() {
     setIsLoading(false)
   }
 
+  const gaugeRef = useRef(null);
+  const lineRef = useRef(null);
+  const radarRef = useRef(null);
+
+  // 添加图表初始化逻辑到现有useEffect
+  useEffect(() => {
+    const initCharts = () => {
+
+      // 仪表盘
+      const gaugeChart = echarts.init(gaugeRef.current);
+      gaugeChart.setOption({
+        series: [{
+          type: 'gauge',
+          center: ['50%', '60%'],
+          progress: { 
+            show: true,
+            width: 15,
+            itemStyle: {
+              color: '#e74c3c' // 进度条红色系
+            }
+          },
+          axisLine: { 
+            lineStyle: { 
+              width: 15,
+              color: [
+                [0.3, '#2ecc71'], // 绿色安全区
+                [0.7, '#f1c40f'], // 黄色警告区
+                [1, '#e74c3c']    // 红色危险区
+              ]
+            } 
+          },
+          axisTick: { show: false },
+          splitLine: { 
+            length: 15, 
+            lineStyle: { 
+              width: 2,
+              color: '#95a5a6' // 刻度线颜色
+            } 
+          },
+          detail: {
+            valueAnimation: true,
+            fontSize: 28,  
+            offsetCenter: [0, '65%'],  
+            formatter: '{value}℃',
+            color: '#e74c3c'
+          },
+          axisLabel: { 
+            distance: 30, 
+            fontSize: 14,  
+            formatter: (v) => v + '℃'
+          },
+          radius: '85%', 
+          data: [mockData.gauge]
+        }]
+      });
+
+      // 折线图
+      const lineChart = echarts.init(lineRef.current);
+      lineChart.setOption({
+        xAxis: { 
+          type: 'category', 
+          data: mockData.line.xData 
+        },
+        yAxis: {
+          type: 'value',
+          name: 'TDS (mg/L)',  // 添加水质单位
+          nameTextStyle: {
+            color: '#2980b9',  // 蓝色系
+            fontSize: 12,
+            padding: [0, 0, 0, 20] // 调整位置
+          },
+          axisLabel: {
+            color: '#2980b9' // 刻度值颜色
+          }
+        },
+        series: mockData.line.series.map(s => ({
+          ...s,
+          type: 'line',
+          smooth: true,
+          areaStyle: { 
+            opacity: 0.3,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: '#3498db' }, // 渐变起始色
+              { offset: 1, color: '#ecf0f1' }  // 渐变结束色
+            ])
+          },
+          lineStyle: {
+            width: 2,
+            color: '#2980b9' // 线条颜色
+          }
+        }))
+      });
+
+      // 雷达图
+      const radarChart = echarts.init(radarRef.current);
+      radarChart.setOption({
+        radar: { indicator: mockData.radar.indicator },
+        series: [{
+          type: 'radar',
+          data: mockData.radar.data,
+          areaStyle: { opacity: 0.3 }
+        }]
+      });
+    };
+
+    initCharts();
+    const resizeHandler = () => initCharts();
+    window.addEventListener('resize', resizeHandler);
+    return () => window.removeEventListener('resize', resizeHandler);
+  }, []);
+
   return (
     <div className="dayWaterChart-div commTable-div">
-      {/* <div
-        className="fixTitle-div"
-        style={{ display: isShowTitle ? 'flex' : 'none' }}>
-        <Radio.Group onChange={onChange} value={radioItem}>
-          <Radio value={'day'}>日水位数据</Radio>
-          <Radio value={'week'}>周水位数据</Radio>
-                    <Radio value={'month'}>月水位数据</Radio> 
-        </Radio.Group>
-        <div className="table-mode-div">
-          <div>表格模式：</div>
-          <Dropdown
-            overlay={
-              <Menu>
-                <Menu.Item onClick={() => onSelectDropdown('紧缩型')}>
-                  <div> 紧缩型 </div>
-                </Menu.Item>
-                <Menu.Item onClick={() => onSelectDropdown('扩展型')}>
-                  <div> 扩展型 </div>
-                </Menu.Item>
-              </Menu>
-            }
-            placement="bottomLeft">
-            <Button type="default">{activeMenuName}</Button>
-            更新数据按钮  <Button type="primary" onClick={updateData}>更新数据</Button>
-          </Dropdown>
-        </div>
-        <div className="table-mode-div">
-          <div>表格模式：</div>
-          <Dropdown
-            overlay={
-              <Menu>
-                <Menu.Item onClick={updateData}>
-                  <div> 手动更新 </div>
-                </Menu.Item>
-                <Menu.Item onClick={autoUpdateData}>
-                  <div> 自动更新 </div>
-                </Menu.Item>
-              </Menu>
-            }
-            placement="bottomLeft">
-            <Button type="default">{activeMenuName1}</Button>
-            更新数据按钮  <Button type="primary" onClick={updateData}>更新数据</Button>
-          </Dropdown>
-        </div>
-      </div> */}
       <div className="body-bottom-div" style={{ background: 'white' ,alignItems:'flex-start',flexDirection:'column'}}>
         <Spin
           tip="加载数据中"
@@ -1438,51 +1530,83 @@ function DayWaterForm() {
                 : 'block !important',
           }}
         />
+
+        
         <div
           className="bottom-bottom"
           style={{
-            // visibility: isTableCollapse ? 'hidden' : 'visible',
-            flexDirection: 'row',
             display: 'flex',
-            justifyContent: 'space-around',
+            justifyContent: 'space-between',
+            gap: '30px', 
             marginTop: '30px',
+            padding: '20px',
+            backgroundColor: 'rgba(245,245,245,0.3)',
+            borderRadius: '12px',
+            boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+            maxWidth: '1400px', // 限制最大宽度
+            margin: '30px auto 0', // 居中显示
+            width: '95%', // 宽度
           }}>
-          {/* <div className='mask-div' style={{'display':isShowEchart ?'none' : 'block'}}>  </div> */}
-          <div
-            id="bottom-echart-top"
-            >
-              <div className="chartTitle">仪表盘</div>
-            <div className="chart1" style={{marginRight: '15px'}}>
-              <iframe
-                src="https://admin.sovitjs.com/publish_2d/3295793546967121924"
-                title="折线图"
-                style={{ width: '350px', height: '250px' }}></iframe>
-            </div>
+
+          {/* 每个图表容器 */}
+          <div style={{ 
+            flex: 1, 
+            minWidth: '300px', 
+            backgroundColor: 'rgba(255,255,255,0.8)',
+            borderRadius: '10px',
+            padding: '15px',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+            height: '400px' 
+          }}>
+            <div className="chartTitle" style={{ 
+              fontSize: '18px',
+              marginBottom: '20px'
+            }}>实时温度</div>
+            <div ref={gaugeRef} style={{ 
+              width: '100%',
+              height: '320px'
+            }}></div>
           </div>
-          <div
-            id="bottom-echart-middle"
-            >
-              <div className="chartTitle">折线图</div>
-            <div className="chart1" style={{marginRight: '15px'}}>
-              <iframe
-                src="https://admin.sovitjs.com/publish_chart/3295777006116929540"
-                title="折线图"
-                style={{ width: '350px', height: '350px' }}></iframe>
-            </div>
+
+          <div style={{ 
+            flex: 1, 
+            minWidth: '300px', 
+            backgroundColor: 'rgba(255,255,255,0.8)',
+            borderRadius: '10px',
+            padding: '15px', 
+            boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+            height: '400px' 
+          }}>
+            <div className="chartTitle" style={{ 
+              fontSize: '18px',
+              marginBottom: '20px' 
+            }}>TDS数据</div>
+            <div ref={lineRef} style={{ 
+               width: '100%',
+               height: '320px' 
+            }}></div>
           </div>
-          <div
-            id="bottom-echart-bottom"
-            >
-              <div className="chartTitle">雷达图</div>
-            <div className="chart1" style={{marginRight: '15px'}}>
-              <iframe
-                src="https://admin.sovitjs.com/publish_chart/3295776862059364361"
-                title="折线图"
-                style={{ width: '350px', height: '350px' }}></iframe>
-            </div>
+
+          <div style={{ 
+            flex: 1, 
+            minWidth: '300px', 
+            backgroundColor: 'rgba(255,255,255,0.8)',
+            borderRadius: '10px',
+            padding: '15px', 
+            boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+            height: '400px' 
+          }}>
+            <div className="chartTitle" style={{ 
+              fontSize: '18px',
+              marginBottom: '20px' 
+            }}>系统指标</div>
+            <div ref={radarRef} style={{ 
+              width: '100%',
+              height: '320px' 
+            }}></div>
           </div>
         </div>
-      </div>
+      </div> 
     </div>
   )
 }
