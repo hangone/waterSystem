@@ -1494,6 +1494,10 @@ function DayWaterForm() {
     return () => window.removeEventListener('resize', resizeHandler);
   }, []);
 
+  useEffect(() => {
+    updateData()
+  }, [])
+
   return (
     <div className="dayWaterChart-div commTable-div">
       <div className="body-bottom-div" style={{ background: 'white' ,alignItems:'flex-start',flexDirection:'column'}}>

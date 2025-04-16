@@ -1370,6 +1370,9 @@ function WaterChange() {
     document.querySelector('.bottom-bottom').style.opacity = 1
     setIsLoading(false)
   }
+  useEffect(() => {
+    updateData()
+  }, [])
 
   return (
     <div className="waterChange-div homeTable-div commTable-div">

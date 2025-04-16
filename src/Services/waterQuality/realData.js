@@ -3,7 +3,7 @@ import {MessageTool} from '../../Components/Tools/MessageTool.js'
 
 export const realData = async () => {
   try {
-    const response = await axios.get(`https://water.miraitowa.tk/realtimeData`);
+    const response = await axios.get(`https://water-api.hangyi.top/realtimeData`);
     const data = response.data.data
     console.log(data)
     let arr = [];

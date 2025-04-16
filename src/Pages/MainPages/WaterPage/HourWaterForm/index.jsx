@@ -1,23 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { DatePicker, Button, Empty, Table } from 'antd'
-import moment from 'moment'
-import {
-  SearchOutlined,
-  DownloadOutlined,
-  PrinterOutlined,
-} from '@ant-design/icons'
-import { getHourWaterForm } from 'Services/Home/search'
-import { MessageTool } from 'Components/Tools/MessageTool'
-import { OutputExcel } from 'Components/Tools/OutputExcel'
-import { OutputPrint } from 'Components/Tools/OutputPrint'
-import MapComponent from '../../../../Components/Map'
-import Poi from '../../../../Components/MapSearch'
+import React, {  } from 'react'
 import MountMap from '../../../../Components/MapDam'
-import { Map, Marker, APILoader, InfoWindow } from '@uiw/react-amap'
 
-import Common from 'Common'
-import Tools from 'Components/Tools/TablesData'
-import { reverseFormatDate2, changeMomentType } from 'Utils'
 import './index.less'
 
 function DayWaterForm() {

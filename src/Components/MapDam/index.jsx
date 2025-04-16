@@ -264,7 +264,7 @@ const Example = () => {
 }
 
 const MountMap = () => (
-  <APILoader akey="a7a90e05a37d3f6bf76d4a9032fc9129">
+  <APILoader akey="8696832e0514c1ef4dd6ec0257f4108f">
     <Example />
   </APILoader>
 )

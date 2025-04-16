@@ -207,17 +207,13 @@ function Home(props) {
   }
   // 选中侧边栏的子项
   const onSelect = (e) => {
-    console.log("🚀 ~ onSelect ~ e:", e)
     const { key } = e
-    console.log("🚀 ~ onSelect ~ key:", key)
     subRouterMap.some((item) => {
       if (item.path.endsWith(key)) {
-        console.log("🚀 ~ subRouterMap.some ~ item:", item)
         sessionStorage.setItem('water_sidebarItem', item.path)
         // 数据不能响应式变化
         const menuList = parseRoute(item.path)
         setDefaultSidebarItem(menuList[1])
-        console.log("🚀 ~ subRouterMap.some ~ path:", item.path)
         props.history.push(item.path)
         return false
       }

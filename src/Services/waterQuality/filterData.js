@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const filterData = async () => {
   try {
-    const response = await axios.get(`https://water.miraitowa.tk/waterpub_filter`);
+    const response = await axios.get(`https://water-api.hangyi.top/waterpub_filter`);
     const data = response.data;
     const result = {};
     for (const key in data) {
